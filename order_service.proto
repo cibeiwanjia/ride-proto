@@ -18,144 +18,142 @@ service order_info {
 }
 
 message OrderInfoCreateReq {
-  uint32 user_id = 1;
-  string start_address = 2; //
-  double start_lat = 3; //
-  double start_lng = 4;
-  string end_address = 5;
-  double end_lat = 6;
-  double end_lng = 7;
-  uint32 car_type = 8;
-  int32 pay_type = 9;
+  uint32 user_id = 1;       // 用户ID
+  string start_address = 2; // 起点地址
+  double start_lat = 3;     // 起点纬度
+  double start_lng = 4;     // 起点经度
+  string end_address = 5;   // 终点地址
+  double end_lat = 6;       // 终点纬度
+  double end_lng = 7;       // 终点经度
+  uint32 car_type = 8;      // 车型类型(1-经济型 2-舒适型 3-豪华型)
+  int32 pay_type = 9;       // 支付方式(1-微信 2-支付宝 3-现金)
 }
 
 message OrderInfoCreateRes {
-  uint32 id = 1;
-  string order_sn = 2;
-  double price = 3;
-  int64 created_at = 4;
+  uint32 id = 1;         // 订单ID
+  string order_sn = 2;   // 订单编号
+  double price = 3;      // 预估价格
+  int64 created_at = 4;  // 创建时间(时间戳)
 }
 
 message OrderInfoGetDetailReq {
-  string order_sn = 1;
-
+  string order_sn = 1; // 订单编号
 }
 
 message OrderInfoGetDetailRes {
-  OrderDetail order = 1;
+  OrderDetail order = 1; // 订单详情
 }
 
 message OrderInfoGetListReq {
-  uint32 user_id = 1;
-  int32 status = 2;
-  uint32 page = 3;
-  uint32 page_size = 4;
+  uint32 user_id = 1;   // 用户ID
+  int32 status = 2;     // 订单状态筛选(0-全部)
+  uint32 page = 3;      // 页码
+  uint32 page_size = 4; // 每页数量
 }
 
 message OrderInfoGetListRes {
-  repeated OrderDetail orders = 1;
-  int32 total = 2;
+  repeated OrderDetail orders = 1; // 订单列表
+  int32 total = 2;                 // 总数
 }
 
 message OrderInfoGetCountReq {
-  uint32 user_id = 1;
-  int32 status = 2;
+  uint32 user_id = 1; // 用户ID
+  int32 status = 2;   // 订单状态筛选(0-全部)
 }
 
 message OrderInfoGetCountRes {
-  int32 count = 1;
+  int32 count = 1; // 订单数量
 }
 
 message PaymentReq {
-  string order_sn = 1;
-  int32 pay_type = 2;
-  string auth_code = 3;
+  string order_sn = 1;  // 订单编号
+  int32 pay_type = 2;   // 支付方式(1-微信 2-支付宝 3-现金)
+  string auth_code = 3; // 支付授权码(扫码支付时使用)
 }
 
 message PaymentRes {
-  bool success = 1;
-  string message = 2;
+  bool success = 1;   // 是否成功
+  string message = 2; // 结果消息
 }
 
 message NotifyReq {
-  string order_sn = 1;
-  string trade_no = 2;
-  string trade_status = 3;
-  double total_amount = 4;
+  string order_sn = 1;     // 订单编号
+  string trade_no = 2;     // 第三方支付交易流水号
+  string trade_status = 3; // 交易状态(TRADE_SUCCESS等)
+  double total_amount = 4; // 实际支付金额
 }
 
 message NotifyRes {
-  bool success = 1;
-  string message = 2;
+  bool success = 1;   // 是否成功
+  string message = 2; // 结果消息
 }
 
 message CancelOrderReq {
-  string order_sn = 1;
-  uint32 user_id = 2;
-  string reason = 3;
+  string order_sn = 1; // 订单编号
+  uint32 user_id = 2;  // 用户ID
+  string reason = 3;   // 取消原因
 }
 
 message CancelOrderRes {
-  bool success = 1;
-  string message = 2;
+  bool success = 1;   // 是否成功
+  string message = 2; // 结果消息
 }
 
 message AcceptOrderReq {
-  string order_sn = 1;
-  uint32 driver_id = 2;
+  string order_sn = 1;  // 订单编号
+  uint32 driver_id = 2; // 司机ID
 }
 
 message AcceptOrderRes {
-  bool success = 1;
-  string message = 2;
+  bool success = 1;   // 是否成功
+  string message = 2; // 结果消息
 }
 
 message StartTripReq {
-  string order_sn = 1;
-  uint32 driver_id = 2;
+  string order_sn = 1;  // 订单编号
+  uint32 driver_id = 2; // 司机ID
 }
 
 message StartTripRes {
-  bool success = 1;
-  string message = 2;
-  int64 start_time = 3;
+  bool success = 1;     // 是否成功
+  string message = 2;   // 结果消息
+  int64 start_time = 3; // 行程开始时间(时间戳)
 }
 
 message CompleteTripReq {
-  string order_sn = 1;
-  uint32 driver_id = 2;
-  double actual_distance = 3;
-  double actual_price = 4;
+  string order_sn = 1;       // 订单编号
+  uint32 driver_id = 2;      // 司机ID
+  double actual_distance = 3; // 实际行驶距离(公里)
+  double actual_price = 4;    // 实际价格(根据实际距离计算)
 }
 
 message CompleteTripRes {
-  bool success = 1;
-  string message = 2;
-  int64 end_time = 3;
+  bool success = 1;   // 是否成功
+  string message = 2; // 结果消息
+  int64 end_time = 3; // 行程结束时间(时间戳)
 }
 
 message OrderDetail {
-  uint32 id = 1;
-  string order_sn = 2;
-  uint32 user_id = 3;
-  uint32 driver_id = 4;
-  string start_address = 5;
-  double start_lat = 6;
-  double start_lng = 7;
-  string end_address = 8;
-  double end_lat = 9;
-  double end_lng = 10;
-  double distance = 11;
-  double price = 12;
-  double actual_distance = 13;
-  double actual_price = 14;
-  int32 status = 15;
-  int32 pay_status = 16;
-  int32 pay_type = 17;
-  uint32 car_type = 18;
-  int64 created_at = 19;
-  int64 updated_at = 20;
-  int64 start_time = 21;
-  int64 end_time = 22;
+  uint32 id = 1;              // 订单ID
+  string order_sn = 2;        // 订单编号
+  uint32 user_id = 3;         // 乘客用户ID
+  uint32 driver_id = 4;       // 司机ID(0表示暂无司机接单)
+  string start_address = 5;   // 起点地址
+  double start_lat = 6;       // 起点纬度
+  double start_lng = 7;       // 起点经度
+  string end_address = 8;     // 终点地址
+  double end_lat = 9;         // 终点纬度
+  double end_lng = 10;        // 终点经度
+  double distance = 11;       // 预估距离(公里)
+  double price = 12;          // 预估价格
+  double actual_distance = 13; // 实际行驶距离(公里)
+  double actual_price = 14;    // 实际价格
+  int32 status = 15;           // 订单状态(0-待接单 1-已接单 2-行程中 3-已完成 4-已取消)
+  int32 pay_status = 16;       // 支付状态(0-未支付 1-已支付)
+  int32 pay_type = 17;         // 支付方式(1-微信 2-支付宝 3-现金)
+  uint32 car_type = 18;        // 车型类型(1-经济型 2-舒适型 3-豪华型)
+  int64 created_at = 19;       // 创建时间(时间戳)
+  int64 updated_at = 20;       // 更新时间(时间戳)
+  int64 start_time = 21;       // 行程开始时间(时间戳)
+  int64 end_time = 22;         // 行程结束时间(时间戳)
 }
-

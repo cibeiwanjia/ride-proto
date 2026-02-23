@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package userproto;
 
-option go_package = "./user";
+option go_package = "github.com/cibeiwanjia/ride-proto/user";
 
 service UserInfo {
     //先完成乘客登录的部分，之后完善司机登录

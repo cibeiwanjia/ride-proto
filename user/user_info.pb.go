@@ -688,7 +688,7 @@ const file_user_info_proto_rawDesc = "" +
 	"\x0eUpdatePassword\x12$.userproto.UserInfoUpdatePasswordReq\x1a$.userproto.UserInfoUpdatePasswordRes\"\x00\x12J\n" +
 	"\n" +
 	"UpdateInfo\x12\x1c.userproto.UserInfoUpdateReq\x1a\x1c.userproto.UserInfoUpdateRes\"\x00\x12?\n" +
-	"\vGetUserInfo\x12\x16.userproto.UserInfoReq\x1a\x16.userproto.UserInfoRes\"\x00B\bZ\x06./userb\x06proto3"
+	"\vGetUserInfo\x12\x16.userproto.UserInfoReq\x1a\x16.userproto.UserInfoRes\"\x00B(Z&github.com/cibeiwanjia/ride-proto/userb\x06proto3"
 
 var (
 	file_user_info_proto_rawDescOnce sync.Once

@@ -4,14 +4,158 @@ package orderProto;
 
 option go_package = "./order";
 
-message AlipayReq {
+service order_info {
+  rpc Create(OrderInfoCreateReq) returns (OrderInfoCreateRes) {} //创建订单
+  rpc GetDetail(OrderInfoGetDetailReq) returns (OrderInfoGetDetailRes) {} //查询订单详情
+  rpc GetList(OrderInfoGetListReq) returns (OrderInfoGetListRes) {} //查询订单列表
+  rpc GetCount(OrderInfoGetCountReq) returns (OrderInfoGetCountRes) {} //查询订单数量
+  rpc Payment(PaymentReq) returns (PaymentRes) {} //订单支付
+  rpc Notify(NotifyReq) returns (NotifyRes) {} //支付回调
+  rpc CancelOrder(CancelOrderReq) returns (CancelOrderRes) {} //取消订单
+  rpc AcceptOrder(AcceptOrderReq) returns (AcceptOrderRes) {} //司机接单
+  rpc StartTrip(StartTripReq) returns (StartTripRes) {} //开始行程
+  rpc CompleteTrip(CompleteTripReq) returns (CompleteTripRes) {} //完成行程
+}
+
+message OrderInfoCreateReq {
+  uint32 user_id = 1;
+  string start_address = 2; //
+  double start_lat = 3; //
+  double start_lng = 4;
+  string end_address = 5;
+  double end_lat = 6;
+  double end_lng = 7;
+  uint32 car_type = 8;
+  int32 pay_type = 9;
+}
+
+message OrderInfoCreateRes {
+  uint32 id = 1;
+  string order_sn = 2;
+  double price = 3;
+  int64 created_at = 4;
+}
+
+message OrderInfoGetDetailReq {
+  string order_sn = 1;
 
 }
 
-message AlipayResp {
-
+message OrderInfoGetDetailRes {
+  OrderDetail order = 1;
 }
 
-service StreamGreeter {
-  rpc greet(AlipayReq) returns (AlipayResp);
+message OrderInfoGetListReq {
+  uint32 user_id = 1;
+  int32 status = 2;
+  uint32 page = 3;
+  uint32 page_size = 4;
 }
+
+message OrderInfoGetListRes {
+  repeated OrderDetail orders = 1;
+  int32 total = 2;
+}
+
+message OrderInfoGetCountReq {
+  uint32 user_id = 1;
+  int32 status = 2;
+}
+
+message OrderInfoGetCountRes {
+  int32 count = 1;
+}
+
+message PaymentReq {
+  string order_sn = 1;
+  int32 pay_type = 2;
+  string auth_code = 3;
+}
+
+message PaymentRes {
+  bool success = 1;
+  string message = 2;
+}
+
+message NotifyReq {
+  string order_sn = 1;
+  string trade_no = 2;
+  string trade_status = 3;
+  double total_amount = 4;
+}
+
+message NotifyRes {
+  bool success = 1;
+  string message = 2;
+}
+
+message CancelOrderReq {
+  string order_sn = 1;
+  uint32 user_id = 2;
+  string reason = 3;
+}
+
+message CancelOrderRes {
+  bool success = 1;
+  string message = 2;
+}
+
+message AcceptOrderReq {
+  string order_sn = 1;
+  uint32 driver_id = 2;
+}
+
+message AcceptOrderRes {
+  bool success = 1;
+  string message = 2;
+}
+
+message StartTripReq {
+  string order_sn = 1;
+  uint32 driver_id = 2;
+}
+
+message StartTripRes {
+  bool success = 1;
+  string message = 2;
+  int64 start_time = 3;
+}
+
+message CompleteTripReq {
+  string order_sn = 1;
+  uint32 driver_id = 2;
+  double actual_distance = 3;
+  double actual_price = 4;
+}
+
+message CompleteTripRes {
+  bool success = 1;
+  string message = 2;
+  int64 end_time = 3;
+}
+
+message OrderDetail {
+  uint32 id = 1;
+  string order_sn = 2;
+  uint32 user_id = 3;
+  uint32 driver_id = 4;
+  string start_address = 5;
+  double start_lat = 6;
+  double start_lng = 7;
+  string end_address = 8;
+  double end_lat = 9;
+  double end_lng = 10;
+  double distance = 11;
+  double price = 12;
+  double actual_distance = 13;
+  double actual_price = 14;
+  int32 status = 15;
+  int32 pay_status = 16;
+  int32 pay_type = 17;
+  uint32 car_type = 18;
+  int64 created_at = 19;
+  int64 updated_at = 20;
+  int64 start_time = 21;
+  int64 end_time = 22;
+}
+

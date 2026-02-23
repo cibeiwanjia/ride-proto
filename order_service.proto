@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package orderProto;
+
+option go_package = "./order";
+
+message AlipayReq {
+
+}
+
+message AlipayResp {
+
+}
+
+service StreamGreeter {
+  rpc greet(AlipayReq) returns (AlipayResp);
+}

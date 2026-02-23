@@ -24,12 +24,10 @@ const (
 // ========== 用户注册 ==========
 type UserInfoRegisterReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`                                     // 用户名
-	Password      string                 `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`                             // 密码
-	Avatar        string                 `protobuf:"bytes,3,opt,name=avatar,proto3" json:"avatar,omitempty"`                                 // 头像
-	Sex           uint32                 `protobuf:"varint,4,opt,name=sex,proto3" json:"sex,omitempty"`                                      // 1男 2女
-	Sign          string                 `protobuf:"bytes,5,opt,name=sign,proto3" json:"sign,omitempty"`                                     // 个性签名
-	SecretAnswer  string                 `protobuf:"bytes,6,opt,name=secret_answer,json=secretAnswer,proto3" json:"secret_answer,omitempty"` // 密保问题的答案
+	Username      string                 `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty"` // 用户名
+	Password      string                 `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"` // 密码
+	Email         string                 `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty"`       // 邮箱
+	Phone         string                 `protobuf:"bytes,4,opt,name=phone,proto3" json:"phone,omitempty"`       // 手机号
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -64,9 +62,9 @@ func (*UserInfoRegisterReq) Descriptor() ([]byte, []int) {
 	return file_user_info_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *UserInfoRegisterReq) GetName() string {
+func (x *UserInfoRegisterReq) GetUsername() string {
 	if x != nil {
-		return x.Name
+		return x.Username
 	}
 	return ""
 }
@@ -78,30 +76,16 @@ func (x *UserInfoRegisterReq) GetPassword() string {
 	return ""
 }
 
-func (x *UserInfoRegisterReq) GetAvatar() string {
+func (x *UserInfoRegisterReq) GetEmail() string {
 	if x != nil {
-		return x.Avatar
+		return x.Email
 	}
 	return ""
 }
 
-func (x *UserInfoRegisterReq) GetSex() uint32 {
+func (x *UserInfoRegisterReq) GetPhone() string {
 	if x != nil {
-		return x.Sex
-	}
-	return 0
-}
-
-func (x *UserInfoRegisterReq) GetSign() string {
-	if x != nil {
-		return x.Sign
-	}
-	return ""
-}
-
-func (x *UserInfoRegisterReq) GetSecretAnswer() string {
-	if x != nil {
-		return x.SecretAnswer
+		return x.Phone
 	}
 	return ""
 }
@@ -153,7 +137,7 @@ func (x *UserInfoRegisterRes) GetId() uint32 {
 // ========== 用户登录 ==========
 type UserInfoLoginReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`         // 用户名
+	Username      string                 `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty"` // 用户名
 	Password      string                 `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"` // 密码
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -189,9 +173,9 @@ func (*UserInfoLoginReq) Descriptor() ([]byte, []int) {
 	return file_user_info_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *UserInfoLoginReq) GetName() string {
+func (x *UserInfoLoginReq) GetUsername() string {
 	if x != nil {
-		return x.Name
+		return x.Username
 	}
 	return ""
 }
@@ -363,9 +347,9 @@ func (x *UserInfoRes) GetUserInfo() *UserInfoBase {
 // ========== 修改密码 ==========
 type UserInfoUpdatePasswordReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            uint32                 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                        // 用户ID
-	Password      string                 `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`                             // 新密码
-	SecretAnswer  string                 `protobuf:"bytes,3,opt,name=secret_answer,json=secretAnswer,proto3" json:"secret_answer,omitempty"` // 密保问题的答案
+	Id            uint32                 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                     // 用户ID
+	OldPassword   string                 `protobuf:"bytes,2,opt,name=old_password,json=oldPassword,proto3" json:"old_password,omitempty"` // 旧密码
+	NewPassword   string                 `protobuf:"bytes,3,opt,name=new_password,json=newPassword,proto3" json:"new_password,omitempty"` // 新密码
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -407,16 +391,16 @@ func (x *UserInfoUpdatePasswordReq) GetId() uint32 {
 	return 0
 }
 
-func (x *UserInfoUpdatePasswordReq) GetPassword() string {
+func (x *UserInfoUpdatePasswordReq) GetOldPassword() string {
 	if x != nil {
-		return x.Password
+		return x.OldPassword
 	}
 	return ""
 }
 
-func (x *UserInfoUpdatePasswordReq) GetSecretAnswer() string {
+func (x *UserInfoUpdatePasswordReq) GetNewPassword() string {
 	if x != nil {
-		return x.SecretAnswer
+		return x.NewPassword
 	}
 	return ""
 }
@@ -465,12 +449,13 @@ func (x *UserInfoUpdatePasswordRes) GetId() uint32 {
 	return 0
 }
 
-// 修改用户信息
+// ========== 修改用户信息 ==========
 type UserInfoUpdateReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            uint32                 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`        //用户id
-	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`     //昵称
-	Avatar        string                 `protobuf:"bytes,3,opt,name=avatar,proto3" json:"avatar,omitempty"` //头像
+	Id            uint32                 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`            // 用户ID
+	Username      string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"` // 用户名
+	Email         string                 `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty"`       // 邮箱
+	Phone         string                 `protobuf:"bytes,4,opt,name=phone,proto3" json:"phone,omitempty"`       // 手机号
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -512,16 +497,23 @@ func (x *UserInfoUpdateReq) GetId() uint32 {
 	return 0
 }
 
-func (x *UserInfoUpdateReq) GetName() string {
+func (x *UserInfoUpdateReq) GetUsername() string {
 	if x != nil {
-		return x.Name
+		return x.Username
 	}
 	return ""
 }
 
-func (x *UserInfoUpdateReq) GetAvatar() string {
+func (x *UserInfoUpdateReq) GetEmail() string {
 	if x != nil {
-		return x.Avatar
+		return x.Email
+	}
+	return ""
+}
+
+func (x *UserInfoUpdateReq) GetPhone() string {
+	if x != nil {
+		return x.Phone
 	}
 	return ""
 }
@@ -573,12 +565,11 @@ func (x *UserInfoUpdateRes) GetId() uint32 {
 // ========== 公共结构 ==========
 type UserInfoBase struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            uint32                 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`         // 用户ID
-	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`      // 用户名
-	Avatar        string                 `protobuf:"bytes,3,opt,name=avatar,proto3" json:"avatar,omitempty"`  // 头像
-	Sex           uint32                 `protobuf:"varint,4,opt,name=sex,proto3" json:"sex,omitempty"`       // 性别
-	Sign          string                 `protobuf:"bytes,5,opt,name=sign,proto3" json:"sign,omitempty"`      // 个性签名
-	Status        uint32                 `protobuf:"varint,6,opt,name=status,proto3" json:"status,omitempty"` // 状态
+	Id            uint32                 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`            // 用户ID
+	Username      string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"` // 用户名
+	Email         string                 `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty"`       // 邮箱
+	Phone         string                 `protobuf:"bytes,4,opt,name=phone,proto3" json:"phone,omitempty"`       // 手机号
+	Status        uint32                 `protobuf:"varint,5,opt,name=status,proto3" json:"status,omitempty"`    // 状态,1:启用,0:禁用
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -620,30 +611,23 @@ func (x *UserInfoBase) GetId() uint32 {
 	return 0
 }
 
-func (x *UserInfoBase) GetName() string {
+func (x *UserInfoBase) GetUsername() string {
 	if x != nil {
-		return x.Name
+		return x.Username
 	}
 	return ""
 }
 
-func (x *UserInfoBase) GetAvatar() string {
+func (x *UserInfoBase) GetEmail() string {
 	if x != nil {
-		return x.Avatar
+		return x.Email
 	}
 	return ""
 }
 
-func (x *UserInfoBase) GetSex() uint32 {
+func (x *UserInfoBase) GetPhone() string {
 	if x != nil {
-		return x.Sex
-	}
-	return 0
-}
-
-func (x *UserInfoBase) GetSign() string {
-	if x != nil {
-		return x.Sign
+		return x.Phone
 	}
 	return ""
 }
@@ -659,18 +643,16 @@ var File_user_info_proto protoreflect.FileDescriptor
 
 const file_user_info_proto_rawDesc = "" +
 	"\n" +
-	"\x0fuser_info.proto\x12\tuserproto\"\xa8\x01\n" +
-	"\x13UserInfoRegisterReq\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\x12\x1a\n" +
-	"\bpassword\x18\x02 \x01(\tR\bpassword\x12\x16\n" +
-	"\x06avatar\x18\x03 \x01(\tR\x06avatar\x12\x10\n" +
-	"\x03sex\x18\x04 \x01(\rR\x03sex\x12\x12\n" +
-	"\x04sign\x18\x05 \x01(\tR\x04sign\x12#\n" +
-	"\rsecret_answer\x18\x06 \x01(\tR\fsecretAnswer\"%\n" +
+	"\x0fuser_info.proto\x12\tuserproto\"y\n" +
+	"\x13UserInfoRegisterReq\x12\x1a\n" +
+	"\busername\x18\x01 \x01(\tR\busername\x12\x1a\n" +
+	"\bpassword\x18\x02 \x01(\tR\bpassword\x12\x14\n" +
+	"\x05email\x18\x03 \x01(\tR\x05email\x12\x14\n" +
+	"\x05phone\x18\x04 \x01(\tR\x05phone\"%\n" +
 	"\x13UserInfoRegisterRes\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\rR\x02id\"B\n" +
-	"\x10UserInfoLoginReq\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\x12\x1a\n" +
+	"\x02id\x18\x01 \x01(\rR\x02id\"J\n" +
+	"\x10UserInfoLoginReq\x12\x1a\n" +
+	"\busername\x18\x01 \x01(\tR\busername\x12\x1a\n" +
 	"\bpassword\x18\x02 \x01(\tR\bpassword\"\x8f\x01\n" +
 	"\x10UserInfoLoginRes\x12\x12\n" +
 	"\x04type\x18\x01 \x01(\tR\x04type\x12\x14\n" +
@@ -680,26 +662,26 @@ const file_user_info_proto_rawDesc = "" +
 	"\vUserInfoReq\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\rR\x02id\"C\n" +
 	"\vUserInfoRes\x124\n" +
-	"\tuser_info\x18\x01 \x01(\v2\x17.userproto.UserInfoBaseR\buserInfo\"l\n" +
+	"\tuser_info\x18\x01 \x01(\v2\x17.userproto.UserInfoBaseR\buserInfo\"q\n" +
 	"\x19UserInfoUpdatePasswordReq\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\rR\x02id\x12\x1a\n" +
-	"\bpassword\x18\x02 \x01(\tR\bpassword\x12#\n" +
-	"\rsecret_answer\x18\x03 \x01(\tR\fsecretAnswer\"+\n" +
+	"\x02id\x18\x01 \x01(\rR\x02id\x12!\n" +
+	"\fold_password\x18\x02 \x01(\tR\voldPassword\x12!\n" +
+	"\fnew_password\x18\x03 \x01(\tR\vnewPassword\"+\n" +
 	"\x19UserInfoUpdatePasswordRes\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\rR\x02id\"O\n" +
+	"\x02id\x18\x01 \x01(\rR\x02id\"k\n" +
 	"\x11UserInfoUpdateReq\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\rR\x02id\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\x12\x16\n" +
-	"\x06avatar\x18\x03 \x01(\tR\x06avatar\"#\n" +
+	"\x02id\x18\x01 \x01(\rR\x02id\x12\x1a\n" +
+	"\busername\x18\x02 \x01(\tR\busername\x12\x14\n" +
+	"\x05email\x18\x03 \x01(\tR\x05email\x12\x14\n" +
+	"\x05phone\x18\x04 \x01(\tR\x05phone\"#\n" +
 	"\x11UserInfoUpdateRes\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\rR\x02id\"\x88\x01\n" +
+	"\x02id\x18\x01 \x01(\rR\x02id\"~\n" +
 	"\fUserInfoBase\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\rR\x02id\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\x12\x16\n" +
-	"\x06avatar\x18\x03 \x01(\tR\x06avatar\x12\x10\n" +
-	"\x03sex\x18\x04 \x01(\rR\x03sex\x12\x12\n" +
-	"\x04sign\x18\x05 \x01(\tR\x04sign\x12\x16\n" +
-	"\x06status\x18\x06 \x01(\rR\x06status2\x8a\x03\n" +
+	"\x02id\x18\x01 \x01(\rR\x02id\x12\x1a\n" +
+	"\busername\x18\x02 \x01(\tR\busername\x12\x14\n" +
+	"\x05email\x18\x03 \x01(\tR\x05email\x12\x14\n" +
+	"\x05phone\x18\x04 \x01(\tR\x05phone\x12\x16\n" +
+	"\x06status\x18\x05 \x01(\rR\x06status2\x8a\x03\n" +
 	"\bUserInfo\x12C\n" +
 	"\x05Login\x12\x1b.userproto.UserInfoLoginReq\x1a\x1b.userproto.UserInfoLoginRes\"\x00\x12L\n" +
 	"\bRegister\x12\x1e.userproto.UserInfoRegisterReq\x1a\x1e.userproto.UserInfoRegisterRes\"\x00\x12^\n" +

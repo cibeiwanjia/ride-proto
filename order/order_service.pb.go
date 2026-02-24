@@ -23,15 +23,15 @@ const (
 
 type OrderInfoCreateReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserId        uint32                 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	StartAddress  string                 `protobuf:"bytes,2,opt,name=start_address,json=startAddress,proto3" json:"start_address,omitempty"`
-	StartLat      float64                `protobuf:"fixed64,3,opt,name=start_lat,json=startLat,proto3" json:"start_lat,omitempty"`
-	StartLng      float64                `protobuf:"fixed64,4,opt,name=start_lng,json=startLng,proto3" json:"start_lng,omitempty"`
-	EndAddress    string                 `protobuf:"bytes,5,opt,name=end_address,json=endAddress,proto3" json:"end_address,omitempty"`
-	EndLat        float64                `protobuf:"fixed64,6,opt,name=end_lat,json=endLat,proto3" json:"end_lat,omitempty"`
-	EndLng        float64                `protobuf:"fixed64,7,opt,name=end_lng,json=endLng,proto3" json:"end_lng,omitempty"`
-	CarType       uint32                 `protobuf:"varint,8,opt,name=car_type,json=carType,proto3" json:"car_type,omitempty"`
-	PayType       int32                  `protobuf:"varint,9,opt,name=pay_type,json=payType,proto3" json:"pay_type,omitempty"`
+	UserId        uint32                 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`                  // 用户ID
+	StartAddress  string                 `protobuf:"bytes,2,opt,name=start_address,json=startAddress,proto3" json:"start_address,omitempty"` // 起点地址
+	StartLat      float64                `protobuf:"fixed64,3,opt,name=start_lat,json=startLat,proto3" json:"start_lat,omitempty"`           // 起点纬度
+	StartLng      float64                `protobuf:"fixed64,4,opt,name=start_lng,json=startLng,proto3" json:"start_lng,omitempty"`           // 起点经度
+	EndAddress    string                 `protobuf:"bytes,5,opt,name=end_address,json=endAddress,proto3" json:"end_address,omitempty"`       // 终点地址
+	EndLat        float64                `protobuf:"fixed64,6,opt,name=end_lat,json=endLat,proto3" json:"end_lat,omitempty"`                 // 终点纬度
+	EndLng        float64                `protobuf:"fixed64,7,opt,name=end_lng,json=endLng,proto3" json:"end_lng,omitempty"`                 // 终点经度
+	CarType       uint32                 `protobuf:"varint,8,opt,name=car_type,json=carType,proto3" json:"car_type,omitempty"`               // 车型类型(1-经济型 2-舒适型 3-豪华型)
+	PayType       int32                  `protobuf:"varint,9,opt,name=pay_type,json=payType,proto3" json:"pay_type,omitempty"`               // 支付方式(1-微信 2-支付宝 3-现金)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -131,10 +131,10 @@ func (x *OrderInfoCreateReq) GetPayType() int32 {
 
 type OrderInfoCreateRes struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            uint32                 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	OrderSn       string                 `protobuf:"bytes,2,opt,name=order_sn,json=orderSn,proto3" json:"order_sn,omitempty"`
-	Price         float64                `protobuf:"fixed64,3,opt,name=price,proto3" json:"price,omitempty"`
-	CreatedAt     int64                  `protobuf:"varint,4,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	Id            uint32                 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                // 订单ID
+	OrderSn       string                 `protobuf:"bytes,2,opt,name=order_sn,json=orderSn,proto3" json:"order_sn,omitempty"`        // 订单编号
+	Price         float64                `protobuf:"fixed64,3,opt,name=price,proto3" json:"price,omitempty"`                         // 预估价格
+	CreatedAt     int64                  `protobuf:"varint,4,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"` // 创建时间(时间戳)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -199,7 +199,7 @@ func (x *OrderInfoCreateRes) GetCreatedAt() int64 {
 
 type OrderInfoGetDetailReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	OrderSn       string                 `protobuf:"bytes,1,opt,name=order_sn,json=orderSn,proto3" json:"order_sn,omitempty"`
+	OrderSn       string                 `protobuf:"bytes,1,opt,name=order_sn,json=orderSn,proto3" json:"order_sn,omitempty"` // 订单编号
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -243,7 +243,7 @@ func (x *OrderInfoGetDetailReq) GetOrderSn() string {
 
 type OrderInfoGetDetailRes struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Order         *OrderDetail           `protobuf:"bytes,1,opt,name=order,proto3" json:"order,omitempty"`
+	Order         *OrderDetail           `protobuf:"bytes,1,opt,name=order,proto3" json:"order,omitempty"` // 订单详情
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -287,10 +287,10 @@ func (x *OrderInfoGetDetailRes) GetOrder() *OrderDetail {
 
 type OrderInfoGetListReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserId        uint32                 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	Status        int32                  `protobuf:"varint,2,opt,name=status,proto3" json:"status,omitempty"`
-	Page          uint32                 `protobuf:"varint,3,opt,name=page,proto3" json:"page,omitempty"`
-	PageSize      uint32                 `protobuf:"varint,4,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	UserId        uint32                 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`       // 用户ID
+	Status        int32                  `protobuf:"varint,2,opt,name=status,proto3" json:"status,omitempty"`                     // 订单状态筛选(0-全部)
+	Page          uint32                 `protobuf:"varint,3,opt,name=page,proto3" json:"page,omitempty"`                         // 页码
+	PageSize      uint32                 `protobuf:"varint,4,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"` // 每页数量
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -355,8 +355,8 @@ func (x *OrderInfoGetListReq) GetPageSize() uint32 {
 
 type OrderInfoGetListRes struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Orders        []*OrderDetail         `protobuf:"bytes,1,rep,name=orders,proto3" json:"orders,omitempty"`
-	Total         int32                  `protobuf:"varint,2,opt,name=total,proto3" json:"total,omitempty"`
+	Orders        []*OrderDetail         `protobuf:"bytes,1,rep,name=orders,proto3" json:"orders,omitempty"` // 订单列表
+	Total         int32                  `protobuf:"varint,2,opt,name=total,proto3" json:"total,omitempty"`  // 总数
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -407,8 +407,8 @@ func (x *OrderInfoGetListRes) GetTotal() int32 {
 
 type OrderInfoGetCountReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserId        uint32                 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	Status        int32                  `protobuf:"varint,2,opt,name=status,proto3" json:"status,omitempty"`
+	UserId        uint32                 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"` // 用户ID
+	Status        int32                  `protobuf:"varint,2,opt,name=status,proto3" json:"status,omitempty"`               // 订单状态筛选(0-全部)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -459,7 +459,7 @@ func (x *OrderInfoGetCountReq) GetStatus() int32 {
 
 type OrderInfoGetCountRes struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Count         int32                  `protobuf:"varint,1,opt,name=count,proto3" json:"count,omitempty"`
+	Count         int32                  `protobuf:"varint,1,opt,name=count,proto3" json:"count,omitempty"` // 订单数量
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -503,9 +503,9 @@ func (x *OrderInfoGetCountRes) GetCount() int32 {
 
 type PaymentReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	OrderSn       string                 `protobuf:"bytes,1,opt,name=order_sn,json=orderSn,proto3" json:"order_sn,omitempty"`
-	PayType       int32                  `protobuf:"varint,2,opt,name=pay_type,json=payType,proto3" json:"pay_type,omitempty"`
-	AuthCode      string                 `protobuf:"bytes,3,opt,name=auth_code,json=authCode,proto3" json:"auth_code,omitempty"`
+	OrderSn       string                 `protobuf:"bytes,1,opt,name=order_sn,json=orderSn,proto3" json:"order_sn,omitempty"`    // 订单编号
+	PayType       int32                  `protobuf:"varint,2,opt,name=pay_type,json=payType,proto3" json:"pay_type,omitempty"`   // 支付方式(1-微信 2-支付宝 3-现金)
+	AuthCode      string                 `protobuf:"bytes,3,opt,name=auth_code,json=authCode,proto3" json:"auth_code,omitempty"` // 支付授权码(扫码支付时使用)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -563,8 +563,8 @@ func (x *PaymentReq) GetAuthCode() string {
 
 type PaymentRes struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
-	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
+	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"` // 是否成功
+	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`  // 结果消息
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -615,10 +615,10 @@ func (x *PaymentRes) GetMessage() string {
 
 type NotifyReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	OrderSn       string                 `protobuf:"bytes,1,opt,name=order_sn,json=orderSn,proto3" json:"order_sn,omitempty"`
-	TradeNo       string                 `protobuf:"bytes,2,opt,name=trade_no,json=tradeNo,proto3" json:"trade_no,omitempty"`
-	TradeStatus   string                 `protobuf:"bytes,3,opt,name=trade_status,json=tradeStatus,proto3" json:"trade_status,omitempty"`
-	TotalAmount   float64                `protobuf:"fixed64,4,opt,name=total_amount,json=totalAmount,proto3" json:"total_amount,omitempty"`
+	OrderSn       string                 `protobuf:"bytes,1,opt,name=order_sn,json=orderSn,proto3" json:"order_sn,omitempty"`               // 订单编号
+	TradeNo       string                 `protobuf:"bytes,2,opt,name=trade_no,json=tradeNo,proto3" json:"trade_no,omitempty"`               // 第三方支付交易流水号
+	TradeStatus   string                 `protobuf:"bytes,3,opt,name=trade_status,json=tradeStatus,proto3" json:"trade_status,omitempty"`   // 交易状态(TRADE_SUCCESS等)
+	TotalAmount   float64                `protobuf:"fixed64,4,opt,name=total_amount,json=totalAmount,proto3" json:"total_amount,omitempty"` // 实际支付金额
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -683,8 +683,8 @@ func (x *NotifyReq) GetTotalAmount() float64 {
 
 type NotifyRes struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
-	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
+	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"` // 是否成功
+	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`  // 结果消息
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -735,9 +735,9 @@ func (x *NotifyRes) GetMessage() string {
 
 type CancelOrderReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	OrderSn       string                 `protobuf:"bytes,1,opt,name=order_sn,json=orderSn,proto3" json:"order_sn,omitempty"`
-	UserId        uint32                 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	Reason        string                 `protobuf:"bytes,3,opt,name=reason,proto3" json:"reason,omitempty"`
+	OrderSn       string                 `protobuf:"bytes,1,opt,name=order_sn,json=orderSn,proto3" json:"order_sn,omitempty"` // 订单编号
+	UserId        uint32                 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`   // 用户ID
+	Reason        string                 `protobuf:"bytes,3,opt,name=reason,proto3" json:"reason,omitempty"`                  // 取消原因
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -795,8 +795,8 @@ func (x *CancelOrderReq) GetReason() string {
 
 type CancelOrderRes struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
-	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
+	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"` // 是否成功
+	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`  // 结果消息
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -847,8 +847,8 @@ func (x *CancelOrderRes) GetMessage() string {
 
 type AcceptOrderReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	OrderSn       string                 `protobuf:"bytes,1,opt,name=order_sn,json=orderSn,proto3" json:"order_sn,omitempty"`
-	DriverId      uint32                 `protobuf:"varint,2,opt,name=driver_id,json=driverId,proto3" json:"driver_id,omitempty"`
+	OrderSn       string                 `protobuf:"bytes,1,opt,name=order_sn,json=orderSn,proto3" json:"order_sn,omitempty"`     // 订单编号
+	DriverId      uint32                 `protobuf:"varint,2,opt,name=driver_id,json=driverId,proto3" json:"driver_id,omitempty"` // 司机ID
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -899,8 +899,8 @@ func (x *AcceptOrderReq) GetDriverId() uint32 {
 
 type AcceptOrderRes struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
-	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
+	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"` // 是否成功
+	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`  // 结果消息
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -951,8 +951,8 @@ func (x *AcceptOrderRes) GetMessage() string {
 
 type StartTripReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	OrderSn       string                 `protobuf:"bytes,1,opt,name=order_sn,json=orderSn,proto3" json:"order_sn,omitempty"`
-	DriverId      uint32                 `protobuf:"varint,2,opt,name=driver_id,json=driverId,proto3" json:"driver_id,omitempty"`
+	OrderSn       string                 `protobuf:"bytes,1,opt,name=order_sn,json=orderSn,proto3" json:"order_sn,omitempty"`     // 订单编号
+	DriverId      uint32                 `protobuf:"varint,2,opt,name=driver_id,json=driverId,proto3" json:"driver_id,omitempty"` // 司机ID
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1003,9 +1003,9 @@ func (x *StartTripReq) GetDriverId() uint32 {
 
 type StartTripRes struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
-	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
-	StartTime     int64                  `protobuf:"varint,3,opt,name=start_time,json=startTime,proto3" json:"start_time,omitempty"`
+	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`                      // 是否成功
+	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`                       // 结果消息
+	StartTime     int64                  `protobuf:"varint,3,opt,name=start_time,json=startTime,proto3" json:"start_time,omitempty"` // 行程开始时间(时间戳)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1063,10 +1063,10 @@ func (x *StartTripRes) GetStartTime() int64 {
 
 type CompleteTripReq struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
-	OrderSn        string                 `protobuf:"bytes,1,opt,name=order_sn,json=orderSn,proto3" json:"order_sn,omitempty"`
-	DriverId       uint32                 `protobuf:"varint,2,opt,name=driver_id,json=driverId,proto3" json:"driver_id,omitempty"`
-	ActualDistance float64                `protobuf:"fixed64,3,opt,name=actual_distance,json=actualDistance,proto3" json:"actual_distance,omitempty"`
-	ActualPrice    float64                `protobuf:"fixed64,4,opt,name=actual_price,json=actualPrice,proto3" json:"actual_price,omitempty"`
+	OrderSn        string                 `protobuf:"bytes,1,opt,name=order_sn,json=orderSn,proto3" json:"order_sn,omitempty"`                        // 订单编号
+	DriverId       uint32                 `protobuf:"varint,2,opt,name=driver_id,json=driverId,proto3" json:"driver_id,omitempty"`                    // 司机ID
+	ActualDistance float64                `protobuf:"fixed64,3,opt,name=actual_distance,json=actualDistance,proto3" json:"actual_distance,omitempty"` // 实际行驶距离(公里)
+	ActualPrice    float64                `protobuf:"fixed64,4,opt,name=actual_price,json=actualPrice,proto3" json:"actual_price,omitempty"`          // 实际价格(根据实际距离计算)
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -1131,9 +1131,9 @@ func (x *CompleteTripReq) GetActualPrice() float64 {
 
 type CompleteTripRes struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
-	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
-	EndTime       int64                  `protobuf:"varint,3,opt,name=end_time,json=endTime,proto3" json:"end_time,omitempty"`
+	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`                // 是否成功
+	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`                 // 结果消息
+	EndTime       int64                  `protobuf:"varint,3,opt,name=end_time,json=endTime,proto3" json:"end_time,omitempty"` // 行程结束时间(时间戳)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1191,28 +1191,28 @@ func (x *CompleteTripRes) GetEndTime() int64 {
 
 type OrderDetail struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
-	Id             uint32                 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	OrderSn        string                 `protobuf:"bytes,2,opt,name=order_sn,json=orderSn,proto3" json:"order_sn,omitempty"`
-	UserId         uint32                 `protobuf:"varint,3,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	DriverId       uint32                 `protobuf:"varint,4,opt,name=driver_id,json=driverId,proto3" json:"driver_id,omitempty"`
-	StartAddress   string                 `protobuf:"bytes,5,opt,name=start_address,json=startAddress,proto3" json:"start_address,omitempty"`
-	StartLat       float64                `protobuf:"fixed64,6,opt,name=start_lat,json=startLat,proto3" json:"start_lat,omitempty"`
-	StartLng       float64                `protobuf:"fixed64,7,opt,name=start_lng,json=startLng,proto3" json:"start_lng,omitempty"`
-	EndAddress     string                 `protobuf:"bytes,8,opt,name=end_address,json=endAddress,proto3" json:"end_address,omitempty"`
-	EndLat         float64                `protobuf:"fixed64,9,opt,name=end_lat,json=endLat,proto3" json:"end_lat,omitempty"`
-	EndLng         float64                `protobuf:"fixed64,10,opt,name=end_lng,json=endLng,proto3" json:"end_lng,omitempty"`
-	Distance       float64                `protobuf:"fixed64,11,opt,name=distance,proto3" json:"distance,omitempty"`
-	Price          float64                `protobuf:"fixed64,12,opt,name=price,proto3" json:"price,omitempty"`
-	ActualDistance float64                `protobuf:"fixed64,13,opt,name=actual_distance,json=actualDistance,proto3" json:"actual_distance,omitempty"`
-	ActualPrice    float64                `protobuf:"fixed64,14,opt,name=actual_price,json=actualPrice,proto3" json:"actual_price,omitempty"`
-	Status         int32                  `protobuf:"varint,15,opt,name=status,proto3" json:"status,omitempty"`
-	PayStatus      int32                  `protobuf:"varint,16,opt,name=pay_status,json=payStatus,proto3" json:"pay_status,omitempty"`
-	PayType        int32                  `protobuf:"varint,17,opt,name=pay_type,json=payType,proto3" json:"pay_type,omitempty"`
-	CarType        uint32                 `protobuf:"varint,18,opt,name=car_type,json=carType,proto3" json:"car_type,omitempty"`
-	CreatedAt      int64                  `protobuf:"varint,19,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	UpdatedAt      int64                  `protobuf:"varint,20,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
-	StartTime      int64                  `protobuf:"varint,21,opt,name=start_time,json=startTime,proto3" json:"start_time,omitempty"`
-	EndTime        int64                  `protobuf:"varint,22,opt,name=end_time,json=endTime,proto3" json:"end_time,omitempty"`
+	Id             uint32                 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                 // 订单ID
+	OrderSn        string                 `protobuf:"bytes,2,opt,name=order_sn,json=orderSn,proto3" json:"order_sn,omitempty"`                         // 订单编号
+	UserId         uint32                 `protobuf:"varint,3,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`                           // 乘客用户ID
+	DriverId       uint32                 `protobuf:"varint,4,opt,name=driver_id,json=driverId,proto3" json:"driver_id,omitempty"`                     // 司机ID(0表示暂无司机接单)
+	StartAddress   string                 `protobuf:"bytes,5,opt,name=start_address,json=startAddress,proto3" json:"start_address,omitempty"`          // 起点地址
+	StartLat       float64                `protobuf:"fixed64,6,opt,name=start_lat,json=startLat,proto3" json:"start_lat,omitempty"`                    // 起点纬度
+	StartLng       float64                `protobuf:"fixed64,7,opt,name=start_lng,json=startLng,proto3" json:"start_lng,omitempty"`                    // 起点经度
+	EndAddress     string                 `protobuf:"bytes,8,opt,name=end_address,json=endAddress,proto3" json:"end_address,omitempty"`                // 终点地址
+	EndLat         float64                `protobuf:"fixed64,9,opt,name=end_lat,json=endLat,proto3" json:"end_lat,omitempty"`                          // 终点纬度
+	EndLng         float64                `protobuf:"fixed64,10,opt,name=end_lng,json=endLng,proto3" json:"end_lng,omitempty"`                         // 终点经度
+	Distance       float64                `protobuf:"fixed64,11,opt,name=distance,proto3" json:"distance,omitempty"`                                   // 预估距离(公里)
+	Price          float64                `protobuf:"fixed64,12,opt,name=price,proto3" json:"price,omitempty"`                                         // 预估价格
+	ActualDistance float64                `protobuf:"fixed64,13,opt,name=actual_distance,json=actualDistance,proto3" json:"actual_distance,omitempty"` // 实际行驶距离(公里)
+	ActualPrice    float64                `protobuf:"fixed64,14,opt,name=actual_price,json=actualPrice,proto3" json:"actual_price,omitempty"`          // 实际价格
+	Status         int32                  `protobuf:"varint,15,opt,name=status,proto3" json:"status,omitempty"`                                        // 订单状态(0-待接单 1-已接单 2-行程中 3-已完成 4-已取消)
+	PayStatus      int32                  `protobuf:"varint,16,opt,name=pay_status,json=payStatus,proto3" json:"pay_status,omitempty"`                 // 支付状态(0-未支付 1-已支付)
+	PayType        int32                  `protobuf:"varint,17,opt,name=pay_type,json=payType,proto3" json:"pay_type,omitempty"`                       // 支付方式(1-微信 2-支付宝 3-现金)
+	CarType        uint32                 `protobuf:"varint,18,opt,name=car_type,json=carType,proto3" json:"car_type,omitempty"`                       // 车型类型(1-经济型 2-舒适型 3-豪华型)
+	CreatedAt      int64                  `protobuf:"varint,19,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`                 // 创建时间(时间戳)
+	UpdatedAt      int64                  `protobuf:"varint,20,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`                 // 更新时间(时间戳)
+	StartTime      int64                  `protobuf:"varint,21,opt,name=start_time,json=startTime,proto3" json:"start_time,omitempty"`                 // 行程开始时间(时间戳)
+	EndTime        int64                  `protobuf:"varint,22,opt,name=end_time,json=endTime,proto3" json:"end_time,omitempty"`                       // 行程结束时间(时间戳)
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -1528,7 +1528,7 @@ const file_order_service_proto_rawDesc = "" +
 	"\vCancelOrder\x12\x1a.orderProto.CancelOrderReq\x1a\x1a.orderProto.CancelOrderRes\"\x00\x12G\n" +
 	"\vAcceptOrder\x12\x1a.orderProto.AcceptOrderReq\x1a\x1a.orderProto.AcceptOrderRes\"\x00\x12A\n" +
 	"\tStartTrip\x12\x18.orderProto.StartTripReq\x1a\x18.orderProto.StartTripRes\"\x00\x12J\n" +
-	"\fCompleteTrip\x12\x1b.orderProto.CompleteTripReq\x1a\x1b.orderProto.CompleteTripRes\"\x00B\tZ\a./orderb\x06proto3"
+	"\fCompleteTrip\x12\x1b.orderProto.CompleteTripReq\x1a\x1b.orderProto.CompleteTripRes\"\x00B)Z'github.com/cibeiwanjia/ride-proto/orderb\x06proto3"
 
 var (
 	file_order_service_proto_rawDescOnce sync.Once

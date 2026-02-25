@@ -1,0 +1,76 @@
+syntax = "proto3";
+
+package reviewproto;
+
+option go_package = "github.com/cibeiwanjia/ride-proto/review";
+
+service ReviewInfo {
+  // 创建评价
+  rpc CreateReview (ReviewCreateReq) returns (ReviewCreateRes) {}
+  // 获取评价列表（用户视角）
+  rpc GetUserReviews (UserReviewsReq) returns (UserReviewsRes) {}
+  // 获取评价列表（司机视角）
+  rpc GetDriverReviews (DriverReviewsReq) returns (DriverReviewsRes) {}
+  // 获取单个评价详情
+  rpc GetReviewDetail (ReviewDetailReq) returns (ReviewDetailRes) {}
+}
+
+// ========== 创建评价 ==========
+message ReviewCreateReq {
+
+  uint32 user_id = 1;     // 用户ID
+  uint32 order_id = 2;    // 订单ID
+  int32 rating = 3;       // 评分(1-5)
+  string content = 4;     // 评价内容
+}
+
+message ReviewCreateRes {
+  uint32 review_id = 1;   // 评价ID
+  bool success = 2;       // 是否成功
+}
+
+// ========== 获取用户评价列表 ==========
+message UserReviewsReq {
+  uint32 user_id = 1;     // 用户ID
+  uint32 page = 2;        // 页码
+  uint32 page_size = 3;   // 每页大小
+}
+
+message UserReviewsRes {
+  repeated ReviewInfos reviews = 1;  // 评价列表
+  uint32 total = 2;                 // 总数
+}
+
+// ========== 获取司机评价列表 ==========
+message DriverReviewsReq {
+  uint32 driver_id = 1;   // 司机ID
+  uint32 page = 2;        // 页码
+  uint32 page_size = 3;   // 每页大小
+}
+
+message DriverReviewsRes {
+  repeated ReviewInfos reviews = 1;  // 评价列表
+  uint32 total = 2;                 // 总数
+}
+
+// ========== 获取评价详情 ==========
+message ReviewDetailReq {
+  uint32 review_id = 1;   // 评价ID
+}
+
+message ReviewDetailRes {
+  ReviewInfos review = 1;  // 评价详情
+}
+
+// ========== 评价信息 ==========
+message ReviewInfos {
+  uint32 id = 1;          // 评价ID
+  uint32 user_id = 2;     // 用户ID
+  uint32 order_id = 3;    // 订单ID
+  uint32 driver_id = 4;   // 司机ID
+  int32 rating = 5;       // 评分
+  string content = 6;     // 评价内容
+  int32 status = 7;       // 状态
+  string created_at = 8;  // 创建时间
+  bool is_notified = 9;   // 是否已通知司机
+}

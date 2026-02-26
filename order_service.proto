@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package orderProto;
 
-option go_package = "./order";
+option go_package = "github.com/cibeiwanjia/ride-proto/order";
 
 service order_info {
   rpc Create(OrderInfoCreateReq) returns (OrderInfoCreateRes) {} //创建订单

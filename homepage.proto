@@ -1,0 +1,82 @@
+syntax = "proto3";
+
+package homeproto;
+
+option go_package = "github.com/cibeiwanjia/ride-proto/homepage";
+
+service HomePageService {
+  // 关键字搜索地点
+  rpc SearchPlace (SearchPlaceReq) returns (SearchPlaceRes) {}
+  
+  // 周边搜索
+  rpc AroundSearch (AroundSearchReq) returns (AroundSearchRes) {}
+  
+  // 地址转经纬度
+  rpc GeoCode (GeoCodeReq) returns (GeoCodeRes) {}
+  
+  // 经纬度转地址
+  rpc ReGeoCode (ReGeoCodeReq) returns (ReGeoCodeRes) {}
+}
+
+// ========== 关键字搜索 ==========
+message SearchPlaceReq {
+  string keyword = 1;  // 搜索关键字
+  string city = 2;     // 城市
+  string type = 3;     // 类型
+  int32 page = 4;      // 页码
+  int32 offset = 5;    // 每页数量
+}
+
+message SearchPlaceRes {
+  int32 total = 1;               // 总数
+  repeated PlaceInfo places = 2;  // 地点列表
+}
+
+message PlaceInfo {
+  string name = 1;      // 名称
+  string address = 2;   // 地址
+  string location = 3;  // 经纬度
+  string type = 4;      // 类型
+  string distance = 5;  // 距离
+}
+
+// ========== 周边搜索 ==========
+message AroundSearchReq {
+  string keyword = 1;   // 搜索关键字
+  string location = 2;  // 当前位置经纬度，格式：经度,纬度
+  string city = 3;      // 城市
+  int32 radius = 4;     // 搜索半径（米）
+  int32 page = 5;       // 页码
+  int32 offset = 6;     // 每页数量
+}
+
+message AroundSearchRes {
+  int32 total = 1;
+  repeated PlaceInfo places = 2;
+}
+
+// ========== 地理编码（地址→经纬度）==========
+message GeoCodeReq {
+  string address = 1;  // 地址
+  string city = 2;     // 城市
+}
+
+message GeoCodeRes {
+  string location = 1;  // 经纬度，格式：经度,纬度
+  string province = 2;  // 省份
+  string city = 3;      // 城市
+  string district = 4; // 区县
+}
+
+// ========== 逆地理编码（经纬度→地址）==========
+message ReGeoCodeReq {
+  string location = 1;  // 经纬度，格式：经度,纬度
+}
+
+message ReGeoCodeRes {
+  string address = 1;   // 详细地址
+  string province = 2;  // 省份
+  string city = 3;      // 城市
+  string district = 4;  // 区县
+  string street = 5;    // 街道
+}

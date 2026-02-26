@@ -24,6 +24,7 @@ message UserInfoRegisterReq {
   string password = 2;     // 密码
   string email = 3;        // 邮箱
   string phone = 4;        // 手机号
+  string image = 5;        // 头像
 }
 
 message UserInfoRegisterRes {
@@ -69,6 +70,8 @@ message UserInfoUpdateReq {
   string username = 2;   // 用户名
   string email = 3;      // 邮箱
   string phone = 4;      // 手机号
+  string avatar = 5;     // 头像
+  int32 sex = 6;         // 性别,1:男,2:女
 }
 
 message UserInfoUpdateRes {

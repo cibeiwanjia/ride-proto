@@ -1,0 +1,69 @@
+syntax = "proto3";
+
+package couponProto;
+
+option go_package = "./coupon";
+
+//import "google/protobuf/timestamp.proto";
+
+// 创建分发任务请求
+message CreateDistributeTaskRequest {
+  uint32 coupon_id = 1;       // 优惠券ID
+  uint32 number = 2;           // 发放数量
+  string task_tag = 3;         // 任务标签
+  string task_target = 4;      // 手机号列表，逗号分隔
+//  google.protobuf.Timestamp plan_time = 5; // 计划执行时间
+  int32 operator_id = 6;       // 操作人ID
+  uint32 app_tpl_id = 7;       // APP模板ID
+  uint32 sms_tpl_id = 8;       // 短信模板ID
+}
+
+// 创建分发任务响应
+message CreateDistributeTaskResponse {
+  bool success = 1;            // 是否成功
+  string message = 2;           // 响应消息
+  uint64 task_id = 3;           // 任务ID
+}
+
+// 执行分发任务请求
+message ExecuteDistributeTaskRequest {
+  uint64 task_id = 1;           // 任务ID
+  int32 operator_id = 2;        // 操作人ID
+}
+
+// 执行分发任务响应
+message ExecuteDistributeTaskResponse {
+  bool success = 1;             // 是否成功
+  string message = 2;            // 响应消息
+  int32 success_num = 3;         // 成功数量
+  int32 fail_num = 4;            // 失败数量
+  map<string, string> fail_reasons = 5; // 失败原因
+}
+// 用户主动领券请求
+message UserGetCouponRequest {
+  uint64 passenger_id = 1; // 乘客ID
+  uint32 coupon_id = 2;    // 优惠券ID
+  uint32 activity_id = 3;  // 营销活动ID（可选）
+}
+
+// 用户主动领券响应
+message UserGetCouponResponse {
+  bool success = 1;          // 是否成功
+  string message = 2;        // 提示信息
+  uint64 user_coupon_id = 3; // 用户优惠券ID
+  uint32 coupon_id = 4;      // 优惠券ID
+  uint64 passenger_id = 5;   // 乘客ID
+  int64 receive_time = 6;    // 领取时间戳（秒）
+  int64 expire_time = 7;     // 优惠券过期时间戳（秒）
+}
+// 优惠券服务
+service CouponService {
+  // 创建平台分发任务
+  rpc CreateDistributeTask(CreateDistributeTaskRequest) returns (CreateDistributeTaskResponse);
+
+  // 执行平台分发任务
+  rpc ExecuteDistributeTask(ExecuteDistributeTaskRequest) returns (ExecuteDistributeTaskResponse);
+
+  // 用户主动领券
+  rpc UserGetCoupon(UserGetCouponRequest) returns (UserGetCouponResponse);
+}

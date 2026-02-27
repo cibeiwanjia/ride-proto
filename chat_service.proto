@@ -1,0 +1,97 @@
+syntax = "proto3";
+
+
+package chatProto;
+
+
+
+option go_package = "./chat";
+
+// 聊天消息服务核心接口定义
+// 用于网约车系统中「订单维度」的聊天功能（乘客↔司机的订单内沟通）
+service chat_info {
+  // 发送聊天消息接口
+  // 功能：用户（乘客/司机）发送一条订单内的聊天消息
+  rpc SendMessage(SendMessageReq) returns (SendMessageRes) {}
+
+  // 获取聊天历史记录接口
+  // 功能：分页查询指定订单下的所有聊天消息
+  rpc GetChatHistory(GetChatHistoryReq) returns (GetChatHistoryRes) {}
+
+  // 标记消息已读接口
+  // 功能：将指定订单下的未读消息标记为已读
+  rpc MarkAsRead(MarkAsReadReq) returns (MarkAsReadRes) {}
+
+  // 校验聊天权限接口
+  // 功能：验证用户是否有权限参与指定订单的聊天（防止非订单相关人员乱发消息）
+  rpc CheckChatPermission(CheckChatPermissionReq) returns (CheckChatPermissionRes) {}
+}
+
+// 发送消息的请求参数
+message SendMessageReq {
+  string order_sn = 1;        // 订单编号（唯一标识该聊天所属的订单，如：OD20260227123456）
+  uint32 sender_id = 2;       // 发送者ID（乘客/司机的用户ID，如：1001、2001）
+  int32 sender_type = 3;      // 发送者类型（业务枚举：1=乘客，2=司机）
+  uint32 receiver_id = 4;     // 接收者ID（消息接收方的用户ID）
+  string content = 5;         // 消息内容（文本消息内容，如："我在小区门口等你"）
+  int32 message_type = 6;     // 消息类型（业务枚举：1=文本，2=图片，3=语音）
+}
+
+// 发送消息的响应结果
+message SendMessageRes {
+  bool success = 1;           // 发送结果（true=成功，false=失败）
+  string message = 2;         // 提示信息（如："发送成功"、"无聊天权限"）
+  int64 created_at = 3;       // 消息创建时间戳（毫秒级，如：1740672000000）
+}
+
+// 获取聊天历史记录的请求参数
+message GetChatHistoryReq {
+  string order_sn = 1;        // 订单编号（查询该订单下的聊天记录）
+  uint32 user_id = 2;         // 当前请求用户ID（谁在查询记录）
+  uint32 page = 3;            // 页码（分页查询，从1开始）
+  uint32 page_size = 4;       // 每页条数（如：20条/页）
+}
+
+// 获取聊天历史记录的响应结果
+message GetChatHistoryRes {
+  repeated ChatMessage messages = 1;  // 聊天消息列表（repeated 表示数组/列表）
+  int32 total = 2;                    // 消息总数（用于分页计算总页数）
+}
+
+// 标记消息已读的请求参数
+message MarkAsReadReq {
+  string order_sn = 1;        // 订单编号（标记该订单下的消息为已读）
+  uint32 user_id = 2;         // 操作人ID（谁标记的已读）
+}
+
+// 标记消息已读的响应结果
+message MarkAsReadRes {
+  bool success = 1;           // 标记结果（true=成功，false=失败）
+  string message = 2;         // 提示信息（如："标记已读成功"）
+}
+
+// 校验聊天权限的请求参数
+message CheckChatPermissionReq {
+  string order_sn = 1;        // 订单编号（校验该订单的聊天权限）
+  uint32 user_id = 2;         // 待校验的用户ID
+  int32 user_type = 3;        // 待校验的用户类型（1=乘客，2=司机）
+}
+
+// 校验聊天权限的响应结果
+message CheckChatPermissionRes {
+  bool allowed = 1;           // 权限结果（true=允许聊天，false=禁止聊天）
+  string message = 2;         // 提示信息（如："无权限参与该订单聊天"）
+}
+
+// 单条聊天消息的实体结构
+message ChatMessage {
+  uint32 id = 1;              // 消息ID（唯一标识单条消息）
+  string order_sn = 2;        // 关联的订单编号
+  uint32 sender_id = 3;       // 发送者ID
+  int32 sender_type = 4;      // 发送者类型（1=乘客，2=司机）
+  uint32 receiver_id = 5;     // 接收者ID
+  string content = 6;         // 消息内容
+  int32 message_type = 7;     // 消息类型（1=文本，2=图片，3=语音）
+  bool is_read = 8;           // 是否已读（true=已读，false=未读）
+  int64 created_at = 9;       // 消息创建时间戳（毫秒级）
+}

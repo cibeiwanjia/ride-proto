@@ -2,89 +2,23 @@ syntax = "proto3";
 
 package productProto;
 
-option go_package = "github.com/cibeiwanjia/ride-proto/product";
+option go_package="./product";
 
-// ========== 商品管理接口 ==========
+// ============== 服务定义 ==============
 
-// 商品模型
-message Product {
-  uint32 id = 1;           // 商品ID
-  string name = 2;        // 商品名称
-  uint32 price = 3;       // 价格（分）
-  string img_url = 4;     // 图片URL
-  int32 stock = 5;        // 库存
-  int32 status = 6;        // 状态：1-上架 0-下架
-  string created_at = 7;   // 创建时间
-  string updated_at = 8;   // 更新时间
+// 购物车和秒杀服务
+service CartService {
+  // 购物车相关
+  rpc AddCartItem(AddCartItemRequest) returns (AddCartItemResponse);
+  rpc GetCartList(GetCartListRequest) returns (GetCartListResponse);
+  rpc RemoveCartItem(RemoveCartItemRequest) returns (RemoveCartItemResponse);
+  rpc ClearCart(ClearCartRequest) returns (ClearCartResponse);
+
+  // 秒杀相关
+  rpc CreateSeckill(CreateSeckillReq) returns (CreateSeckillResp);
+  rpc GetSeckillList(GetSeckillListReq) returns (GetSeckillListResp);
+  rpc SeckillOrder(SeckillOrderReq) returns (SeckillOrderResp);
 }
-
-// 添加商品请求
-message CreateProductReq {
-  string name = 1;      // 商品名称
-  uint32 price = 2;     // 价格
-  string img_url = 3;    // 图片URL
-  int32 stock = 4;      // 库存
-}
-
-// 添加商品响应
-message CreateProductRes {
-  uint32 id = 1;        // 商品ID
-  bool success = 2;      // 是否成功
-  string message = 3;    // 消息
-}
-
-// 商品列表请求
-message ProductListReq {
-  int32 page = 1;       // 页码，默认1
-  int32 page_size = 2;   // 每页数量，默认10
-  string keyword = 3;    // 搜索关键字
-  int32 status = 4;      // 状态筛选：1-上架 0-下架
-}
-
-// 商品列表响应
-message ProductListRes {
-  int32 total = 1;                  // 总数
-  repeated Product products = 2;    // 商品列表
-}
-
-// 商品详情请求
-message ProductDetailReq {
-  uint32 id = 1;    // 商品ID
-}
-
-// 商品详情响应
-message ProductDetailRes {
-  Product product = 1;  // 商品信息
-}
-
-// 修改商品请求
-message UpdateProductReq {
-  uint32 id = 1;        // 商品ID
-  string name = 2;       // 商品名称
-  uint32 price = 3;      // 价格
-  string img_url = 4;    // 图片URL
-  int32 stock = 5;       // 库存
-  int32 status = 6;      // 状态
-}
-
-// 修改商品响应
-message UpdateProductRes {
-  bool success = 1;     // 是否成功
-  string message = 2;  // 消息
-}
-
-// 删除商品请求
-message DeleteProductReq {
-  uint32 id = 1;    // 商品ID
-}
-
-// 删除商品响应
-message DeleteProductRes {
-  bool success = 1;    // 是否成功
-  string message = 2;  // 消息
-}
-
-// ========== 购物车接口（保留原有的）==========
 
 // 购物车商品项
 message CartItem {
@@ -110,6 +44,7 @@ message AddCartItemResponse {
   bool success = 1;
   string message = 2;
 }
+
 
 // 获取购物车列表请求
 message GetCartListRequest {
@@ -144,19 +79,53 @@ message ClearCartResponse {
   string message = 2;
 }
 
-// ========== 服务定义 ==========
+// ============== 秒杀相关 ==============
 
-service ProductService {
-  // 商品管理
-  rpc CreateProduct(CreateProductReq) returns (CreateProductRes);
-  rpc GetProductList(ProductListReq) returns (ProductListRes);
-  rpc GetProductDetail(ProductDetailReq) returns (ProductDetailRes);
-  rpc UpdateProduct(UpdateProductReq) returns (UpdateProductRes);
-  rpc DeleteProduct(DeleteProductReq) returns (DeleteProductRes);
-
-  // 购物车
-  rpc AddCartItem(AddCartItemRequest) returns (AddCartItemResponse);
-  rpc GetCartList(GetCartListRequest) returns (GetCartListResponse);
-  rpc RemoveCartItem(RemoveCartItemRequest) returns (RemoveCartItemResponse);
-  rpc ClearCart(ClearCartRequest) returns (ClearCartResponse);
+// 秒杀商品信息
+message SeckillProduct {
+  int64 product_id = 1;
+  string product_name = 2;
+  string seckill_price = 3;
+  int64 total_quantity = 4;
+  int64 start_time = 5;
+  int64 end_time = 6;
+  int32 max_per_user = 7;
 }
+
+// 创建秒杀商品请求
+message CreateSeckillReq  {
+  int64 product_id = 1;
+  double seckill_price = 2;
+  int64 quantity = 3;
+  int64 start_time = 4;
+  int64 end_time = 5;
+  int32 max_per_user = 6;
+}
+
+// 创建秒杀商品响应
+message CreateSeckillResp {
+  bool success = 1;
+  string message = 2;
+}
+
+// 获取秒杀商品列表请求
+message GetSeckillListReq {}
+
+// 获取秒杀商品列表响应
+message GetSeckillListResp {
+  repeated SeckillProduct products = 1;
+}
+
+// 秒杀抢购请求
+message SeckillOrderReq {
+  int64 user_id = 1;
+  int64 product_id = 2;
+  int64 quantity = 3;
+}
+
+// 秒杀抢购响应
+message SeckillOrderResp {
+  bool success = 1;
+  string message = 2;
+}
+

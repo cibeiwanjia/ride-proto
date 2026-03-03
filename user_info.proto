@@ -25,6 +25,7 @@ message UserInfoRegisterReq {
   string email = 3;        // 邮箱
   string phone = 4;        // 手机号
   string image = 5;        // 头像
+  int32 role = 6;         // 角色,1:乘客,2:司机
 }
 
 message UserInfoRegisterRes {

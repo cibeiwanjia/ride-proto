@@ -19,398 +19,326 @@ import (
 const _ = grpc.SupportPackageIsVersion8
 
 const (
-	ProductService_CreateProduct_FullMethodName    = "/productProto.ProductService/CreateProduct"
-	ProductService_GetProductList_FullMethodName   = "/productProto.ProductService/GetProductList"
-	ProductService_GetProductDetail_FullMethodName = "/productProto.ProductService/GetProductDetail"
-	ProductService_UpdateProduct_FullMethodName    = "/productProto.ProductService/UpdateProduct"
-	ProductService_DeleteProduct_FullMethodName    = "/productProto.ProductService/DeleteProduct"
-	ProductService_AddCartItem_FullMethodName      = "/productProto.ProductService/AddCartItem"
-	ProductService_GetCartList_FullMethodName      = "/productProto.ProductService/GetCartList"
-	ProductService_RemoveCartItem_FullMethodName   = "/productProto.ProductService/RemoveCartItem"
-	ProductService_ClearCart_FullMethodName        = "/productProto.ProductService/ClearCart"
+	CartService_AddCartItem_FullMethodName    = "/productProto.CartService/AddCartItem"
+	CartService_GetCartList_FullMethodName    = "/productProto.CartService/GetCartList"
+	CartService_RemoveCartItem_FullMethodName = "/productProto.CartService/RemoveCartItem"
+	CartService_ClearCart_FullMethodName      = "/productProto.CartService/ClearCart"
+	CartService_CreateSeckill_FullMethodName  = "/productProto.CartService/CreateSeckill"
+	CartService_GetSeckillList_FullMethodName = "/productProto.CartService/GetSeckillList"
+	CartService_SeckillOrder_FullMethodName   = "/productProto.CartService/SeckillOrder"
 )
 
-// ProductServiceClient is the client API for ProductService service.
+// CartServiceClient is the client API for CartService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type ProductServiceClient interface {
-	// 商品管理
-	CreateProduct(ctx context.Context, in *CreateProductReq, opts ...grpc.CallOption) (*CreateProductRes, error)
-	GetProductList(ctx context.Context, in *ProductListReq, opts ...grpc.CallOption) (*ProductListRes, error)
-	GetProductDetail(ctx context.Context, in *ProductDetailReq, opts ...grpc.CallOption) (*ProductDetailRes, error)
-	UpdateProduct(ctx context.Context, in *UpdateProductReq, opts ...grpc.CallOption) (*UpdateProductRes, error)
-	DeleteProduct(ctx context.Context, in *DeleteProductReq, opts ...grpc.CallOption) (*DeleteProductRes, error)
-	// 购物车
+//
+// 购物车和秒杀服务
+type CartServiceClient interface {
+	// 购物车相关
 	AddCartItem(ctx context.Context, in *AddCartItemRequest, opts ...grpc.CallOption) (*AddCartItemResponse, error)
 	GetCartList(ctx context.Context, in *GetCartListRequest, opts ...grpc.CallOption) (*GetCartListResponse, error)
 	RemoveCartItem(ctx context.Context, in *RemoveCartItemRequest, opts ...grpc.CallOption) (*RemoveCartItemResponse, error)
 	ClearCart(ctx context.Context, in *ClearCartRequest, opts ...grpc.CallOption) (*ClearCartResponse, error)
+	// 秒杀相关
+	CreateSeckill(ctx context.Context, in *CreateSeckillReq, opts ...grpc.CallOption) (*CreateSeckillResp, error)
+	GetSeckillList(ctx context.Context, in *GetSeckillListReq, opts ...grpc.CallOption) (*GetSeckillListResp, error)
+	SeckillOrder(ctx context.Context, in *SeckillOrderReq, opts ...grpc.CallOption) (*SeckillOrderResp, error)
 }
 
-type productServiceClient struct {
+type cartServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewProductServiceClient(cc grpc.ClientConnInterface) ProductServiceClient {
-	return &productServiceClient{cc}
+func NewCartServiceClient(cc grpc.ClientConnInterface) CartServiceClient {
+	return &cartServiceClient{cc}
 }
 
-func (c *productServiceClient) CreateProduct(ctx context.Context, in *CreateProductReq, opts ...grpc.CallOption) (*CreateProductRes, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CreateProductRes)
-	err := c.cc.Invoke(ctx, ProductService_CreateProduct_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *productServiceClient) GetProductList(ctx context.Context, in *ProductListReq, opts ...grpc.CallOption) (*ProductListRes, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ProductListRes)
-	err := c.cc.Invoke(ctx, ProductService_GetProductList_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *productServiceClient) GetProductDetail(ctx context.Context, in *ProductDetailReq, opts ...grpc.CallOption) (*ProductDetailRes, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ProductDetailRes)
-	err := c.cc.Invoke(ctx, ProductService_GetProductDetail_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *productServiceClient) UpdateProduct(ctx context.Context, in *UpdateProductReq, opts ...grpc.CallOption) (*UpdateProductRes, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(UpdateProductRes)
-	err := c.cc.Invoke(ctx, ProductService_UpdateProduct_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *productServiceClient) DeleteProduct(ctx context.Context, in *DeleteProductReq, opts ...grpc.CallOption) (*DeleteProductRes, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(DeleteProductRes)
-	err := c.cc.Invoke(ctx, ProductService_DeleteProduct_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *productServiceClient) AddCartItem(ctx context.Context, in *AddCartItemRequest, opts ...grpc.CallOption) (*AddCartItemResponse, error) {
+func (c *cartServiceClient) AddCartItem(ctx context.Context, in *AddCartItemRequest, opts ...grpc.CallOption) (*AddCartItemResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(AddCartItemResponse)
-	err := c.cc.Invoke(ctx, ProductService_AddCartItem_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, CartService_AddCartItem_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *productServiceClient) GetCartList(ctx context.Context, in *GetCartListRequest, opts ...grpc.CallOption) (*GetCartListResponse, error) {
+func (c *cartServiceClient) GetCartList(ctx context.Context, in *GetCartListRequest, opts ...grpc.CallOption) (*GetCartListResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetCartListResponse)
-	err := c.cc.Invoke(ctx, ProductService_GetCartList_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, CartService_GetCartList_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *productServiceClient) RemoveCartItem(ctx context.Context, in *RemoveCartItemRequest, opts ...grpc.CallOption) (*RemoveCartItemResponse, error) {
+func (c *cartServiceClient) RemoveCartItem(ctx context.Context, in *RemoveCartItemRequest, opts ...grpc.CallOption) (*RemoveCartItemResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(RemoveCartItemResponse)
-	err := c.cc.Invoke(ctx, ProductService_RemoveCartItem_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, CartService_RemoveCartItem_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *productServiceClient) ClearCart(ctx context.Context, in *ClearCartRequest, opts ...grpc.CallOption) (*ClearCartResponse, error) {
+func (c *cartServiceClient) ClearCart(ctx context.Context, in *ClearCartRequest, opts ...grpc.CallOption) (*ClearCartResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ClearCartResponse)
-	err := c.cc.Invoke(ctx, ProductService_ClearCart_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, CartService_ClearCart_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// ProductServiceServer is the server API for ProductService service.
-// All implementations must embed UnimplementedProductServiceServer
+func (c *cartServiceClient) CreateSeckill(ctx context.Context, in *CreateSeckillReq, opts ...grpc.CallOption) (*CreateSeckillResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateSeckillResp)
+	err := c.cc.Invoke(ctx, CartService_CreateSeckill_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *cartServiceClient) GetSeckillList(ctx context.Context, in *GetSeckillListReq, opts ...grpc.CallOption) (*GetSeckillListResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetSeckillListResp)
+	err := c.cc.Invoke(ctx, CartService_GetSeckillList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *cartServiceClient) SeckillOrder(ctx context.Context, in *SeckillOrderReq, opts ...grpc.CallOption) (*SeckillOrderResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SeckillOrderResp)
+	err := c.cc.Invoke(ctx, CartService_SeckillOrder_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// CartServiceServer is the server API for CartService service.
+// All implementations must embed UnimplementedCartServiceServer
 // for forward compatibility
-type ProductServiceServer interface {
-	// 商品管理
-	CreateProduct(context.Context, *CreateProductReq) (*CreateProductRes, error)
-	GetProductList(context.Context, *ProductListReq) (*ProductListRes, error)
-	GetProductDetail(context.Context, *ProductDetailReq) (*ProductDetailRes, error)
-	UpdateProduct(context.Context, *UpdateProductReq) (*UpdateProductRes, error)
-	DeleteProduct(context.Context, *DeleteProductReq) (*DeleteProductRes, error)
-	// 购物车
+//
+// 购物车和秒杀服务
+type CartServiceServer interface {
+	// 购物车相关
 	AddCartItem(context.Context, *AddCartItemRequest) (*AddCartItemResponse, error)
 	GetCartList(context.Context, *GetCartListRequest) (*GetCartListResponse, error)
 	RemoveCartItem(context.Context, *RemoveCartItemRequest) (*RemoveCartItemResponse, error)
 	ClearCart(context.Context, *ClearCartRequest) (*ClearCartResponse, error)
-	mustEmbedUnimplementedProductServiceServer()
+	// 秒杀相关
+	CreateSeckill(context.Context, *CreateSeckillReq) (*CreateSeckillResp, error)
+	GetSeckillList(context.Context, *GetSeckillListReq) (*GetSeckillListResp, error)
+	SeckillOrder(context.Context, *SeckillOrderReq) (*SeckillOrderResp, error)
+	mustEmbedUnimplementedCartServiceServer()
 }
 
-// UnimplementedProductServiceServer must be embedded to have forward compatible implementations.
-type UnimplementedProductServiceServer struct {
+// UnimplementedCartServiceServer must be embedded to have forward compatible implementations.
+type UnimplementedCartServiceServer struct {
 }
 
-func (UnimplementedProductServiceServer) CreateProduct(context.Context, *CreateProductReq) (*CreateProductRes, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateProduct not implemented")
-}
-func (UnimplementedProductServiceServer) GetProductList(context.Context, *ProductListReq) (*ProductListRes, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetProductList not implemented")
-}
-func (UnimplementedProductServiceServer) GetProductDetail(context.Context, *ProductDetailReq) (*ProductDetailRes, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetProductDetail not implemented")
-}
-func (UnimplementedProductServiceServer) UpdateProduct(context.Context, *UpdateProductReq) (*UpdateProductRes, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateProduct not implemented")
-}
-func (UnimplementedProductServiceServer) DeleteProduct(context.Context, *DeleteProductReq) (*DeleteProductRes, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteProduct not implemented")
-}
-func (UnimplementedProductServiceServer) AddCartItem(context.Context, *AddCartItemRequest) (*AddCartItemResponse, error) {
+func (UnimplementedCartServiceServer) AddCartItem(context.Context, *AddCartItemRequest) (*AddCartItemResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddCartItem not implemented")
 }
-func (UnimplementedProductServiceServer) GetCartList(context.Context, *GetCartListRequest) (*GetCartListResponse, error) {
+func (UnimplementedCartServiceServer) GetCartList(context.Context, *GetCartListRequest) (*GetCartListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCartList not implemented")
 }
-func (UnimplementedProductServiceServer) RemoveCartItem(context.Context, *RemoveCartItemRequest) (*RemoveCartItemResponse, error) {
+func (UnimplementedCartServiceServer) RemoveCartItem(context.Context, *RemoveCartItemRequest) (*RemoveCartItemResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RemoveCartItem not implemented")
 }
-func (UnimplementedProductServiceServer) ClearCart(context.Context, *ClearCartRequest) (*ClearCartResponse, error) {
+func (UnimplementedCartServiceServer) ClearCart(context.Context, *ClearCartRequest) (*ClearCartResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ClearCart not implemented")
 }
-func (UnimplementedProductServiceServer) mustEmbedUnimplementedProductServiceServer() {}
+func (UnimplementedCartServiceServer) CreateSeckill(context.Context, *CreateSeckillReq) (*CreateSeckillResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateSeckill not implemented")
+}
+func (UnimplementedCartServiceServer) GetSeckillList(context.Context, *GetSeckillListReq) (*GetSeckillListResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSeckillList not implemented")
+}
+func (UnimplementedCartServiceServer) SeckillOrder(context.Context, *SeckillOrderReq) (*SeckillOrderResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SeckillOrder not implemented")
+}
+func (UnimplementedCartServiceServer) mustEmbedUnimplementedCartServiceServer() {}
 
-// UnsafeProductServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to ProductServiceServer will
+// UnsafeCartServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to CartServiceServer will
 // result in compilation errors.
-type UnsafeProductServiceServer interface {
-	mustEmbedUnimplementedProductServiceServer()
+type UnsafeCartServiceServer interface {
+	mustEmbedUnimplementedCartServiceServer()
 }
 
-func RegisterProductServiceServer(s grpc.ServiceRegistrar, srv ProductServiceServer) {
-	s.RegisterService(&ProductService_ServiceDesc, srv)
+func RegisterCartServiceServer(s grpc.ServiceRegistrar, srv CartServiceServer) {
+	s.RegisterService(&CartService_ServiceDesc, srv)
 }
 
-func _ProductService_CreateProduct_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateProductReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ProductServiceServer).CreateProduct(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: ProductService_CreateProduct_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProductServiceServer).CreateProduct(ctx, req.(*CreateProductReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ProductService_GetProductList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ProductListReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ProductServiceServer).GetProductList(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: ProductService_GetProductList_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProductServiceServer).GetProductList(ctx, req.(*ProductListReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ProductService_GetProductDetail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ProductDetailReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ProductServiceServer).GetProductDetail(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: ProductService_GetProductDetail_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProductServiceServer).GetProductDetail(ctx, req.(*ProductDetailReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ProductService_UpdateProduct_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateProductReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ProductServiceServer).UpdateProduct(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: ProductService_UpdateProduct_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProductServiceServer).UpdateProduct(ctx, req.(*UpdateProductReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ProductService_DeleteProduct_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteProductReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ProductServiceServer).DeleteProduct(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: ProductService_DeleteProduct_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProductServiceServer).DeleteProduct(ctx, req.(*DeleteProductReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ProductService_AddCartItem_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _CartService_AddCartItem_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AddCartItemRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ProductServiceServer).AddCartItem(ctx, in)
+		return srv.(CartServiceServer).AddCartItem(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ProductService_AddCartItem_FullMethodName,
+		FullMethod: CartService_AddCartItem_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProductServiceServer).AddCartItem(ctx, req.(*AddCartItemRequest))
+		return srv.(CartServiceServer).AddCartItem(ctx, req.(*AddCartItemRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ProductService_GetCartList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _CartService_GetCartList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetCartListRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ProductServiceServer).GetCartList(ctx, in)
+		return srv.(CartServiceServer).GetCartList(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ProductService_GetCartList_FullMethodName,
+		FullMethod: CartService_GetCartList_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProductServiceServer).GetCartList(ctx, req.(*GetCartListRequest))
+		return srv.(CartServiceServer).GetCartList(ctx, req.(*GetCartListRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ProductService_RemoveCartItem_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _CartService_RemoveCartItem_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(RemoveCartItemRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ProductServiceServer).RemoveCartItem(ctx, in)
+		return srv.(CartServiceServer).RemoveCartItem(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ProductService_RemoveCartItem_FullMethodName,
+		FullMethod: CartService_RemoveCartItem_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProductServiceServer).RemoveCartItem(ctx, req.(*RemoveCartItemRequest))
+		return srv.(CartServiceServer).RemoveCartItem(ctx, req.(*RemoveCartItemRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ProductService_ClearCart_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _CartService_ClearCart_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ClearCartRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ProductServiceServer).ClearCart(ctx, in)
+		return srv.(CartServiceServer).ClearCart(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ProductService_ClearCart_FullMethodName,
+		FullMethod: CartService_ClearCart_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProductServiceServer).ClearCart(ctx, req.(*ClearCartRequest))
+		return srv.(CartServiceServer).ClearCart(ctx, req.(*ClearCartRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// ProductService_ServiceDesc is the grpc.ServiceDesc for ProductService service.
+func _CartService_CreateSeckill_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateSeckillReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CartServiceServer).CreateSeckill(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CartService_CreateSeckill_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CartServiceServer).CreateSeckill(ctx, req.(*CreateSeckillReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CartService_GetSeckillList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetSeckillListReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CartServiceServer).GetSeckillList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CartService_GetSeckillList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CartServiceServer).GetSeckillList(ctx, req.(*GetSeckillListReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CartService_SeckillOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SeckillOrderReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CartServiceServer).SeckillOrder(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CartService_SeckillOrder_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CartServiceServer).SeckillOrder(ctx, req.(*SeckillOrderReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// CartService_ServiceDesc is the grpc.ServiceDesc for CartService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var ProductService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "productProto.ProductService",
-	HandlerType: (*ProductServiceServer)(nil),
+var CartService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "productProto.CartService",
+	HandlerType: (*CartServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "CreateProduct",
-			Handler:    _ProductService_CreateProduct_Handler,
-		},
-		{
-			MethodName: "GetProductList",
-			Handler:    _ProductService_GetProductList_Handler,
-		},
-		{
-			MethodName: "GetProductDetail",
-			Handler:    _ProductService_GetProductDetail_Handler,
-		},
-		{
-			MethodName: "UpdateProduct",
-			Handler:    _ProductService_UpdateProduct_Handler,
-		},
-		{
-			MethodName: "DeleteProduct",
-			Handler:    _ProductService_DeleteProduct_Handler,
-		},
-		{
 			MethodName: "AddCartItem",
-			Handler:    _ProductService_AddCartItem_Handler,
+			Handler:    _CartService_AddCartItem_Handler,
 		},
 		{
 			MethodName: "GetCartList",
-			Handler:    _ProductService_GetCartList_Handler,
+			Handler:    _CartService_GetCartList_Handler,
 		},
 		{
 			MethodName: "RemoveCartItem",
-			Handler:    _ProductService_RemoveCartItem_Handler,
+			Handler:    _CartService_RemoveCartItem_Handler,
 		},
 		{
 			MethodName: "ClearCart",
-			Handler:    _ProductService_ClearCart_Handler,
+			Handler:    _CartService_ClearCart_Handler,
+		},
+		{
+			MethodName: "CreateSeckill",
+			Handler:    _CartService_CreateSeckill_Handler,
+		},
+		{
+			MethodName: "GetSeckillList",
+			Handler:    _CartService_GetSeckillList_Handler,
+		},
+		{
+			MethodName: "SeckillOrder",
+			Handler:    _CartService_SeckillOrder_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -1,0 +1,184 @@
+syntax = "proto3";
+
+package driverProto;
+
+option go_package = "github.com/cibeiwanjia/ride-proto/driver";
+
+// ========== 司机资质管理接口 ==========
+
+// 司机资质状态
+// Driver qualification status
+enum DriverStatus {
+  DRIVER_STATUS_UNSPECIFIED = 0;  // 未指定
+  DRIVER_STATUS_PENDING = 1;       // 待审核 (Pending review)
+  DRIVER_STATUS_APPROVED = 2;     // 已通过 (Approved)
+  DRIVER_STATUS_REJECTED = 3;      // 已拒绝 (Rejected)
+  DRIVER_STATUS_SUSPENDED = 4;     // 已暂停 (Suspended)
+}
+
+// 司机资质信息
+// Driver qualification information
+message DriverInfo {
+  uint32 id = 1;                  // 司机ID (Driver ID)
+  string name = 2;                 // 司机姓名 (Driver name)
+  string phone = 3;               // 手机号 (Phone number)
+  string license_number = 4;       // 驾驶证号 (Driver's license number)
+  string license_image = 5;        // 驾驶证图片URL (Driver's license image URL)
+  string vehicle_plate = 6;        // 车牌号 (Vehicle plate number)
+  string vehicle_image = 7;         // 车辆图片URL (Vehicle image URL)
+  string vehicle_type = 8;          // 车辆类型 (Vehicle type: 出租车/网约车)
+  string id_card_number = 9;       // 身份证号 (ID card number)
+  string id_card_image = 10;       // 身份证图片URL (ID card image URL)
+  DriverStatus status = 11;        // 资质状态 (Qualification status)
+  string reject_reason = 12;        // 拒绝原因 (Rejection reason)
+  string created_at = 13;          // 创建时间 (Created time)
+  string updated_at = 14;          // 更新时间 (Updated time)
+}
+
+// 司机入驻请求
+// Driver registration request
+message DriverRegisterReq {
+  string name = 1;                 // 司机姓名
+  string phone = 2;                // 手机号
+  string license_number = 3;        // 驾驶证号
+  string license_image = 4;         // 驾驶证图片
+  string vehicle_plate = 5;         // 车牌号
+  string vehicle_image = 6;         // 车辆图片
+  string vehicle_type = 7;          // 车辆类型
+  string id_card_number = 8;        // 身份证号
+  string id_card_image = 9;         // 身份证图片
+}
+
+// 司机入驻响应
+// Driver registration response
+message DriverRegisterRes {
+  uint32 id = 1;                   // 司机ID
+  bool success = 2;                // 是否成功
+  string message = 3;               // 消息
+}
+
+// 司机列表请求
+// Driver list request
+message DriverListReq {
+  int32 page = 1;                  // 页码
+  int32 page_size = 2;             // 每页数量
+  string keyword = 3;              // 搜索关键字(姓名/手机号/车牌号)
+  int32 status = 4;                // 状态筛选
+}
+
+// 司机列表响应
+// Driver list response
+message DriverListRes {
+  int32 total = 1;                 // 总数
+  repeated DriverInfo drivers = 2;  // 司机列表
+}
+
+// 司机详情请求
+// Driver detail request
+message DriverDetailReq {
+  uint32 id = 1;                   // 司机ID
+}
+
+// 司机详情响应
+// Driver detail response
+message DriverDetailRes {
+  DriverInfo driver = 1;           // 司机信息
+}
+
+// 司机审核请求
+// Driver approval request
+message DriverApproveReq {
+  uint32 id = 1;                   // 司机ID
+  int32 status = 2;               // 审核状态 (2-通过, 3-拒绝)
+  string reject_reason = 3;       // 拒绝原因(当status为拒绝时必填)
+  string remark = 4;              // 审核备注 (审核意见/备注)
+}
+
+// 司机审核响应
+// Driver approval response
+message DriverApproveRes {
+  bool success = 1;                // 是否成功
+  string message = 2;               // 消息
+}
+
+// 批量司机审核请求
+// Batch driver approval request
+message DriverBatchApproveReq {
+  repeated uint32 ids = 1;         // 司机ID列表
+  int32 status = 2;               // 审核状态 (2-通过, 3-拒绝)
+  string reject_reason = 3;       // 拒绝原因
+  string remark = 4;              // 审核备注
+}
+
+// 批量司机审核响应
+// Batch driver approval response
+message DriverBatchApproveRes {
+  int32 success_count = 1;        // 成功数量
+  int32 fail_count = 2;           // 失败数量
+  string message = 3;               // 消息
+}
+
+// 审核历史记录
+// Audit history record
+message AuditHistory {
+  uint32 id = 1;                   // 记录ID
+  uint32 driver_id = 2;            // 司机ID
+  int32 old_status = 3;           // 原状态
+  int32 new_status = 4;           // 新状态
+  string remark = 5;              // 审核备注
+  string auditor = 6;             // 审核人
+  string created_at = 7;          // 审核时间
+}
+
+// 审核历史列表请求
+// Audit history list request
+message AuditHistoryListReq {
+  uint32 driver_id = 1;            // 司机ID (可选，不填则查全部)
+  int32 page = 2;                 // 页码
+  int32 page_size = 3;             // 每页数量
+}
+
+// 审核历史列表响应
+// Audit history list response
+message AuditHistoryListRes {
+  int32 total = 1;                // 总数
+  repeated AuditHistory histories = 2;  // 审核历史列表
+}
+
+// 司机删除请求
+// Driver delete request
+message DriverDeleteReq {
+  uint32 id = 1;                   // 司机ID
+}
+
+// 司机删除响应
+// Driver delete response
+message DriverDeleteRes {
+  bool success = 1;                // 是否成功
+  string message = 2;              // 消息
+}
+
+// ========== 服务定义 ==========
+
+service DriverService {
+  // 司机入驻 - Driver registration
+  rpc RegisterDriver(DriverRegisterReq) returns (DriverRegisterRes);
+  
+  // 司机列表 - Driver list (with pagination and filter)
+  rpc GetDriverList(DriverListReq) returns (DriverListRes);
+  
+  // 司机详情 - Driver detail
+  rpc GetDriverDetail(DriverDetailReq) returns (DriverDetailRes);
+  
+  // 司机审核 - Driver approval/rejection (single)
+  rpc ApproveDriver(DriverApproveReq) returns (DriverApproveRes);
+  
+  // 批量司机审核 - Batch driver approval
+  rpc BatchApproveDriver(DriverBatchApproveReq) returns (DriverBatchApproveRes);
+  
+  // 获取审核历史 - Get audit history
+  rpc GetAuditHistory(AuditHistoryListReq) returns (AuditHistoryListRes);
+  
+  // 删除司机 - Delete driver
+  rpc DeleteDriver(DriverDeleteReq) returns (DriverDeleteRes);
+}

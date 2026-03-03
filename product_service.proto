@@ -85,26 +85,21 @@ message ClearCartResponse {
 message SeckillProduct {
   int64 product_id = 1;
   string product_name = 2;
-  string img_url = 3;
-  double original_price = 4;
-  double seckill_price = 5;
-  int64 total_quantity = 6;
-  int64 start_time = 7;
-  int64 end_time = 8;
-  int32 max_per_user = 9;
+  string seckill_price = 3;
+  int64 total_quantity = 4;
+  int64 start_time = 5;
+  int64 end_time = 6;
+  int32 max_per_user = 7;
 }
 
 // 创建秒杀商品请求
 message CreateSeckillReq  {
   int64 product_id = 1;
-  string product_name = 2;
-  string img_url = 3;
-  double original_price = 4;
-  double seckill_price = 5;
-  int64 total_quantity = 6;
-  int64 start_time = 7;
-  int64 end_time = 8;
-  int32 max_per_user = 9;
+  double seckill_price = 2;
+  int64 quantity = 3;
+  int64 start_time = 4;
+  int64 end_time = 5;
+  int32 max_per_user = 6;
 }
 
 // 创建秒杀商品响应

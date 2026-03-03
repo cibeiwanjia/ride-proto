@@ -535,13 +535,11 @@ type SeckillProduct struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	ProductId     int64                  `protobuf:"varint,1,opt,name=product_id,json=productId,proto3" json:"product_id,omitempty"`
 	ProductName   string                 `protobuf:"bytes,2,opt,name=product_name,json=productName,proto3" json:"product_name,omitempty"`
-	ImgUrl        string                 `protobuf:"bytes,3,opt,name=img_url,json=imgUrl,proto3" json:"img_url,omitempty"`
-	OriginalPrice float64                `protobuf:"fixed64,4,opt,name=original_price,json=originalPrice,proto3" json:"original_price,omitempty"`
-	SeckillPrice  float64                `protobuf:"fixed64,5,opt,name=seckill_price,json=seckillPrice,proto3" json:"seckill_price,omitempty"`
-	TotalQuantity int64                  `protobuf:"varint,6,opt,name=total_quantity,json=totalQuantity,proto3" json:"total_quantity,omitempty"`
-	StartTime     int64                  `protobuf:"varint,7,opt,name=start_time,json=startTime,proto3" json:"start_time,omitempty"`
-	EndTime       int64                  `protobuf:"varint,8,opt,name=end_time,json=endTime,proto3" json:"end_time,omitempty"`
-	MaxPerUser    int32                  `protobuf:"varint,9,opt,name=max_per_user,json=maxPerUser,proto3" json:"max_per_user,omitempty"`
+	SeckillPrice  string                 `protobuf:"bytes,3,opt,name=seckill_price,json=seckillPrice,proto3" json:"seckill_price,omitempty"`
+	TotalQuantity int64                  `protobuf:"varint,4,opt,name=total_quantity,json=totalQuantity,proto3" json:"total_quantity,omitempty"`
+	StartTime     int64                  `protobuf:"varint,5,opt,name=start_time,json=startTime,proto3" json:"start_time,omitempty"`
+	EndTime       int64                  `protobuf:"varint,6,opt,name=end_time,json=endTime,proto3" json:"end_time,omitempty"`
+	MaxPerUser    int32                  `protobuf:"varint,7,opt,name=max_per_user,json=maxPerUser,proto3" json:"max_per_user,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -590,25 +588,11 @@ func (x *SeckillProduct) GetProductName() string {
 	return ""
 }
 
-func (x *SeckillProduct) GetImgUrl() string {
-	if x != nil {
-		return x.ImgUrl
-	}
-	return ""
-}
-
-func (x *SeckillProduct) GetOriginalPrice() float64 {
-	if x != nil {
-		return x.OriginalPrice
-	}
-	return 0
-}
-
-func (x *SeckillProduct) GetSeckillPrice() float64 {
+func (x *SeckillProduct) GetSeckillPrice() string {
 	if x != nil {
 		return x.SeckillPrice
 	}
-	return 0
+	return ""
 }
 
 func (x *SeckillProduct) GetTotalQuantity() int64 {
@@ -643,14 +627,11 @@ func (x *SeckillProduct) GetMaxPerUser() int32 {
 type CreateSeckillReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	ProductId     int64                  `protobuf:"varint,1,opt,name=product_id,json=productId,proto3" json:"product_id,omitempty"`
-	ProductName   string                 `protobuf:"bytes,2,opt,name=product_name,json=productName,proto3" json:"product_name,omitempty"`
-	ImgUrl        string                 `protobuf:"bytes,3,opt,name=img_url,json=imgUrl,proto3" json:"img_url,omitempty"`
-	OriginalPrice float64                `protobuf:"fixed64,4,opt,name=original_price,json=originalPrice,proto3" json:"original_price,omitempty"`
-	SeckillPrice  float64                `protobuf:"fixed64,5,opt,name=seckill_price,json=seckillPrice,proto3" json:"seckill_price,omitempty"`
-	TotalQuantity int64                  `protobuf:"varint,6,opt,name=total_quantity,json=totalQuantity,proto3" json:"total_quantity,omitempty"`
-	StartTime     int64                  `protobuf:"varint,7,opt,name=start_time,json=startTime,proto3" json:"start_time,omitempty"`
-	EndTime       int64                  `protobuf:"varint,8,opt,name=end_time,json=endTime,proto3" json:"end_time,omitempty"`
-	MaxPerUser    int32                  `protobuf:"varint,9,opt,name=max_per_user,json=maxPerUser,proto3" json:"max_per_user,omitempty"`
+	SeckillPrice  float64                `protobuf:"fixed64,2,opt,name=seckill_price,json=seckillPrice,proto3" json:"seckill_price,omitempty"`
+	Quantity      int64                  `protobuf:"varint,3,opt,name=quantity,proto3" json:"quantity,omitempty"`
+	StartTime     int64                  `protobuf:"varint,4,opt,name=start_time,json=startTime,proto3" json:"start_time,omitempty"`
+	EndTime       int64                  `protobuf:"varint,5,opt,name=end_time,json=endTime,proto3" json:"end_time,omitempty"`
+	MaxPerUser    int32                  `protobuf:"varint,6,opt,name=max_per_user,json=maxPerUser,proto3" json:"max_per_user,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -692,27 +673,6 @@ func (x *CreateSeckillReq) GetProductId() int64 {
 	return 0
 }
 
-func (x *CreateSeckillReq) GetProductName() string {
-	if x != nil {
-		return x.ProductName
-	}
-	return ""
-}
-
-func (x *CreateSeckillReq) GetImgUrl() string {
-	if x != nil {
-		return x.ImgUrl
-	}
-	return ""
-}
-
-func (x *CreateSeckillReq) GetOriginalPrice() float64 {
-	if x != nil {
-		return x.OriginalPrice
-	}
-	return 0
-}
-
 func (x *CreateSeckillReq) GetSeckillPrice() float64 {
 	if x != nil {
 		return x.SeckillPrice
@@ -720,9 +680,9 @@ func (x *CreateSeckillReq) GetSeckillPrice() float64 {
 	return 0
 }
 
-func (x *CreateSeckillReq) GetTotalQuantity() int64 {
+func (x *CreateSeckillReq) GetQuantity() int64 {
 	if x != nil {
-		return x.TotalQuantity
+		return x.Quantity
 	}
 	return 0
 }
@@ -1035,32 +995,27 @@ const file_product_service_proto_rawDesc = "" +
 	"\auser_id\x18\x01 \x01(\x03R\x06userId\"G\n" +
 	"\x11ClearCartResponse\x12\x18\n" +
 	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
-	"\amessage\x18\x02 \x01(\tR\amessage\"\xba\x02\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage\"\xfa\x01\n" +
 	"\x0eSeckillProduct\x12\x1d\n" +
 	"\n" +
 	"product_id\x18\x01 \x01(\x03R\tproductId\x12!\n" +
-	"\fproduct_name\x18\x02 \x01(\tR\vproductName\x12\x17\n" +
-	"\aimg_url\x18\x03 \x01(\tR\x06imgUrl\x12%\n" +
-	"\x0eoriginal_price\x18\x04 \x01(\x01R\roriginalPrice\x12#\n" +
-	"\rseckill_price\x18\x05 \x01(\x01R\fseckillPrice\x12%\n" +
-	"\x0etotal_quantity\x18\x06 \x01(\x03R\rtotalQuantity\x12\x1d\n" +
+	"\fproduct_name\x18\x02 \x01(\tR\vproductName\x12#\n" +
+	"\rseckill_price\x18\x03 \x01(\tR\fseckillPrice\x12%\n" +
+	"\x0etotal_quantity\x18\x04 \x01(\x03R\rtotalQuantity\x12\x1d\n" +
 	"\n" +
-	"start_time\x18\a \x01(\x03R\tstartTime\x12\x19\n" +
-	"\bend_time\x18\b \x01(\x03R\aendTime\x12 \n" +
-	"\fmax_per_user\x18\t \x01(\x05R\n" +
-	"maxPerUser\"\xbc\x02\n" +
+	"start_time\x18\x05 \x01(\x03R\tstartTime\x12\x19\n" +
+	"\bend_time\x18\x06 \x01(\x03R\aendTime\x12 \n" +
+	"\fmax_per_user\x18\a \x01(\x05R\n" +
+	"maxPerUser\"\xce\x01\n" +
 	"\x10CreateSeckillReq\x12\x1d\n" +
 	"\n" +
-	"product_id\x18\x01 \x01(\x03R\tproductId\x12!\n" +
-	"\fproduct_name\x18\x02 \x01(\tR\vproductName\x12\x17\n" +
-	"\aimg_url\x18\x03 \x01(\tR\x06imgUrl\x12%\n" +
-	"\x0eoriginal_price\x18\x04 \x01(\x01R\roriginalPrice\x12#\n" +
-	"\rseckill_price\x18\x05 \x01(\x01R\fseckillPrice\x12%\n" +
-	"\x0etotal_quantity\x18\x06 \x01(\x03R\rtotalQuantity\x12\x1d\n" +
+	"product_id\x18\x01 \x01(\x03R\tproductId\x12#\n" +
+	"\rseckill_price\x18\x02 \x01(\x01R\fseckillPrice\x12\x1a\n" +
+	"\bquantity\x18\x03 \x01(\x03R\bquantity\x12\x1d\n" +
 	"\n" +
-	"start_time\x18\a \x01(\x03R\tstartTime\x12\x19\n" +
-	"\bend_time\x18\b \x01(\x03R\aendTime\x12 \n" +
-	"\fmax_per_user\x18\t \x01(\x05R\n" +
+	"start_time\x18\x04 \x01(\x03R\tstartTime\x12\x19\n" +
+	"\bend_time\x18\x05 \x01(\x03R\aendTime\x12 \n" +
+	"\fmax_per_user\x18\x06 \x01(\x05R\n" +
 	"maxPerUser\"G\n" +
 	"\x11CreateSeckillResp\x12\x18\n" +
 	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +

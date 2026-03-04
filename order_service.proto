@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package orderProto;
 
-option go_package = "github.com/cibeiwanjia/ride-proto/order";
+option go_package = "./order";
 
 service order_info {
   rpc Create(OrderInfoCreateReq) returns (OrderInfoCreateRes) {} //创建订单
@@ -70,6 +70,7 @@ message OrderInfoGetCountRes {
 message PaymentReq {
   string order_sn = 1;  // 订单编号
   int32 pay_type = 2;   // 支付方式(1-微信 2-支付宝 3-现金)
+  string auth_code = 3; // 支付授权码(扫码支付时使用)
 }
 
 message PaymentRes {

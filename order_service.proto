@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package orderProto;
 
-option go_package = "github.com/cibeiwanjia/ride-proto/order";
+option go_package = "./order";
 
 service order_info {
   rpc Create(OrderInfoCreateReq) returns (OrderInfoCreateRes) {} //创建订单
@@ -30,10 +30,12 @@ message OrderInfoCreateReq {
 }
 
 message OrderInfoCreateRes {
-  uint32 id = 1;         // 订单ID
+  uint32 id = 1;         // 订单ID（异步创建时为0，需要查询获取）
   string order_sn = 2;   // 订单编号
   double price = 3;      // 预估价格
   int64 created_at = 4;  // 创建时间(时间戳)
+  string request_id = 5; // 请求ID（用于查询创建状态）
+  string status = 6;     // 订单状态（creating-创建中，created-已创建）
 }
 
 message OrderInfoGetDetailReq {
@@ -74,6 +76,7 @@ message PaymentReq {
 message PaymentRes {
   bool success = 1;   // 是否成功
   string message = 2; // 结果消息
+  string pay_url = 3;
 }
 
 message NotifyReq {

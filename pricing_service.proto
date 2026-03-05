@@ -1,0 +1,72 @@
+/**
+ * ============================================
+ * 价格计算 Proto 定义
+ * ============================================
+ * 定义价格计算服务的请求和响应结构
+ * 用于 gRPC 通信
+ * ============================================
+ */
+
+syntax = "proto3";
+
+package pricingProto;
+
+option go_package = "./pricing";
+
+// 计价规则配置
+message PricingRule {
+    int32  id           = 1;    // 规则ID
+    string name         = 2;    // 规则名称（如"标准计价"）
+    double base_price   = 3;    // 起步价（元）
+    double base_km      = 4;    // 起步公里数
+    double price_per_km = 5;    // 每公里单价（元）
+    double price_per_min= 6;    // 每分钟单价（元）
+    double night_multiplier = 7; // 夜间倍数
+    int32  night_start_hour = 8; // 夜间开始时间（小时）
+    int32  night_end_hour   = 9; // 夜间结束时间（小时）
+}
+
+// 价格计算请求
+message CalculatePriceReq {
+    double distance = 1;    // 距离（公里）
+    int32  duration = 2;    // 时长（秒）
+    int32  rule_id  = 3;    // 计价规则ID（0表示使用默认规则）
+}
+
+// 价格计算响应
+message CalculatePriceRes {
+    double base_price      = 1;  // 起步价
+    double distance_price  = 2;  // 里程费
+    double time_price      = 3;  // 时长费
+    double night_fee       = 4;  // 夜间服务费
+    double total_price     = 5;  // 总价
+    string rule_name       = 6;  // 使用的规则名称
+    bool   success         = 7;  // 是否成功
+    string message        = 8;  // 消息
+}
+
+// 获取所有计价规则请求
+message GetRulesReq {}
+
+// 获取所有计价规则响应
+message GetRulesRes {
+    repeated PricingRule rules = 1;
+    bool success = 2;
+    string message = 3;
+}
+
+// ============================================
+// 服务定义
+// ============================================
+
+/**
+ * PricingService 价格计算服务
+ * 提供价格计算和计价规则管理功能
+ */
+service PricingService {
+    // 计算价格
+    rpc CalculatePrice(CalculatePriceReq) returns (CalculatePriceRes);
+    
+    // 获取所有计价规则
+    rpc GetRules(GetRulesReq) returns (GetRulesRes);
+}

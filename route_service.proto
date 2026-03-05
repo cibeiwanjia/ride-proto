@@ -1,0 +1,91 @@
+/**
+ * ============================================
+ * 路线规划 Proto 定义
+ * ============================================
+ * 定义路线规划服务的请求和响应结构
+ * 用于 gRPC 通信
+ * ============================================
+ */
+
+syntax = "proto3";
+
+package routeProto;
+
+option go_package = "./route";
+
+// 驾车策略
+// Driving strategy
+enum DrivingStrategy {
+    STRATEGY_UNSPECIFIED = 0;  // 默认
+    STRATEGY_FAST = 1;          // 高速优先（最快）
+    STRATEGY_SHORTEST = 2;      // 距离优先（最短）
+    STRATEGY_SAVE = 3;          // 费用优先（最省钱）
+}
+
+// 单条路线信息
+// Single route information
+message RouteInfo {
+    string distance = 1;         // 距离（公里）
+    int32 duration = 2;          // 预计时间（秒）
+    string strategy = 3;        // 策略名称
+    string polyline = 4;        // 路线坐标点串（经纬度用;分隔，点之间用,分隔）
+    repeated RouteStep steps = 5; // 分段路线
+}
+
+// 分段路线信息
+// Route step information
+message RouteStep {
+    string instruction = 1;      // 导航指引（如"沿xxx路向东"）
+    string distance = 2;        // 本段距离（公里）
+    int32 duration = 3;          // 本段时间（秒）
+    string road_name = 4;       // 道路名称
+    string coord = 5;           // 本段起点坐标
+}
+
+// 路线规划请求
+// Route planning request
+message RoutePlanningReq {
+    string origin = 1;           // 起点坐标 "经度,纬度" 如 "116.481,39.989"
+    string destination = 2;    // 终点坐标 "经度,纬度" 如 "116.465,40.004"
+    DrivingStrategy strategy = 3; // 驾车策略
+}
+
+// 路线规划响应
+// Route planning response
+message RoutePlanningRes {
+    repeated RouteInfo routes = 1;  // 路线列表（可能返回多条路线）
+    bool success = 2;            // 是否成功
+    string message = 3;          // 消息
+}
+
+// 距离计算请求（只计算距离，不返回路线）
+// Distance calculation request
+message DistanceReq {
+    string origin = 1;          // 起点坐标
+    string destination = 2;      // 终点坐标
+}
+
+// 距离计算响应
+// Distance calculation response
+message DistanceRes {
+    double distance = 1;         // 距离（公里）
+    int32 duration = 2;          // 预计时间（秒）
+    bool success = 3;            // 是否成功
+    string message = 4;           // 消息
+}
+
+// ============================================
+// 服务定义
+// ============================================
+
+/**
+ * RouteService 路线规划服务
+ * 提供路线规划和距离计算功能
+ */
+service RouteService {
+    // 路线规划 - 返回详细路线（坐标点、时间、分段信息）
+    rpc PlanningRoute(RoutePlanningReq) returns (RoutePlanningRes);
+    
+    // 距离计算 - 只返回距离和时间（用于计价）
+    rpc CalculateDistance(DistanceReq) returns (DistanceRes);
+}

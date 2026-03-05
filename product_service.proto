@@ -1,9 +1,24 @@
-
 syntax = "proto3";
 
 package productProto;
 
 option go_package="./product";
+
+// ============== 服务定义 ==============
+
+// 购物车和秒杀服务
+service CartService {
+  // 购物车相关
+  rpc AddCartItem(AddCartItemRequest) returns (AddCartItemResponse);
+  rpc GetCartList(GetCartListRequest) returns (GetCartListResponse);
+  rpc RemoveCartItem(RemoveCartItemRequest) returns (RemoveCartItemResponse);
+  rpc ClearCart(ClearCartRequest) returns (ClearCartResponse);
+
+  // 秒杀相关
+  rpc CreateSeckill(CreateSeckillReq) returns (CreateSeckillResp);
+  rpc GetSeckillList(GetSeckillListReq) returns (GetSeckillListResp);
+  rpc SeckillOrder(SeckillOrderReq) returns (SeckillOrderResp);
+}
 
 // 购物车商品项
 message CartItem {
@@ -64,15 +79,53 @@ message ClearCartResponse {
   string message = 2;
 }
 
+// ============== 秒杀相关 ==============
 
-// 购物车服务
-service CartService {
-  // 添加购物车
-  rpc AddCartItem(AddCartItemRequest) returns (AddCartItemResponse);
-  // 获取购物车列表
-  rpc GetCartList(GetCartListRequest) returns (GetCartListResponse);
-  // 删除购物车商品
-  rpc RemoveCartItem(RemoveCartItemRequest) returns (RemoveCartItemResponse);
-  // 清空购物车
-  rpc ClearCart(ClearCartRequest) returns (ClearCartResponse);
+// 秒杀商品信息
+message SeckillProduct {
+  int64 product_id = 1;
+  string product_name = 2;
+  string seckill_price = 3;
+  int64 total_quantity = 4;
+  int64 start_time = 5;
+  int64 end_time = 6;
+  int32 max_per_user = 7;
 }
+
+// 创建秒杀商品请求
+message CreateSeckillReq  {
+  int64 product_id = 1;
+  double seckill_price = 2;
+  int64 quantity = 3;
+  int64 start_time = 4;
+  int64 end_time = 5;
+  int32 max_per_user = 6;
+}
+
+// 创建秒杀商品响应
+message CreateSeckillResp {
+  bool success = 1;
+  string message = 2;
+}
+
+// 获取秒杀商品列表请求
+message GetSeckillListReq {}
+
+// 获取秒杀商品列表响应
+message GetSeckillListResp {
+  repeated SeckillProduct products = 1;
+}
+
+// 秒杀抢购请求
+message SeckillOrderReq {
+  int64 user_id = 1;
+  int64 product_id = 2;
+  int64 quantity = 3;
+}
+
+// 秒杀抢购响应
+message SeckillOrderResp {
+  bool success = 1;
+  string message = 2;
+}
+

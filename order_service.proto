@@ -27,6 +27,7 @@ message OrderInfoCreateReq {
   double end_lng = 7;       // 终点经度
   uint32 car_type = 8;      // 车型类型(1-经济型 2-舒适型 3-豪华型)
   int32 pay_type = 9;       // 支付方式(1-微信 2-支付宝 3-现金)
+  int64 ride_time = 10;
 }
 
 message OrderInfoCreateRes {
@@ -159,4 +160,5 @@ message OrderDetail {
   int64 updated_at = 20;       // 更新时间(时间戳)
   int64 start_time = 21;       // 行程开始时间(时间戳)
   int64 end_time = 22;         // 行程结束时间(时间戳)
+  int64 ride_time = 23;
 }

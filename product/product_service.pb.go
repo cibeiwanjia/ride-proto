@@ -187,7 +187,7 @@ func (x *AddCartItemRequest) GetQuantity() int64 {
 type AddCartItemResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
-	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
+	Message       string                 `protobuf:"bytes,2,opt,name=message-api,proto3" json:"message-api,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -383,7 +383,7 @@ func (x *RemoveCartItemRequest) GetProductId() int64 {
 type RemoveCartItemResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
-	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
+	Message       string                 `protobuf:"bytes,2,opt,name=message-api,proto3" json:"message-api,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -481,7 +481,7 @@ func (x *ClearCartRequest) GetUserId() int64 {
 type ClearCartResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
-	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
+	Message       string                 `protobuf:"bytes,2,opt,name=message-api,proto3" json:"message-api,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -752,7 +752,7 @@ func (x *CreateSeckillReq) GetMaxPerUser() int32 {
 type CreateSeckillResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
-	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
+	Message       string                 `protobuf:"bytes,2,opt,name=message-api,proto3" json:"message-api,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -948,7 +948,7 @@ func (x *SeckillOrderReq) GetQuantity() int64 {
 type SeckillOrderResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
-	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
+	Message       string                 `protobuf:"bytes,2,opt,name=message-api,proto3" json:"message-api,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1019,7 +1019,7 @@ const file_product_service_proto_rawDesc = "" +
 	"\bquantity\x18\x05 \x01(\x03R\bquantity\"I\n" +
 	"\x13AddCartItemResponse\x12\x18\n" +
 	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
-	"\amessage\x18\x02 \x01(\tR\amessage\"-\n" +
+	"\amessage-api\x18\x02 \x01(\tR\amessage-api\"-\n" +
 	"\x12GetCartListRequest\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\x03R\x06userId\"C\n" +
 	"\x13GetCartListResponse\x12,\n" +
@@ -1030,12 +1030,12 @@ const file_product_service_proto_rawDesc = "" +
 	"product_id\x18\x02 \x01(\x03R\tproductId\"L\n" +
 	"\x16RemoveCartItemResponse\x12\x18\n" +
 	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
-	"\amessage\x18\x02 \x01(\tR\amessage\"+\n" +
+	"\amessage-api\x18\x02 \x01(\tR\amessage-api\"+\n" +
 	"\x10ClearCartRequest\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\x03R\x06userId\"G\n" +
 	"\x11ClearCartResponse\x12\x18\n" +
 	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
-	"\amessage\x18\x02 \x01(\tR\amessage\"\xba\x02\n" +
+	"\amessage-api\x18\x02 \x01(\tR\amessage-api\"\xba\x02\n" +
 	"\x0eSeckillProduct\x12\x1d\n" +
 	"\n" +
 	"product_id\x18\x01 \x01(\x03R\tproductId\x12!\n" +
@@ -1064,7 +1064,7 @@ const file_product_service_proto_rawDesc = "" +
 	"maxPerUser\"G\n" +
 	"\x11CreateSeckillResp\x12\x18\n" +
 	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
-	"\amessage\x18\x02 \x01(\tR\amessage\"\x13\n" +
+	"\amessage-api\x18\x02 \x01(\tR\amessage-api\"\x13\n" +
 	"\x11GetSeckillListReq\"N\n" +
 	"\x12GetSeckillListResp\x128\n" +
 	"\bproducts\x18\x01 \x03(\v2\x1c.productProto.SeckillProductR\bproducts\"e\n" +
@@ -1075,7 +1075,7 @@ const file_product_service_proto_rawDesc = "" +
 	"\bquantity\x18\x03 \x01(\x03R\bquantity\"F\n" +
 	"\x10SeckillOrderResp\x12\x18\n" +
 	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
-	"\amessage\x18\x02 \x01(\tR\amessage2\xd6\x04\n" +
+	"\amessage-api\x18\x02 \x01(\tR\amessage2\xd6\x04\n" +
 	"\vCartService\x12R\n" +
 	"\vAddCartItem\x12 .productProto.AddCartItemRequest\x1a!.productProto.AddCartItemResponse\x12R\n" +
 	"\vGetCartList\x12 .productProto.GetCartListRequest\x1a!.productProto.GetCartListResponse\x12[\n" +

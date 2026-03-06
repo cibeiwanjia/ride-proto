@@ -795,8 +795,10 @@ func (x *CancelOrderReq) GetReason() string {
 
 type CancelOrderRes struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"` // 是否成功
-	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`  // 结果消息
+	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
+	Refunded      bool                   `protobuf:"varint,3,opt,name=refunded,proto3" json:"refunded,omitempty"`             // 是否已退款
+	TradeNo       string                 `protobuf:"bytes,4,opt,name=trade_no,json=tradeNo,proto3" json:"trade_no,omitempty"` // 退款交易号
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -841,6 +843,20 @@ func (x *CancelOrderRes) GetSuccess() bool {
 func (x *CancelOrderRes) GetMessage() string {
 	if x != nil {
 		return x.Message
+	}
+	return ""
+}
+
+func (x *CancelOrderRes) GetRefunded() bool {
+	if x != nil {
+		return x.Refunded
+	}
+	return false
+}
+
+func (x *CancelOrderRes) GetTradeNo() string {
+	if x != nil {
+		return x.TradeNo
 	}
 	return ""
 }
@@ -1189,6 +1205,110 @@ func (x *CompleteTripRes) GetEndTime() int64 {
 	return 0
 }
 
+type AssignDriverReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	OrderSn       string                 `protobuf:"bytes,1,opt,name=order_sn,json=orderSn,proto3" json:"order_sn,omitempty"`     // 订单编号
+	DriverId      uint32                 `protobuf:"varint,2,opt,name=driver_id,json=driverId,proto3" json:"driver_id,omitempty"` // 司机ID
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AssignDriverReq) Reset() {
+	*x = AssignDriverReq{}
+	mi := &file_order_service_proto_msgTypes[20]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AssignDriverReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AssignDriverReq) ProtoMessage() {}
+
+func (x *AssignDriverReq) ProtoReflect() protoreflect.Message {
+	mi := &file_order_service_proto_msgTypes[20]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AssignDriverReq.ProtoReflect.Descriptor instead.
+func (*AssignDriverReq) Descriptor() ([]byte, []int) {
+	return file_order_service_proto_rawDescGZIP(), []int{20}
+}
+
+func (x *AssignDriverReq) GetOrderSn() string {
+	if x != nil {
+		return x.OrderSn
+	}
+	return ""
+}
+
+func (x *AssignDriverReq) GetDriverId() uint32 {
+	if x != nil {
+		return x.DriverId
+	}
+	return 0
+}
+
+type AssignDriverRes struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"` // 是否成功
+	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`  // 结果消息
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AssignDriverRes) Reset() {
+	*x = AssignDriverRes{}
+	mi := &file_order_service_proto_msgTypes[21]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AssignDriverRes) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AssignDriverRes) ProtoMessage() {}
+
+func (x *AssignDriverRes) ProtoReflect() protoreflect.Message {
+	mi := &file_order_service_proto_msgTypes[21]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AssignDriverRes.ProtoReflect.Descriptor instead.
+func (*AssignDriverRes) Descriptor() ([]byte, []int) {
+	return file_order_service_proto_rawDescGZIP(), []int{21}
+}
+
+func (x *AssignDriverRes) GetSuccess() bool {
+	if x != nil {
+		return x.Success
+	}
+	return false
+}
+
+func (x *AssignDriverRes) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
 type OrderDetail struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
 	Id             uint32                 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                 // 订单ID
@@ -1219,7 +1339,7 @@ type OrderDetail struct {
 
 func (x *OrderDetail) Reset() {
 	*x = OrderDetail{}
-	mi := &file_order_service_proto_msgTypes[20]
+	mi := &file_order_service_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1231,7 +1351,7 @@ func (x *OrderDetail) String() string {
 func (*OrderDetail) ProtoMessage() {}
 
 func (x *OrderDetail) ProtoReflect() protoreflect.Message {
-	mi := &file_order_service_proto_msgTypes[20]
+	mi := &file_order_service_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1244,7 +1364,7 @@ func (x *OrderDetail) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use OrderDetail.ProtoReflect.Descriptor instead.
 func (*OrderDetail) Descriptor() ([]byte, []int) {
-	return file_order_service_proto_rawDescGZIP(), []int{20}
+	return file_order_service_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *OrderDetail) GetId() uint32 {
@@ -1401,6 +1521,475 @@ func (x *OrderDetail) GetEndTime() int64 {
 	return 0
 }
 
+// 司机收入相关消息定义
+type GetDriverIncomeListReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	DriverId      uint32                 `protobuf:"varint,1,opt,name=driver_id,json=driverId,proto3" json:"driver_id,omitempty"`   // 司机ID
+	StartDate     string                 `protobuf:"bytes,2,opt,name=start_date,json=startDate,proto3" json:"start_date,omitempty"` // 开始日期(YYYY-MM-DD)
+	EndDate       string                 `protobuf:"bytes,3,opt,name=end_date,json=endDate,proto3" json:"end_date,omitempty"`       // 结束日期(YYYY-MM-DD)
+	Page          uint32                 `protobuf:"varint,4,opt,name=page,proto3" json:"page,omitempty"`                           // 页码
+	PageSize      uint32                 `protobuf:"varint,5,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`   // 每页数量
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetDriverIncomeListReq) Reset() {
+	*x = GetDriverIncomeListReq{}
+	mi := &file_order_service_proto_msgTypes[23]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetDriverIncomeListReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetDriverIncomeListReq) ProtoMessage() {}
+
+func (x *GetDriverIncomeListReq) ProtoReflect() protoreflect.Message {
+	mi := &file_order_service_proto_msgTypes[23]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetDriverIncomeListReq.ProtoReflect.Descriptor instead.
+func (*GetDriverIncomeListReq) Descriptor() ([]byte, []int) {
+	return file_order_service_proto_rawDescGZIP(), []int{23}
+}
+
+func (x *GetDriverIncomeListReq) GetDriverId() uint32 {
+	if x != nil {
+		return x.DriverId
+	}
+	return 0
+}
+
+func (x *GetDriverIncomeListReq) GetStartDate() string {
+	if x != nil {
+		return x.StartDate
+	}
+	return ""
+}
+
+func (x *GetDriverIncomeListReq) GetEndDate() string {
+	if x != nil {
+		return x.EndDate
+	}
+	return ""
+}
+
+func (x *GetDriverIncomeListReq) GetPage() uint32 {
+	if x != nil {
+		return x.Page
+	}
+	return 0
+}
+
+func (x *GetDriverIncomeListReq) GetPageSize() uint32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+type GetDriverIncomeListRes struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Incomes       []*DriverIncomeDetail  `protobuf:"bytes,1,rep,name=incomes,proto3" json:"incomes,omitempty"`                              // 收入列表
+	Total         int32                  `protobuf:"varint,2,opt,name=total,proto3" json:"total,omitempty"`                                 // 总数
+	TotalAmount   float64                `protobuf:"fixed64,3,opt,name=total_amount,json=totalAmount,proto3" json:"total_amount,omitempty"` // 总收入
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetDriverIncomeListRes) Reset() {
+	*x = GetDriverIncomeListRes{}
+	mi := &file_order_service_proto_msgTypes[24]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetDriverIncomeListRes) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetDriverIncomeListRes) ProtoMessage() {}
+
+func (x *GetDriverIncomeListRes) ProtoReflect() protoreflect.Message {
+	mi := &file_order_service_proto_msgTypes[24]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetDriverIncomeListRes.ProtoReflect.Descriptor instead.
+func (*GetDriverIncomeListRes) Descriptor() ([]byte, []int) {
+	return file_order_service_proto_rawDescGZIP(), []int{24}
+}
+
+func (x *GetDriverIncomeListRes) GetIncomes() []*DriverIncomeDetail {
+	if x != nil {
+		return x.Incomes
+	}
+	return nil
+}
+
+func (x *GetDriverIncomeListRes) GetTotal() int32 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
+}
+
+func (x *GetDriverIncomeListRes) GetTotalAmount() float64 {
+	if x != nil {
+		return x.TotalAmount
+	}
+	return 0
+}
+
+type GetDriverIncomeDetailReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            uint32                 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                             // 收入记录ID
+	DriverId      uint32                 `protobuf:"varint,2,opt,name=driver_id,json=driverId,proto3" json:"driver_id,omitempty"` // 司机ID
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetDriverIncomeDetailReq) Reset() {
+	*x = GetDriverIncomeDetailReq{}
+	mi := &file_order_service_proto_msgTypes[25]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetDriverIncomeDetailReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetDriverIncomeDetailReq) ProtoMessage() {}
+
+func (x *GetDriverIncomeDetailReq) ProtoReflect() protoreflect.Message {
+	mi := &file_order_service_proto_msgTypes[25]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetDriverIncomeDetailReq.ProtoReflect.Descriptor instead.
+func (*GetDriverIncomeDetailReq) Descriptor() ([]byte, []int) {
+	return file_order_service_proto_rawDescGZIP(), []int{25}
+}
+
+func (x *GetDriverIncomeDetailReq) GetId() uint32 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *GetDriverIncomeDetailReq) GetDriverId() uint32 {
+	if x != nil {
+		return x.DriverId
+	}
+	return 0
+}
+
+type GetDriverIncomeDetailRes struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Income        *DriverIncomeDetail    `protobuf:"bytes,1,opt,name=income,proto3" json:"income,omitempty"` // 收入详情
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetDriverIncomeDetailRes) Reset() {
+	*x = GetDriverIncomeDetailRes{}
+	mi := &file_order_service_proto_msgTypes[26]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetDriverIncomeDetailRes) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetDriverIncomeDetailRes) ProtoMessage() {}
+
+func (x *GetDriverIncomeDetailRes) ProtoReflect() protoreflect.Message {
+	mi := &file_order_service_proto_msgTypes[26]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetDriverIncomeDetailRes.ProtoReflect.Descriptor instead.
+func (*GetDriverIncomeDetailRes) Descriptor() ([]byte, []int) {
+	return file_order_service_proto_rawDescGZIP(), []int{26}
+}
+
+func (x *GetDriverIncomeDetailRes) GetIncome() *DriverIncomeDetail {
+	if x != nil {
+		return x.Income
+	}
+	return nil
+}
+
+type GetDriverIncomeSummaryReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	DriverId      uint32                 `protobuf:"varint,1,opt,name=driver_id,json=driverId,proto3" json:"driver_id,omitempty"`   // 司机ID
+	StartDate     string                 `protobuf:"bytes,2,opt,name=start_date,json=startDate,proto3" json:"start_date,omitempty"` // 开始日期(YYYY-MM-DD)
+	EndDate       string                 `protobuf:"bytes,3,opt,name=end_date,json=endDate,proto3" json:"end_date,omitempty"`       // 结束日期(YYYY-MM-DD)
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetDriverIncomeSummaryReq) Reset() {
+	*x = GetDriverIncomeSummaryReq{}
+	mi := &file_order_service_proto_msgTypes[27]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetDriverIncomeSummaryReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetDriverIncomeSummaryReq) ProtoMessage() {}
+
+func (x *GetDriverIncomeSummaryReq) ProtoReflect() protoreflect.Message {
+	mi := &file_order_service_proto_msgTypes[27]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetDriverIncomeSummaryReq.ProtoReflect.Descriptor instead.
+func (*GetDriverIncomeSummaryReq) Descriptor() ([]byte, []int) {
+	return file_order_service_proto_rawDescGZIP(), []int{27}
+}
+
+func (x *GetDriverIncomeSummaryReq) GetDriverId() uint32 {
+	if x != nil {
+		return x.DriverId
+	}
+	return 0
+}
+
+func (x *GetDriverIncomeSummaryReq) GetStartDate() string {
+	if x != nil {
+		return x.StartDate
+	}
+	return ""
+}
+
+func (x *GetDriverIncomeSummaryReq) GetEndDate() string {
+	if x != nil {
+		return x.EndDate
+	}
+	return ""
+}
+
+type GetDriverIncomeSummaryRes struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	TotalAmount   float64                `protobuf:"fixed64,1,opt,name=total_amount,json=totalAmount,proto3" json:"total_amount,omitempty"`       // 总收入
+	OrderCount    int32                  `protobuf:"varint,2,opt,name=order_count,json=orderCount,proto3" json:"order_count,omitempty"`           // 订单数量
+	AverageAmount float64                `protobuf:"fixed64,3,opt,name=average_amount,json=averageAmount,proto3" json:"average_amount,omitempty"` // 平均收入
+	Period        string                 `protobuf:"bytes,4,opt,name=period,proto3" json:"period,omitempty"`                                      // 统计周期
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetDriverIncomeSummaryRes) Reset() {
+	*x = GetDriverIncomeSummaryRes{}
+	mi := &file_order_service_proto_msgTypes[28]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetDriverIncomeSummaryRes) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetDriverIncomeSummaryRes) ProtoMessage() {}
+
+func (x *GetDriverIncomeSummaryRes) ProtoReflect() protoreflect.Message {
+	mi := &file_order_service_proto_msgTypes[28]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetDriverIncomeSummaryRes.ProtoReflect.Descriptor instead.
+func (*GetDriverIncomeSummaryRes) Descriptor() ([]byte, []int) {
+	return file_order_service_proto_rawDescGZIP(), []int{28}
+}
+
+func (x *GetDriverIncomeSummaryRes) GetTotalAmount() float64 {
+	if x != nil {
+		return x.TotalAmount
+	}
+	return 0
+}
+
+func (x *GetDriverIncomeSummaryRes) GetOrderCount() int32 {
+	if x != nil {
+		return x.OrderCount
+	}
+	return 0
+}
+
+func (x *GetDriverIncomeSummaryRes) GetAverageAmount() float64 {
+	if x != nil {
+		return x.AverageAmount
+	}
+	return 0
+}
+
+func (x *GetDriverIncomeSummaryRes) GetPeriod() string {
+	if x != nil {
+		return x.Period
+	}
+	return ""
+}
+
+type DriverIncomeDetail struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            uint32                 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                          // 收入记录ID
+	DriverId      uint32                 `protobuf:"varint,2,opt,name=driver_id,json=driverId,proto3" json:"driver_id,omitempty"`              // 司机ID
+	OrderSn       string                 `protobuf:"bytes,3,opt,name=order_sn,json=orderSn,proto3" json:"order_sn,omitempty"`                  // 订单编号
+	OrderAmount   float64                `protobuf:"fixed64,4,opt,name=order_amount,json=orderAmount,proto3" json:"order_amount,omitempty"`    // 订单金额
+	DriverAmount  float64                `protobuf:"fixed64,5,opt,name=driver_amount,json=driverAmount,proto3" json:"driver_amount,omitempty"` // 司机实际收入
+	PlatformFee   float64                `protobuf:"fixed64,6,opt,name=platform_fee,json=platformFee,proto3" json:"platform_fee,omitempty"`    // 平台费用
+	OrderTime     string                 `protobuf:"bytes,7,opt,name=order_time,json=orderTime,proto3" json:"order_time,omitempty"`            // 订单时间
+	Status        string                 `protobuf:"bytes,8,opt,name=status,proto3" json:"status,omitempty"`                                   // 状态(completed/pending)
+	IncomeType    string                 `protobuf:"bytes,9,opt,name=income_type,json=incomeType,proto3" json:"income_type,omitempty"`         // 收入类型(order_bonus等)
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DriverIncomeDetail) Reset() {
+	*x = DriverIncomeDetail{}
+	mi := &file_order_service_proto_msgTypes[29]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DriverIncomeDetail) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DriverIncomeDetail) ProtoMessage() {}
+
+func (x *DriverIncomeDetail) ProtoReflect() protoreflect.Message {
+	mi := &file_order_service_proto_msgTypes[29]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DriverIncomeDetail.ProtoReflect.Descriptor instead.
+func (*DriverIncomeDetail) Descriptor() ([]byte, []int) {
+	return file_order_service_proto_rawDescGZIP(), []int{29}
+}
+
+func (x *DriverIncomeDetail) GetId() uint32 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *DriverIncomeDetail) GetDriverId() uint32 {
+	if x != nil {
+		return x.DriverId
+	}
+	return 0
+}
+
+func (x *DriverIncomeDetail) GetOrderSn() string {
+	if x != nil {
+		return x.OrderSn
+	}
+	return ""
+}
+
+func (x *DriverIncomeDetail) GetOrderAmount() float64 {
+	if x != nil {
+		return x.OrderAmount
+	}
+	return 0
+}
+
+func (x *DriverIncomeDetail) GetDriverAmount() float64 {
+	if x != nil {
+		return x.DriverAmount
+	}
+	return 0
+}
+
+func (x *DriverIncomeDetail) GetPlatformFee() float64 {
+	if x != nil {
+		return x.PlatformFee
+	}
+	return 0
+}
+
+func (x *DriverIncomeDetail) GetOrderTime() string {
+	if x != nil {
+		return x.OrderTime
+	}
+	return ""
+}
+
+func (x *DriverIncomeDetail) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
+func (x *DriverIncomeDetail) GetIncomeType() string {
+	if x != nil {
+		return x.IncomeType
+	}
+	return ""
+}
+
 var File_order_service_proto protoreflect.FileDescriptor
 
 const file_order_service_proto_rawDesc = "" +
@@ -1461,10 +2050,12 @@ const file_order_service_proto_rawDesc = "" +
 	"\x0eCancelOrderReq\x12\x19\n" +
 	"\border_sn\x18\x01 \x01(\tR\aorderSn\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\rR\x06userId\x12\x16\n" +
-	"\x06reason\x18\x03 \x01(\tR\x06reason\"D\n" +
+	"\x06reason\x18\x03 \x01(\tR\x06reason\"{\n" +
 	"\x0eCancelOrderRes\x12\x18\n" +
 	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
-	"\amessage\x18\x02 \x01(\tR\amessage\"H\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage\x12\x1a\n" +
+	"\brefunded\x18\x03 \x01(\bR\brefunded\x12\x19\n" +
+	"\btrade_no\x18\x04 \x01(\tR\atradeNo\"H\n" +
 	"\x0eAcceptOrderReq\x12\x19\n" +
 	"\border_sn\x18\x01 \x01(\tR\aorderSn\x12\x1b\n" +
 	"\tdriver_id\x18\x02 \x01(\rR\bdriverId\"D\n" +
@@ -1487,7 +2078,13 @@ const file_order_service_proto_rawDesc = "" +
 	"\x0fCompleteTripRes\x12\x18\n" +
 	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
 	"\amessage\x18\x02 \x01(\tR\amessage\x12\x19\n" +
-	"\bend_time\x18\x03 \x01(\x03R\aendTime\"\x83\x05\n" +
+	"\bend_time\x18\x03 \x01(\x03R\aendTime\"I\n" +
+	"\x0fAssignDriverReq\x12\x19\n" +
+	"\border_sn\x18\x01 \x01(\tR\aorderSn\x12\x1b\n" +
+	"\tdriver_id\x18\x02 \x01(\rR\bdriverId\"E\n" +
+	"\x0fAssignDriverRes\x12\x18\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage\"\x83\x05\n" +
 	"\vOrderDetail\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\rR\x02id\x12\x19\n" +
 	"\border_sn\x18\x02 \x01(\tR\aorderSn\x12\x17\n" +
@@ -1516,7 +2113,46 @@ const file_order_service_proto_rawDesc = "" +
 	"updated_at\x18\x14 \x01(\x03R\tupdatedAt\x12\x1d\n" +
 	"\n" +
 	"start_time\x18\x15 \x01(\x03R\tstartTime\x12\x19\n" +
-	"\bend_time\x18\x16 \x01(\x03R\aendTime2\xe6\x05\n" +
+	"\bend_time\x18\x16 \x01(\x03R\aendTime\"\xa0\x01\n" +
+	"\x16GetDriverIncomeListReq\x12\x1b\n" +
+	"\tdriver_id\x18\x01 \x01(\rR\bdriverId\x12\x1d\n" +
+	"\n" +
+	"start_date\x18\x02 \x01(\tR\tstartDate\x12\x19\n" +
+	"\bend_date\x18\x03 \x01(\tR\aendDate\x12\x12\n" +
+	"\x04page\x18\x04 \x01(\rR\x04page\x12\x1b\n" +
+	"\tpage_size\x18\x05 \x01(\rR\bpageSize\"\x8b\x01\n" +
+	"\x16GetDriverIncomeListRes\x128\n" +
+	"\aincomes\x18\x01 \x03(\v2\x1e.orderProto.DriverIncomeDetailR\aincomes\x12\x14\n" +
+	"\x05total\x18\x02 \x01(\x05R\x05total\x12!\n" +
+	"\ftotal_amount\x18\x03 \x01(\x01R\vtotalAmount\"G\n" +
+	"\x18GetDriverIncomeDetailReq\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\rR\x02id\x12\x1b\n" +
+	"\tdriver_id\x18\x02 \x01(\rR\bdriverId\"R\n" +
+	"\x18GetDriverIncomeDetailRes\x126\n" +
+	"\x06income\x18\x01 \x01(\v2\x1e.orderProto.DriverIncomeDetailR\x06income\"r\n" +
+	"\x19GetDriverIncomeSummaryReq\x12\x1b\n" +
+	"\tdriver_id\x18\x01 \x01(\rR\bdriverId\x12\x1d\n" +
+	"\n" +
+	"start_date\x18\x02 \x01(\tR\tstartDate\x12\x19\n" +
+	"\bend_date\x18\x03 \x01(\tR\aendDate\"\x9e\x01\n" +
+	"\x19GetDriverIncomeSummaryRes\x12!\n" +
+	"\ftotal_amount\x18\x01 \x01(\x01R\vtotalAmount\x12\x1f\n" +
+	"\vorder_count\x18\x02 \x01(\x05R\n" +
+	"orderCount\x12%\n" +
+	"\x0eaverage_amount\x18\x03 \x01(\x01R\raverageAmount\x12\x16\n" +
+	"\x06period\x18\x04 \x01(\tR\x06period\"\x9f\x02\n" +
+	"\x12DriverIncomeDetail\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\rR\x02id\x12\x1b\n" +
+	"\tdriver_id\x18\x02 \x01(\rR\bdriverId\x12\x19\n" +
+	"\border_sn\x18\x03 \x01(\tR\aorderSn\x12!\n" +
+	"\forder_amount\x18\x04 \x01(\x01R\vorderAmount\x12#\n" +
+	"\rdriver_amount\x18\x05 \x01(\x01R\fdriverAmount\x12!\n" +
+	"\fplatform_fee\x18\x06 \x01(\x01R\vplatformFee\x12\x1d\n" +
+	"\n" +
+	"order_time\x18\a \x01(\tR\torderTime\x12\x16\n" +
+	"\x06status\x18\b \x01(\tR\x06status\x12\x1f\n" +
+	"\vincome_type\x18\t \x01(\tR\n" +
+	"incomeType2\xe4\b\n" +
 	"\n" +
 	"order_info\x12J\n" +
 	"\x06Create\x12\x1e.orderProto.OrderInfoCreateReq\x1a\x1e.orderProto.OrderInfoCreateRes\"\x00\x12S\n" +
@@ -1528,7 +2164,11 @@ const file_order_service_proto_rawDesc = "" +
 	"\vCancelOrder\x12\x1a.orderProto.CancelOrderReq\x1a\x1a.orderProto.CancelOrderRes\"\x00\x12G\n" +
 	"\vAcceptOrder\x12\x1a.orderProto.AcceptOrderReq\x1a\x1a.orderProto.AcceptOrderRes\"\x00\x12A\n" +
 	"\tStartTrip\x12\x18.orderProto.StartTripReq\x1a\x18.orderProto.StartTripRes\"\x00\x12J\n" +
-	"\fCompleteTrip\x12\x1b.orderProto.CompleteTripReq\x1a\x1b.orderProto.CompleteTripRes\"\x00B)Z'github.com/cibeiwanjia/ride-proto/orderb\x06proto3"
+	"\fCompleteTrip\x12\x1b.orderProto.CompleteTripReq\x1a\x1b.orderProto.CompleteTripRes\"\x00\x12J\n" +
+	"\fAssignDriver\x12\x1b.orderProto.AssignDriverReq\x1a\x1b.orderProto.AssignDriverRes\"\x00\x12_\n" +
+	"\x13GetDriverIncomeList\x12\".orderProto.GetDriverIncomeListReq\x1a\".orderProto.GetDriverIncomeListRes\"\x00\x12e\n" +
+	"\x15GetDriverIncomeDetail\x12$.orderProto.GetDriverIncomeDetailReq\x1a$.orderProto.GetDriverIncomeDetailRes\"\x00\x12h\n" +
+	"\x16GetDriverIncomeSummary\x12%.orderProto.GetDriverIncomeSummaryReq\x1a%.orderProto.GetDriverIncomeSummaryRes\"\x00B)Z'github.com/cibeiwanjia/ride-proto/orderb\x06proto3"
 
 var (
 	file_order_service_proto_rawDescOnce sync.Once
@@ -1542,58 +2182,77 @@ func file_order_service_proto_rawDescGZIP() []byte {
 	return file_order_service_proto_rawDescData
 }
 
-var file_order_service_proto_msgTypes = make([]protoimpl.MessageInfo, 21)
+var file_order_service_proto_msgTypes = make([]protoimpl.MessageInfo, 30)
 var file_order_service_proto_goTypes = []any{
-	(*OrderInfoCreateReq)(nil),    // 0: orderProto.OrderInfoCreateReq
-	(*OrderInfoCreateRes)(nil),    // 1: orderProto.OrderInfoCreateRes
-	(*OrderInfoGetDetailReq)(nil), // 2: orderProto.OrderInfoGetDetailReq
-	(*OrderInfoGetDetailRes)(nil), // 3: orderProto.OrderInfoGetDetailRes
-	(*OrderInfoGetListReq)(nil),   // 4: orderProto.OrderInfoGetListReq
-	(*OrderInfoGetListRes)(nil),   // 5: orderProto.OrderInfoGetListRes
-	(*OrderInfoGetCountReq)(nil),  // 6: orderProto.OrderInfoGetCountReq
-	(*OrderInfoGetCountRes)(nil),  // 7: orderProto.OrderInfoGetCountRes
-	(*PaymentReq)(nil),            // 8: orderProto.PaymentReq
-	(*PaymentRes)(nil),            // 9: orderProto.PaymentRes
-	(*NotifyReq)(nil),             // 10: orderProto.NotifyReq
-	(*NotifyRes)(nil),             // 11: orderProto.NotifyRes
-	(*CancelOrderReq)(nil),        // 12: orderProto.CancelOrderReq
-	(*CancelOrderRes)(nil),        // 13: orderProto.CancelOrderRes
-	(*AcceptOrderReq)(nil),        // 14: orderProto.AcceptOrderReq
-	(*AcceptOrderRes)(nil),        // 15: orderProto.AcceptOrderRes
-	(*StartTripReq)(nil),          // 16: orderProto.StartTripReq
-	(*StartTripRes)(nil),          // 17: orderProto.StartTripRes
-	(*CompleteTripReq)(nil),       // 18: orderProto.CompleteTripReq
-	(*CompleteTripRes)(nil),       // 19: orderProto.CompleteTripRes
-	(*OrderDetail)(nil),           // 20: orderProto.OrderDetail
+	(*OrderInfoCreateReq)(nil),        // 0: orderProto.OrderInfoCreateReq
+	(*OrderInfoCreateRes)(nil),        // 1: orderProto.OrderInfoCreateRes
+	(*OrderInfoGetDetailReq)(nil),     // 2: orderProto.OrderInfoGetDetailReq
+	(*OrderInfoGetDetailRes)(nil),     // 3: orderProto.OrderInfoGetDetailRes
+	(*OrderInfoGetListReq)(nil),       // 4: orderProto.OrderInfoGetListReq
+	(*OrderInfoGetListRes)(nil),       // 5: orderProto.OrderInfoGetListRes
+	(*OrderInfoGetCountReq)(nil),      // 6: orderProto.OrderInfoGetCountReq
+	(*OrderInfoGetCountRes)(nil),      // 7: orderProto.OrderInfoGetCountRes
+	(*PaymentReq)(nil),                // 8: orderProto.PaymentReq
+	(*PaymentRes)(nil),                // 9: orderProto.PaymentRes
+	(*NotifyReq)(nil),                 // 10: orderProto.NotifyReq
+	(*NotifyRes)(nil),                 // 11: orderProto.NotifyRes
+	(*CancelOrderReq)(nil),            // 12: orderProto.CancelOrderReq
+	(*CancelOrderRes)(nil),            // 13: orderProto.CancelOrderRes
+	(*AcceptOrderReq)(nil),            // 14: orderProto.AcceptOrderReq
+	(*AcceptOrderRes)(nil),            // 15: orderProto.AcceptOrderRes
+	(*StartTripReq)(nil),              // 16: orderProto.StartTripReq
+	(*StartTripRes)(nil),              // 17: orderProto.StartTripRes
+	(*CompleteTripReq)(nil),           // 18: orderProto.CompleteTripReq
+	(*CompleteTripRes)(nil),           // 19: orderProto.CompleteTripRes
+	(*AssignDriverReq)(nil),           // 20: orderProto.AssignDriverReq
+	(*AssignDriverRes)(nil),           // 21: orderProto.AssignDriverRes
+	(*OrderDetail)(nil),               // 22: orderProto.OrderDetail
+	(*GetDriverIncomeListReq)(nil),    // 23: orderProto.GetDriverIncomeListReq
+	(*GetDriverIncomeListRes)(nil),    // 24: orderProto.GetDriverIncomeListRes
+	(*GetDriverIncomeDetailReq)(nil),  // 25: orderProto.GetDriverIncomeDetailReq
+	(*GetDriverIncomeDetailRes)(nil),  // 26: orderProto.GetDriverIncomeDetailRes
+	(*GetDriverIncomeSummaryReq)(nil), // 27: orderProto.GetDriverIncomeSummaryReq
+	(*GetDriverIncomeSummaryRes)(nil), // 28: orderProto.GetDriverIncomeSummaryRes
+	(*DriverIncomeDetail)(nil),        // 29: orderProto.DriverIncomeDetail
 }
 var file_order_service_proto_depIdxs = []int32{
-	20, // 0: orderProto.OrderInfoGetDetailRes.order:type_name -> orderProto.OrderDetail
-	20, // 1: orderProto.OrderInfoGetListRes.orders:type_name -> orderProto.OrderDetail
-	0,  // 2: orderProto.order_info.Create:input_type -> orderProto.OrderInfoCreateReq
-	2,  // 3: orderProto.order_info.GetDetail:input_type -> orderProto.OrderInfoGetDetailReq
-	4,  // 4: orderProto.order_info.GetList:input_type -> orderProto.OrderInfoGetListReq
-	6,  // 5: orderProto.order_info.GetCount:input_type -> orderProto.OrderInfoGetCountReq
-	8,  // 6: orderProto.order_info.Payment:input_type -> orderProto.PaymentReq
-	10, // 7: orderProto.order_info.Notify:input_type -> orderProto.NotifyReq
-	12, // 8: orderProto.order_info.CancelOrder:input_type -> orderProto.CancelOrderReq
-	14, // 9: orderProto.order_info.AcceptOrder:input_type -> orderProto.AcceptOrderReq
-	16, // 10: orderProto.order_info.StartTrip:input_type -> orderProto.StartTripReq
-	18, // 11: orderProto.order_info.CompleteTrip:input_type -> orderProto.CompleteTripReq
-	1,  // 12: orderProto.order_info.Create:output_type -> orderProto.OrderInfoCreateRes
-	3,  // 13: orderProto.order_info.GetDetail:output_type -> orderProto.OrderInfoGetDetailRes
-	5,  // 14: orderProto.order_info.GetList:output_type -> orderProto.OrderInfoGetListRes
-	7,  // 15: orderProto.order_info.GetCount:output_type -> orderProto.OrderInfoGetCountRes
-	9,  // 16: orderProto.order_info.Payment:output_type -> orderProto.PaymentRes
-	11, // 17: orderProto.order_info.Notify:output_type -> orderProto.NotifyRes
-	13, // 18: orderProto.order_info.CancelOrder:output_type -> orderProto.CancelOrderRes
-	15, // 19: orderProto.order_info.AcceptOrder:output_type -> orderProto.AcceptOrderRes
-	17, // 20: orderProto.order_info.StartTrip:output_type -> orderProto.StartTripRes
-	19, // 21: orderProto.order_info.CompleteTrip:output_type -> orderProto.CompleteTripRes
-	12, // [12:22] is the sub-list for method output_type
-	2,  // [2:12] is the sub-list for method input_type
-	2,  // [2:2] is the sub-list for extension type_name
-	2,  // [2:2] is the sub-list for extension extendee
-	0,  // [0:2] is the sub-list for field type_name
+	22, // 0: orderProto.OrderInfoGetDetailRes.order:type_name -> orderProto.OrderDetail
+	22, // 1: orderProto.OrderInfoGetListRes.orders:type_name -> orderProto.OrderDetail
+	29, // 2: orderProto.GetDriverIncomeListRes.incomes:type_name -> orderProto.DriverIncomeDetail
+	29, // 3: orderProto.GetDriverIncomeDetailRes.income:type_name -> orderProto.DriverIncomeDetail
+	0,  // 4: orderProto.order_info.Create:input_type -> orderProto.OrderInfoCreateReq
+	2,  // 5: orderProto.order_info.GetDetail:input_type -> orderProto.OrderInfoGetDetailReq
+	4,  // 6: orderProto.order_info.GetList:input_type -> orderProto.OrderInfoGetListReq
+	6,  // 7: orderProto.order_info.GetCount:input_type -> orderProto.OrderInfoGetCountReq
+	8,  // 8: orderProto.order_info.Payment:input_type -> orderProto.PaymentReq
+	10, // 9: orderProto.order_info.Notify:input_type -> orderProto.NotifyReq
+	12, // 10: orderProto.order_info.CancelOrder:input_type -> orderProto.CancelOrderReq
+	14, // 11: orderProto.order_info.AcceptOrder:input_type -> orderProto.AcceptOrderReq
+	16, // 12: orderProto.order_info.StartTrip:input_type -> orderProto.StartTripReq
+	18, // 13: orderProto.order_info.CompleteTrip:input_type -> orderProto.CompleteTripReq
+	20, // 14: orderProto.order_info.AssignDriver:input_type -> orderProto.AssignDriverReq
+	23, // 15: orderProto.order_info.GetDriverIncomeList:input_type -> orderProto.GetDriverIncomeListReq
+	25, // 16: orderProto.order_info.GetDriverIncomeDetail:input_type -> orderProto.GetDriverIncomeDetailReq
+	27, // 17: orderProto.order_info.GetDriverIncomeSummary:input_type -> orderProto.GetDriverIncomeSummaryReq
+	1,  // 18: orderProto.order_info.Create:output_type -> orderProto.OrderInfoCreateRes
+	3,  // 19: orderProto.order_info.GetDetail:output_type -> orderProto.OrderInfoGetDetailRes
+	5,  // 20: orderProto.order_info.GetList:output_type -> orderProto.OrderInfoGetListRes
+	7,  // 21: orderProto.order_info.GetCount:output_type -> orderProto.OrderInfoGetCountRes
+	9,  // 22: orderProto.order_info.Payment:output_type -> orderProto.PaymentRes
+	11, // 23: orderProto.order_info.Notify:output_type -> orderProto.NotifyRes
+	13, // 24: orderProto.order_info.CancelOrder:output_type -> orderProto.CancelOrderRes
+	15, // 25: orderProto.order_info.AcceptOrder:output_type -> orderProto.AcceptOrderRes
+	17, // 26: orderProto.order_info.StartTrip:output_type -> orderProto.StartTripRes
+	19, // 27: orderProto.order_info.CompleteTrip:output_type -> orderProto.CompleteTripRes
+	21, // 28: orderProto.order_info.AssignDriver:output_type -> orderProto.AssignDriverRes
+	24, // 29: orderProto.order_info.GetDriverIncomeList:output_type -> orderProto.GetDriverIncomeListRes
+	26, // 30: orderProto.order_info.GetDriverIncomeDetail:output_type -> orderProto.GetDriverIncomeDetailRes
+	28, // 31: orderProto.order_info.GetDriverIncomeSummary:output_type -> orderProto.GetDriverIncomeSummaryRes
+	18, // [18:32] is the sub-list for method output_type
+	4,  // [4:18] is the sub-list for method input_type
+	4,  // [4:4] is the sub-list for extension type_name
+	4,  // [4:4] is the sub-list for extension extendee
+	0,  // [0:4] is the sub-list for field type_name
 }
 
 func init() { file_order_service_proto_init() }
@@ -1607,7 +2266,7 @@ func file_order_service_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_order_service_proto_rawDesc), len(file_order_service_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   21,
+			NumMessages:   30,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

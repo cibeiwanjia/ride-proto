@@ -19,16 +19,20 @@ import (
 const _ = grpc.SupportPackageIsVersion8
 
 const (
-	OrderInfo_Create_FullMethodName       = "/orderProto.order_info/Create"
-	OrderInfo_GetDetail_FullMethodName    = "/orderProto.order_info/GetDetail"
-	OrderInfo_GetList_FullMethodName      = "/orderProto.order_info/GetList"
-	OrderInfo_GetCount_FullMethodName     = "/orderProto.order_info/GetCount"
-	OrderInfo_Payment_FullMethodName      = "/orderProto.order_info/Payment"
-	OrderInfo_Notify_FullMethodName       = "/orderProto.order_info/Notify"
-	OrderInfo_CancelOrder_FullMethodName  = "/orderProto.order_info/CancelOrder"
-	OrderInfo_AcceptOrder_FullMethodName  = "/orderProto.order_info/AcceptOrder"
-	OrderInfo_StartTrip_FullMethodName    = "/orderProto.order_info/StartTrip"
-	OrderInfo_CompleteTrip_FullMethodName = "/orderProto.order_info/CompleteTrip"
+	OrderInfo_Create_FullMethodName                 = "/orderProto.order_info/Create"
+	OrderInfo_GetDetail_FullMethodName              = "/orderProto.order_info/GetDetail"
+	OrderInfo_GetList_FullMethodName                = "/orderProto.order_info/GetList"
+	OrderInfo_GetCount_FullMethodName               = "/orderProto.order_info/GetCount"
+	OrderInfo_Payment_FullMethodName                = "/orderProto.order_info/Payment"
+	OrderInfo_Notify_FullMethodName                 = "/orderProto.order_info/Notify"
+	OrderInfo_CancelOrder_FullMethodName            = "/orderProto.order_info/CancelOrder"
+	OrderInfo_AcceptOrder_FullMethodName            = "/orderProto.order_info/AcceptOrder"
+	OrderInfo_StartTrip_FullMethodName              = "/orderProto.order_info/StartTrip"
+	OrderInfo_CompleteTrip_FullMethodName           = "/orderProto.order_info/CompleteTrip"
+	OrderInfo_AssignDriver_FullMethodName           = "/orderProto.order_info/AssignDriver"
+	OrderInfo_GetDriverIncomeList_FullMethodName    = "/orderProto.order_info/GetDriverIncomeList"
+	OrderInfo_GetDriverIncomeDetail_FullMethodName  = "/orderProto.order_info/GetDriverIncomeDetail"
+	OrderInfo_GetDriverIncomeSummary_FullMethodName = "/orderProto.order_info/GetDriverIncomeSummary"
 )
 
 // OrderInfoClient is the client API for OrderInfo service.
@@ -45,6 +49,10 @@ type OrderInfoClient interface {
 	AcceptOrder(ctx context.Context, in *AcceptOrderReq, opts ...grpc.CallOption) (*AcceptOrderRes, error)
 	StartTrip(ctx context.Context, in *StartTripReq, opts ...grpc.CallOption) (*StartTripRes, error)
 	CompleteTrip(ctx context.Context, in *CompleteTripReq, opts ...grpc.CallOption) (*CompleteTripRes, error)
+	AssignDriver(ctx context.Context, in *AssignDriverReq, opts ...grpc.CallOption) (*AssignDriverRes, error)
+	GetDriverIncomeList(ctx context.Context, in *GetDriverIncomeListReq, opts ...grpc.CallOption) (*GetDriverIncomeListRes, error)
+	GetDriverIncomeDetail(ctx context.Context, in *GetDriverIncomeDetailReq, opts ...grpc.CallOption) (*GetDriverIncomeDetailRes, error)
+	GetDriverIncomeSummary(ctx context.Context, in *GetDriverIncomeSummaryReq, opts ...grpc.CallOption) (*GetDriverIncomeSummaryRes, error)
 }
 
 type orderInfoClient struct {
@@ -155,6 +163,46 @@ func (c *orderInfoClient) CompleteTrip(ctx context.Context, in *CompleteTripReq,
 	return out, nil
 }
 
+func (c *orderInfoClient) AssignDriver(ctx context.Context, in *AssignDriverReq, opts ...grpc.CallOption) (*AssignDriverRes, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AssignDriverRes)
+	err := c.cc.Invoke(ctx, OrderInfo_AssignDriver_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *orderInfoClient) GetDriverIncomeList(ctx context.Context, in *GetDriverIncomeListReq, opts ...grpc.CallOption) (*GetDriverIncomeListRes, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetDriverIncomeListRes)
+	err := c.cc.Invoke(ctx, OrderInfo_GetDriverIncomeList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *orderInfoClient) GetDriverIncomeDetail(ctx context.Context, in *GetDriverIncomeDetailReq, opts ...grpc.CallOption) (*GetDriverIncomeDetailRes, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetDriverIncomeDetailRes)
+	err := c.cc.Invoke(ctx, OrderInfo_GetDriverIncomeDetail_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *orderInfoClient) GetDriverIncomeSummary(ctx context.Context, in *GetDriverIncomeSummaryReq, opts ...grpc.CallOption) (*GetDriverIncomeSummaryRes, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetDriverIncomeSummaryRes)
+	err := c.cc.Invoke(ctx, OrderInfo_GetDriverIncomeSummary_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // OrderInfoServer is the server API for OrderInfo service.
 // All implementations must embed UnimplementedOrderInfoServer
 // for forward compatibility
@@ -169,6 +217,10 @@ type OrderInfoServer interface {
 	AcceptOrder(context.Context, *AcceptOrderReq) (*AcceptOrderRes, error)
 	StartTrip(context.Context, *StartTripReq) (*StartTripRes, error)
 	CompleteTrip(context.Context, *CompleteTripReq) (*CompleteTripRes, error)
+	AssignDriver(context.Context, *AssignDriverReq) (*AssignDriverRes, error)
+	GetDriverIncomeList(context.Context, *GetDriverIncomeListReq) (*GetDriverIncomeListRes, error)
+	GetDriverIncomeDetail(context.Context, *GetDriverIncomeDetailReq) (*GetDriverIncomeDetailRes, error)
+	GetDriverIncomeSummary(context.Context, *GetDriverIncomeSummaryReq) (*GetDriverIncomeSummaryRes, error)
 	mustEmbedUnimplementedOrderInfoServer()
 }
 
@@ -205,6 +257,18 @@ func (UnimplementedOrderInfoServer) StartTrip(context.Context, *StartTripReq) (*
 }
 func (UnimplementedOrderInfoServer) CompleteTrip(context.Context, *CompleteTripReq) (*CompleteTripRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CompleteTrip not implemented")
+}
+func (UnimplementedOrderInfoServer) AssignDriver(context.Context, *AssignDriverReq) (*AssignDriverRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AssignDriver not implemented")
+}
+func (UnimplementedOrderInfoServer) GetDriverIncomeList(context.Context, *GetDriverIncomeListReq) (*GetDriverIncomeListRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDriverIncomeList not implemented")
+}
+func (UnimplementedOrderInfoServer) GetDriverIncomeDetail(context.Context, *GetDriverIncomeDetailReq) (*GetDriverIncomeDetailRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDriverIncomeDetail not implemented")
+}
+func (UnimplementedOrderInfoServer) GetDriverIncomeSummary(context.Context, *GetDriverIncomeSummaryReq) (*GetDriverIncomeSummaryRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDriverIncomeSummary not implemented")
 }
 func (UnimplementedOrderInfoServer) mustEmbedUnimplementedOrderInfoServer() {}
 
@@ -399,6 +463,78 @@ func _OrderInfo_CompleteTrip_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _OrderInfo_AssignDriver_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AssignDriverReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrderInfoServer).AssignDriver(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OrderInfo_AssignDriver_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrderInfoServer).AssignDriver(ctx, req.(*AssignDriverReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _OrderInfo_GetDriverIncomeList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDriverIncomeListReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrderInfoServer).GetDriverIncomeList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OrderInfo_GetDriverIncomeList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrderInfoServer).GetDriverIncomeList(ctx, req.(*GetDriverIncomeListReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _OrderInfo_GetDriverIncomeDetail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDriverIncomeDetailReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrderInfoServer).GetDriverIncomeDetail(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OrderInfo_GetDriverIncomeDetail_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrderInfoServer).GetDriverIncomeDetail(ctx, req.(*GetDriverIncomeDetailReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _OrderInfo_GetDriverIncomeSummary_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDriverIncomeSummaryReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrderInfoServer).GetDriverIncomeSummary(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OrderInfo_GetDriverIncomeSummary_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrderInfoServer).GetDriverIncomeSummary(ctx, req.(*GetDriverIncomeSummaryReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // OrderInfo_ServiceDesc is the grpc.ServiceDesc for OrderInfo service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -445,6 +581,22 @@ var OrderInfo_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CompleteTrip",
 			Handler:    _OrderInfo_CompleteTrip_Handler,
+		},
+		{
+			MethodName: "AssignDriver",
+			Handler:    _OrderInfo_AssignDriver_Handler,
+		},
+		{
+			MethodName: "GetDriverIncomeList",
+			Handler:    _OrderInfo_GetDriverIncomeList_Handler,
+		},
+		{
+			MethodName: "GetDriverIncomeDetail",
+			Handler:    _OrderInfo_GetDriverIncomeDetail_Handler,
+		},
+		{
+			MethodName: "GetDriverIncomeSummary",
+			Handler:    _OrderInfo_GetDriverIncomeSummary_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

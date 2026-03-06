@@ -15,8 +15,11 @@ service order_info {
   rpc AcceptOrder(AcceptOrderReq) returns (AcceptOrderRes) {} //司机接单
   rpc StartTrip(StartTripReq) returns (StartTripRes) {} //开始行程
   rpc CompleteTrip(CompleteTripReq) returns (CompleteTripRes) {} //完成行程
+  rpc AssignDriver(AssignDriverReq) returns (AssignDriverRes) {} //平台指派司机
+  rpc GetDriverIncomeList(GetDriverIncomeListReq) returns (GetDriverIncomeListRes) {} //查询司机收入列表
+  rpc GetDriverIncomeDetail(GetDriverIncomeDetailReq) returns (GetDriverIncomeDetailRes) {} //查询司机收入详情
+  rpc GetDriverIncomeSummary(GetDriverIncomeSummaryReq) returns (GetDriverIncomeSummaryRes) {} //查询司机收入汇总
 }
-
 message OrderInfoCreateReq {
   uint32 user_id = 1;       // 用户ID
   string start_address = 2; // 起点地址
@@ -28,7 +31,6 @@ message OrderInfoCreateReq {
   uint32 car_type = 8;      // 车型类型(1-经济型 2-舒适型 3-豪华型)
   int32 pay_type = 9;       // 支付方式(1-微信 2-支付宝 3-现金)
 }
-
 message OrderInfoCreateRes {
   uint32 id = 1;         // 订单ID
   string order_sn = 2;   // 订单编号
@@ -39,7 +41,6 @@ message OrderInfoCreateRes {
 message OrderInfoGetDetailReq {
   string order_sn = 1; // 订单编号
 }
-
 message OrderInfoGetDetailRes {
   OrderDetail order = 1; // 订单详情
 }
@@ -50,7 +51,6 @@ message OrderInfoGetListReq {
   uint32 page = 3;      // 页码
   uint32 page_size = 4; // 每页数量
 }
-
 message OrderInfoGetListRes {
   repeated OrderDetail orders = 1; // 订单列表
   int32 total = 2;                 // 总数
@@ -60,7 +60,6 @@ message OrderInfoGetCountReq {
   uint32 user_id = 1; // 用户ID
   int32 status = 2;   // 订单状态筛选(0-全部)
 }
-
 message OrderInfoGetCountRes {
   int32 count = 1; // 订单数量
 }
@@ -69,7 +68,6 @@ message PaymentReq {
   string order_sn = 1;  // 订单编号
   int32 pay_type = 2;   // 支付方式(1-微信 2-支付宝 3-现金)
 }
-
 message PaymentRes {
   bool success = 1;   // 是否成功
   string message = 2; // 结果消息
@@ -82,7 +80,6 @@ message NotifyReq {
   string trade_status = 3; // 交易状态(TRADE_SUCCESS等)
   double total_amount = 4; // 实际支付金额
 }
-
 message NotifyRes {
   bool success = 1;   // 是否成功
   string message = 2; // 结果消息
@@ -93,17 +90,17 @@ message CancelOrderReq {
   uint32 user_id = 2;  // 用户ID
   string reason = 3;   // 取消原因
 }
-
 message CancelOrderRes {
-  bool success = 1;   // 是否成功
-  string message = 2; // 结果消息
+  bool success = 1;
+  string message = 2;
+  bool refunded = 3; // 是否已退款
+  string trade_no = 4; // 退款交易号
 }
 
 message AcceptOrderReq {
   string order_sn = 1;  // 订单编号
   uint32 driver_id = 2; // 司机ID
 }
-
 message AcceptOrderRes {
   bool success = 1;   // 是否成功
   string message = 2; // 结果消息
@@ -113,7 +110,6 @@ message StartTripReq {
   string order_sn = 1;  // 订单编号
   uint32 driver_id = 2; // 司机ID
 }
-
 message StartTripRes {
   bool success = 1;     // 是否成功
   string message = 2;   // 结果消息
@@ -126,11 +122,19 @@ message CompleteTripReq {
   double actual_distance = 3; // 实际行驶距离(公里)
   double actual_price = 4;    // 实际价格(根据实际距离计算)
 }
-
 message CompleteTripRes {
   bool success = 1;   // 是否成功
   string message = 2; // 结果消息
   int64 end_time = 3; // 行程结束时间(时间戳)
+}
+
+message AssignDriverReq {
+  string order_sn = 1;  // 订单编号
+  uint32 driver_id = 2; // 司机ID
+}
+message AssignDriverRes {
+  bool success = 1;   // 是否成功
+  string message = 2; // 结果消息
 }
 
 message OrderDetail {
@@ -156,4 +160,47 @@ message OrderDetail {
   int64 updated_at = 20;       // 更新时间(时间戳)
   int64 start_time = 21;       // 行程开始时间(时间戳)
   int64 end_time = 22;         // 行程结束时间(时间戳)
+}
+
+// 司机收入相关消息定义
+message GetDriverIncomeListReq {
+  uint32 driver_id = 1;     // 司机ID
+  string start_date = 2;    // 开始日期(YYYY-MM-DD)
+  string end_date = 3;      // 结束日期(YYYY-MM-DD)
+  uint32 page = 4;          // 页码
+  uint32 page_size = 5;     // 每页数量
+}
+message GetDriverIncomeListRes {
+  repeated DriverIncomeDetail incomes = 1; // 收入列表
+  int32 total = 2;                       // 总数
+  double total_amount = 3;               // 总收入
+}
+message GetDriverIncomeDetailReq {
+  uint32 id = 1;         // 收入记录ID
+  uint32 driver_id = 2;  // 司机ID
+}
+message GetDriverIncomeDetailRes {
+  DriverIncomeDetail income = 1; // 收入详情
+}
+message GetDriverIncomeSummaryReq {
+  uint32 driver_id = 1;     // 司机ID
+  string start_date = 2;    // 开始日期(YYYY-MM-DD)
+  string end_date = 3;      // 结束日期(YYYY-MM-DD)
+}
+message GetDriverIncomeSummaryRes {
+  double total_amount = 1;     // 总收入
+  int32 order_count = 2;       // 订单数量
+  double average_amount = 3;   // 平均收入
+  string period = 4;           // 统计周期
+}
+message DriverIncomeDetail {
+  uint32 id = 1;             // 收入记录ID
+  uint32 driver_id = 2;      // 司机ID
+  string order_sn = 3;        // 订单编号
+  double order_amount = 4;    // 订单金额
+  double driver_amount = 5;   // 司机实际收入
+  double platform_fee = 6;    // 平台费用
+  string order_time = 7;       // 订单时间
+  string status = 8;          // 状态(completed/pending)
+  string income_type = 9;     // 收入类型(order_bonus等)
 }

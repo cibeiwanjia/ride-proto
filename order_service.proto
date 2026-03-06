@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package orderProto;
 
-option go_package = "github.com/cibeiwanjia/ride-proto/order";
+option go_package = "./order";
 
 service order_info {
   rpc Create(OrderInfoCreateReq) returns (OrderInfoCreateRes) {} //创建订单
@@ -30,12 +30,15 @@ message OrderInfoCreateReq {
   double end_lng = 7;       // 终点经度
   uint32 car_type = 8;      // 车型类型(1-经济型 2-舒适型 3-豪华型)
   int32 pay_type = 9;       // 支付方式(1-微信 2-支付宝 3-现金)
+  int64 ride_time = 10;
 }
 message OrderInfoCreateRes {
-  uint32 id = 1;         // 订单ID
+  uint32 id = 1;         // 订单ID（异步创建时为0，需要查询获取）
   string order_sn = 2;   // 订单编号
   double price = 3;      // 预估价格
   int64 created_at = 4;  // 创建时间(时间戳)
+  string request_id = 5; // 请求ID（用于查询创建状态）
+  string status = 6;     // 订单状态（creating-创建中，created-已创建）
 }
 
 message OrderInfoGetDetailReq {
@@ -67,6 +70,7 @@ message OrderInfoGetCountRes {
 message PaymentReq {
   string order_sn = 1;  // 订单编号
   int32 pay_type = 2;   // 支付方式(1-微信 2-支付宝 3-现金)
+  string auth_code = 3; // 支付授权码(扫码支付时使用)
 }
 message PaymentRes {
   bool success = 1;   // 是否成功
@@ -160,6 +164,7 @@ message OrderDetail {
   int64 updated_at = 20;       // 更新时间(时间戳)
   int64 start_time = 21;       // 行程开始时间(时间戳)
   int64 end_time = 22;         // 行程结束时间(时间戳)
+  int64 ride_time = 23;
 }
 
 // 司机收入相关消息定义

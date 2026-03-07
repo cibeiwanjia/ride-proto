@@ -88,4 +88,66 @@ service NotifyService {
   rpc GetNotifyRecord(GetNotifyRecordReq) returns (GetNotifyRecordRes);
   rpc PushToDriver(PushNotifyReq) returns (PushNotifyRes);
   rpc UpdateDriverLocation(UpdateDriverLocationReq) returns (UpdateDriverLocationRes);
+  rpc CreateRideSharingOrder(CreateRideSharingOrderReq) returns (CreateRideSharingOrderRes);
+  rpc GetDriverOrders(GetDriverOrdersReq) returns (GetDriverOrdersRes);
+  rpc DriverAccept(DriverAcceptReq) returns (DriverAcceptRes);
+}
+
+// 创建顺风车预约单请求
+message CreateRideSharingOrderReq {
+  string order_sn = 1;          // 订单编号
+  string start_address = 2;     // 起点地址
+  double start_lat = 3;         // 起点纬度
+  double start_lng = 4;         // 起点经度
+  string end_address = 5;       // 终点地址
+  double end_lat = 6;           // 终点纬度
+  double end_lng = 7;           // 终点经度
+  double price = 8;              // 价格
+  int32 passengers = 9;          // 乘车人数
+  int32 is_carpool = 10;         // 是否拼车
+  double toll_fee = 11;          // 高速费
+  int32 toll_fee_payer = 12;     // 高速费承担方
+  string earliest_time = 13;     // 最早出发时间
+  string latest_time = 14;       // 最晚出发时间
+}
+
+// 创建顺风车预约单响应
+message CreateRideSharingOrderRes {
+  bool success = 1;
+  string message = 2;
+}
+
+// 司机订单请求
+message GetDriverOrdersReq {
+  uint32 driver_id = 1;
+  uint32 page = 2;
+  uint32 page_size = 3;
+}
+
+// 司机订单响应
+message GetDriverOrdersRes {
+  repeated DriverOrder orders = 1;
+}
+
+// 司机订单
+message DriverOrder {
+  string order_sn = 1;
+  int32 order_type = 2;
+  string title = 3;
+  string content = 4;
+  int32 status = 5;
+  int32 passengers = 6;
+  int32 is_carpool = 7;
+}
+
+// 司机接单请求
+message DriverAcceptReq {
+  uint32 driver_id = 1;
+  string order_sn = 2;
+}
+
+// 司机接单响应
+message DriverAcceptRes {
+  bool success = 1;
+  string message = 2;
 }

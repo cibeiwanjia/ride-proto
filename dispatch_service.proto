@@ -1,0 +1,93 @@
+syntax = "proto3";
+
+package dispatchProto;
+
+option go_package = "./dispatch";
+
+service Dispatch {
+  rpc DispatchOrder(DispatchOrderReq) returns (DispatchOrderRes);
+  rpc GetDispatchStatus(GetDispatchStatusReq) returns (GetDispatchStatusRes);
+  rpc CancelDispatch(CancelDispatchReq) returns (CancelDispatchRes);
+
+  rpc ForceDispatch(ForceDispatchRequest) returns (ForceDispatchResponse);  // 强派
+  rpc ManualDispatch(ManualDispatchRequest) returns (ManualDispatchResponse); // 人工派单
+  rpc DriverRejectOrder(DriverRejectOrderRequest) returns (DriverRejectOrderResponse);// 司机拒单
+}
+
+// DispatchOrderReq 派单请求
+message DispatchOrderReq {
+  uint32 order_id = 1;  // 订单 ID
+  string order_sn = 2;  // 订单编号
+}
+
+// DispatchOrderRes 派单响应
+message DispatchOrderRes {
+  string request_id = 1;  // 请求 ID
+  uint32 driver_id = 2;   // 司机 ID（0 表示未匹配到司机）
+  bool success = 3;       // 是否成功
+  string message = 4;     // 结果消息
+}
+
+// GetDispatchStatusReq 查询派单状态请求
+message GetDispatchStatusReq {
+  string order_sn = 1;  // 订单编号
+}
+
+// GetDispatchStatusRes 查询派单状态响应
+message GetDispatchStatusRes {
+  string status = 1;    // 派单状态：pending-待派单，dispatching-派单中，matched-已匹配，failed-失败，cancelled-已取消
+  uint32 driver_id = 2; // 司机 ID
+  string message = 3;   // 状态描述
+}
+
+// CancelDispatchReq 取消派单请求
+message CancelDispatchReq {
+  string order_sn = 1;  // 订单编号
+}
+
+// CancelDispatchRes 取消派单响应
+message CancelDispatchRes {
+  bool success = 1;   // 是否成功
+  string message = 2; // 结果消息
+}
+
+// ForceDispatchRequest 强派请求
+message ForceDispatchRequest {
+  uint32 order_id = 1;    // 订单ID
+  string order_sn = 2;    // 订单编号
+  uint32 driver_id = 3;   // 指定司机ID
+  uint32 operator_id = 4; // 操作员ID（可选）
+  string reason = 5;      // 强派原因
+}
+// ForceDispatchResponse 强派响应
+message ForceDispatchResponse {
+  bool success = 1;       // 是否成功
+  string message = 2;     // 结果消息
+  int64 dispatch_time = 3; // 派单时间(时间戳)
+}
+// ManualDispatchRequest 人工派单请求
+message ManualDispatchRequest {
+  uint32 order_id = 1;    // 订单ID
+  string order_sn = 2;    // 订单编号
+  uint32 driver_id = 3;   // 指定司机ID
+  uint32 operator_id = 4; // 操作员ID
+  string reason = 5;      // 派单原因
+}
+// ManualDispatchResponse 人工派单响应
+message ManualDispatchResponse {
+  bool success = 1;       // 是否成功
+  string message = 2;     // 结果消息
+  int64 dispatch_time = 3; // 派单时间(时间戳)
+}
+// DriverRejectOrderRequest 司机拒单请求
+message DriverRejectOrderRequest {
+  string order_sn = 1;  // 订单编号
+  uint32 driver_id = 2; // 司机ID
+  string reason = 3;    // 拒单原因
+}
+// DriverRejectOrderResponse 司机拒单响应
+message DriverRejectOrderResponse {
+  bool success = 1;   // 是否成功
+  string message = 2; // 结果消息
+  int32 reject_count = 3; // 已拒单次数
+}

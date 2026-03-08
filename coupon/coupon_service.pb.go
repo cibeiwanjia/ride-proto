@@ -124,7 +124,7 @@ type CreateDistributeTaskResponse struct {
 	unknownFields protoimpl.UnknownFields
 
 	Success bool   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`             // 是否成功
-	Message string `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`              // 响应消息
+	Message string `protobuf:"bytes,2,opt,name=message-api,proto3" json:"message-api,omitempty"`              // 响应消息
 	TaskId  uint64 `protobuf:"varint,3,opt,name=task_id,json=taskId,proto3" json:"task_id,omitempty"` // 任务ID
 }
 
@@ -244,7 +244,7 @@ type ExecuteDistributeTaskResponse struct {
 	unknownFields protoimpl.UnknownFields
 
 	Success     bool              `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`                                                                                                                   // 是否成功
-	Message     string            `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`                                                                                                                    // 响应消息
+	Message     string            `protobuf:"bytes,2,opt,name=message-api,proto3" json:"message-api,omitempty"`                                                                                                                    // 响应消息
 	SuccessNum  int32             `protobuf:"varint,3,opt,name=success_num,json=successNum,proto3" json:"success_num,omitempty"`                                                                                           // 成功数量
 	FailNum     int32             `protobuf:"varint,4,opt,name=fail_num,json=failNum,proto3" json:"fail_num,omitempty"`                                                                                                    // 失败数量
 	FailReasons map[string]string `protobuf:"bytes,5,rep,name=fail_reasons,json=failReasons,proto3" json:"fail_reasons,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"` // 失败原因
@@ -388,7 +388,7 @@ type UserGetCouponResponse struct {
 	unknownFields protoimpl.UnknownFields
 
 	Success      bool   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`                                 // 是否成功
-	Message      string `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`                                  // 提示信息
+	Message      string `protobuf:"bytes,2,opt,name=message-api,proto3" json:"message-api,omitempty"`                                  // 提示信息
 	UserCouponId uint64 `protobuf:"varint,3,opt,name=user_coupon_id,json=userCouponId,proto3" json:"user_coupon_id,omitempty"` // 用户优惠券ID
 	CouponId     uint32 `protobuf:"varint,4,opt,name=coupon_id,json=couponId,proto3" json:"coupon_id,omitempty"`               // 优惠券ID
 	PassengerId  uint64 `protobuf:"varint,5,opt,name=passenger_id,json=passengerId,proto3" json:"passenger_id,omitempty"`      // 乘客ID

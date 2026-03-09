@@ -1,0 +1,79 @@
+syntax = "proto3";
+
+package weatherproto;
+
+option go_package = "./weather";
+
+// ============================================================
+// 天气预警服务
+// ============================================================
+
+service WeatherService {
+  // 获取天气预警信息
+  rpc GetWeatherAlert(GetWeatherAlertRequest) returns (GetWeatherAlertResponse);
+}
+
+// ============================================================
+// 请求/响应定义
+// ============================================================
+
+// GetWeatherAlertRequest 获取天气预警请求
+message GetWeatherAlertRequest {
+  string city = 1;              // 城市名称或城市编码
+  string key = 2;               // 高德API密钥
+  string extensions = 3;        // 查询类型：base=实况，all=预报
+}
+
+// GetWeatherAlertResponse 获取天气预警响应
+message GetWeatherAlertResponse {
+  bool success = 1;
+  string message = 2;
+  
+  // 预警信息
+  repeated AlertItem alerts = 3;
+  
+  // 实况天气
+  CurrentWeather current_weather = 4;
+  
+  // 预报天气列表
+  ForecastList weather_forecast = 5;
+}
+
+// AlertItem 预警条目
+message AlertItem {
+  string alert_type = 1;        // 预警类型，如：暴雨黄色预警
+  int32 alert_level = 2;        // 预警级别：1-蓝 2-黄 3-橙 4-红
+  string content = 3;           // 预警内容
+  int64 start_time = 4;         // 预警开始时间（Unix时间戳）
+  int64 end_time = 5;           // 预警结束时间（Unix时间戳）
+  string effective_time = 6;    // 生效时间
+  string issue_time = 7;        // 发布时间
+}
+
+// CurrentWeather 实况天气
+message CurrentWeather {
+  string weather = 1;           // 天气现象，如：多云
+  double temperature = 2;       // 实时气温（摄氏度）
+  double humidity = 3;          // 湿度（%）
+  string wind_direction = 4;    // 风向
+  double wind_speed = 5;        // 风速（km/h）
+  double wind_power = 6;        // 风力等级
+  string report_time = 7;       // 数据发布时间
+}
+
+// ForecastWeather 预报天气
+message ForecastWeather {
+  string date = 1;              // 日期
+  string week = 2;              // 星期
+  string day_weather = 3;       // 白天天气
+  string night_weather = 4;     // 晚上天气
+  double temp_high = 5;         // 最高温度
+  double temp_low = 6;          // 最低温度
+  string wind_direction = 7;    // 风向
+  double wind_speed = 8;        // 风速
+}
+
+// ForecastList 预报天气列表
+message ForecastList {
+  repeated ForecastWeather forecasts = 1;
+}

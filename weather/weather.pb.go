@@ -82,19 +82,19 @@ func (x *GetWeatherAlertRequest) GetExtensions() string {
 	return ""
 }
 
-// GetWeatherAlertResponse 获取天气预警响应
+// GetWeatherAlertResponse 获取天气预警响应（高德API返回结构）
 type GetWeatherAlertResponse struct {
-	state   protoimpl.MessageState `protogen:"open.v1"`
-	Success bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
-	Message string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
-	// 预警信息
-	Alerts []*AlertItem `protobuf:"bytes,3,rep,name=alerts,proto3" json:"alerts,omitempty"`
-	// 实况天气
-	CurrentWeather *CurrentWeather `protobuf:"bytes,4,opt,name=current_weather,json=currentWeather,proto3" json:"current_weather,omitempty"`
+	state    protoimpl.MessageState `protogen:"open.v1"`
+	Status   string                 `protobuf:"bytes,1,opt,name=status,proto3" json:"status,omitempty"`     // 查询结果状态
+	Count    string                 `protobuf:"bytes,2,opt,name=count,proto3" json:"count,omitempty"`       // 查询结果的数量
+	Info     string                 `protobuf:"bytes,3,opt,name=info,proto3" json:"info,omitempty"`         // 天气信息摘要
+	Infocode string                 `protobuf:"bytes,4,opt,name=infocode,proto3" json:"infocode,omitempty"` // 状态码
+	Success  bool                   `protobuf:"varint,5,opt,name=success,proto3" json:"success,omitempty"`
+	Msg      string                 `protobuf:"bytes,6,opt,name=msg,proto3" json:"msg,omitempty"`
 	// 预报天气列表
-	WeatherForecast *ForecastList `protobuf:"bytes,5,opt,name=weather_forecast,json=weatherForecast,proto3" json:"weather_forecast,omitempty"`
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
+	Forecasts     []*Forecast `protobuf:"bytes,7,rep,name=forecasts,proto3" json:"forecasts,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetWeatherAlertResponse) Reset() {
@@ -127,6 +127,34 @@ func (*GetWeatherAlertResponse) Descriptor() ([]byte, []int) {
 	return file_weather_proto_rawDescGZIP(), []int{1}
 }
 
+func (x *GetWeatherAlertResponse) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
+func (x *GetWeatherAlertResponse) GetCount() string {
+	if x != nil {
+		return x.Count
+	}
+	return ""
+}
+
+func (x *GetWeatherAlertResponse) GetInfo() string {
+	if x != nil {
+		return x.Info
+	}
+	return ""
+}
+
+func (x *GetWeatherAlertResponse) GetInfocode() string {
+	if x != nil {
+		return x.Infocode
+	}
+	return ""
+}
+
 func (x *GetWeatherAlertResponse) GetSuccess() bool {
 	if x != nil {
 		return x.Success
@@ -134,421 +162,2365 @@ func (x *GetWeatherAlertResponse) GetSuccess() bool {
 	return false
 }
 
-func (x *GetWeatherAlertResponse) GetMessage() string {
+func (x *GetWeatherAlertResponse) GetMsg() string {
 	if x != nil {
-		return x.Message
+		return x.Msg
 	}
 	return ""
 }
 
-func (x *GetWeatherAlertResponse) GetAlerts() []*AlertItem {
-	if x != nil {
-		return x.Alerts
-	}
-	return nil
-}
-
-func (x *GetWeatherAlertResponse) GetCurrentWeather() *CurrentWeather {
-	if x != nil {
-		return x.CurrentWeather
-	}
-	return nil
-}
-
-func (x *GetWeatherAlertResponse) GetWeatherForecast() *ForecastList {
-	if x != nil {
-		return x.WeatherForecast
-	}
-	return nil
-}
-
-// AlertItem 预警条目
-type AlertItem struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	AlertType     string                 `protobuf:"bytes,1,opt,name=alert_type,json=alertType,proto3" json:"alert_type,omitempty"`             // 预警类型，如：暴雨黄色预警
-	AlertLevel    int32                  `protobuf:"varint,2,opt,name=alert_level,json=alertLevel,proto3" json:"alert_level,omitempty"`         // 预警级别：1-蓝 2-黄 3-橙 4-红
-	Content       string                 `protobuf:"bytes,3,opt,name=content,proto3" json:"content,omitempty"`                                  // 预警内容
-	StartTime     int64                  `protobuf:"varint,4,opt,name=start_time,json=startTime,proto3" json:"start_time,omitempty"`            // 预警开始时间（Unix时间戳）
-	EndTime       int64                  `protobuf:"varint,5,opt,name=end_time,json=endTime,proto3" json:"end_time,omitempty"`                  // 预警结束时间（Unix时间戳）
-	EffectiveTime string                 `protobuf:"bytes,6,opt,name=effective_time,json=effectiveTime,proto3" json:"effective_time,omitempty"` // 生效时间
-	IssueTime     string                 `protobuf:"bytes,7,opt,name=issue_time,json=issueTime,proto3" json:"issue_time,omitempty"`             // 发布时间
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *AlertItem) Reset() {
-	*x = AlertItem{}
-	mi := &file_weather_proto_msgTypes[2]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *AlertItem) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*AlertItem) ProtoMessage() {}
-
-func (x *AlertItem) ProtoReflect() protoreflect.Message {
-	mi := &file_weather_proto_msgTypes[2]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use AlertItem.ProtoReflect.Descriptor instead.
-func (*AlertItem) Descriptor() ([]byte, []int) {
-	return file_weather_proto_rawDescGZIP(), []int{2}
-}
-
-func (x *AlertItem) GetAlertType() string {
-	if x != nil {
-		return x.AlertType
-	}
-	return ""
-}
-
-func (x *AlertItem) GetAlertLevel() int32 {
-	if x != nil {
-		return x.AlertLevel
-	}
-	return 0
-}
-
-func (x *AlertItem) GetContent() string {
-	if x != nil {
-		return x.Content
-	}
-	return ""
-}
-
-func (x *AlertItem) GetStartTime() int64 {
-	if x != nil {
-		return x.StartTime
-	}
-	return 0
-}
-
-func (x *AlertItem) GetEndTime() int64 {
-	if x != nil {
-		return x.EndTime
-	}
-	return 0
-}
-
-func (x *AlertItem) GetEffectiveTime() string {
-	if x != nil {
-		return x.EffectiveTime
-	}
-	return ""
-}
-
-func (x *AlertItem) GetIssueTime() string {
-	if x != nil {
-		return x.IssueTime
-	}
-	return ""
-}
-
-// CurrentWeather 实况天气
-type CurrentWeather struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Weather       string                 `protobuf:"bytes,1,opt,name=weather,proto3" json:"weather,omitempty"`                                  // 天气现象，如：多云
-	Temperature   float64                `protobuf:"fixed64,2,opt,name=temperature,proto3" json:"temperature,omitempty"`                        // 实时气温（摄氏度）
-	Humidity      float64                `protobuf:"fixed64,3,opt,name=humidity,proto3" json:"humidity,omitempty"`                              // 湿度（%）
-	WindDirection string                 `protobuf:"bytes,4,opt,name=wind_direction,json=windDirection,proto3" json:"wind_direction,omitempty"` // 风向
-	WindSpeed     float64                `protobuf:"fixed64,5,opt,name=wind_speed,json=windSpeed,proto3" json:"wind_speed,omitempty"`           // 风速（km/h）
-	WindPower     float64                `protobuf:"fixed64,6,opt,name=wind_power,json=windPower,proto3" json:"wind_power,omitempty"`           // 风力等级
-	ReportTime    string                 `protobuf:"bytes,7,opt,name=report_time,json=reportTime,proto3" json:"report_time,omitempty"`          // 数据发布时间
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *CurrentWeather) Reset() {
-	*x = CurrentWeather{}
-	mi := &file_weather_proto_msgTypes[3]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *CurrentWeather) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*CurrentWeather) ProtoMessage() {}
-
-func (x *CurrentWeather) ProtoReflect() protoreflect.Message {
-	mi := &file_weather_proto_msgTypes[3]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use CurrentWeather.ProtoReflect.Descriptor instead.
-func (*CurrentWeather) Descriptor() ([]byte, []int) {
-	return file_weather_proto_rawDescGZIP(), []int{3}
-}
-
-func (x *CurrentWeather) GetWeather() string {
-	if x != nil {
-		return x.Weather
-	}
-	return ""
-}
-
-func (x *CurrentWeather) GetTemperature() float64 {
-	if x != nil {
-		return x.Temperature
-	}
-	return 0
-}
-
-func (x *CurrentWeather) GetHumidity() float64 {
-	if x != nil {
-		return x.Humidity
-	}
-	return 0
-}
-
-func (x *CurrentWeather) GetWindDirection() string {
-	if x != nil {
-		return x.WindDirection
-	}
-	return ""
-}
-
-func (x *CurrentWeather) GetWindSpeed() float64 {
-	if x != nil {
-		return x.WindSpeed
-	}
-	return 0
-}
-
-func (x *CurrentWeather) GetWindPower() float64 {
-	if x != nil {
-		return x.WindPower
-	}
-	return 0
-}
-
-func (x *CurrentWeather) GetReportTime() string {
-	if x != nil {
-		return x.ReportTime
-	}
-	return ""
-}
-
-// ForecastWeather 预报天气
-type ForecastWeather struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Date          string                 `protobuf:"bytes,1,opt,name=date,proto3" json:"date,omitempty"`                                        // 日期
-	Week          string                 `protobuf:"bytes,2,opt,name=week,proto3" json:"week,omitempty"`                                        // 星期
-	DayWeather    string                 `protobuf:"bytes,3,opt,name=day_weather,json=dayWeather,proto3" json:"day_weather,omitempty"`          // 白天天气
-	NightWeather  string                 `protobuf:"bytes,4,opt,name=night_weather,json=nightWeather,proto3" json:"night_weather,omitempty"`    // 晚上天气
-	TempHigh      float64                `protobuf:"fixed64,5,opt,name=temp_high,json=tempHigh,proto3" json:"temp_high,omitempty"`              // 最高温度
-	TempLow       float64                `protobuf:"fixed64,6,opt,name=temp_low,json=tempLow,proto3" json:"temp_low,omitempty"`                 // 最低温度
-	WindDirection string                 `protobuf:"bytes,7,opt,name=wind_direction,json=windDirection,proto3" json:"wind_direction,omitempty"` // 风向
-	WindSpeed     float64                `protobuf:"fixed64,8,opt,name=wind_speed,json=windSpeed,proto3" json:"wind_speed,omitempty"`           // 风速
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ForecastWeather) Reset() {
-	*x = ForecastWeather{}
-	mi := &file_weather_proto_msgTypes[4]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ForecastWeather) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ForecastWeather) ProtoMessage() {}
-
-func (x *ForecastWeather) ProtoReflect() protoreflect.Message {
-	mi := &file_weather_proto_msgTypes[4]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ForecastWeather.ProtoReflect.Descriptor instead.
-func (*ForecastWeather) Descriptor() ([]byte, []int) {
-	return file_weather_proto_rawDescGZIP(), []int{4}
-}
-
-func (x *ForecastWeather) GetDate() string {
-	if x != nil {
-		return x.Date
-	}
-	return ""
-}
-
-func (x *ForecastWeather) GetWeek() string {
-	if x != nil {
-		return x.Week
-	}
-	return ""
-}
-
-func (x *ForecastWeather) GetDayWeather() string {
-	if x != nil {
-		return x.DayWeather
-	}
-	return ""
-}
-
-func (x *ForecastWeather) GetNightWeather() string {
-	if x != nil {
-		return x.NightWeather
-	}
-	return ""
-}
-
-func (x *ForecastWeather) GetTempHigh() float64 {
-	if x != nil {
-		return x.TempHigh
-	}
-	return 0
-}
-
-func (x *ForecastWeather) GetTempLow() float64 {
-	if x != nil {
-		return x.TempLow
-	}
-	return 0
-}
-
-func (x *ForecastWeather) GetWindDirection() string {
-	if x != nil {
-		return x.WindDirection
-	}
-	return ""
-}
-
-func (x *ForecastWeather) GetWindSpeed() float64 {
-	if x != nil {
-		return x.WindSpeed
-	}
-	return 0
-}
-
-// ForecastList 预报天气列表
-type ForecastList struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Forecasts     []*ForecastWeather     `protobuf:"bytes,1,rep,name=forecasts,proto3" json:"forecasts,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ForecastList) Reset() {
-	*x = ForecastList{}
-	mi := &file_weather_proto_msgTypes[5]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ForecastList) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ForecastList) ProtoMessage() {}
-
-func (x *ForecastList) ProtoReflect() protoreflect.Message {
-	mi := &file_weather_proto_msgTypes[5]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ForecastList.ProtoReflect.Descriptor instead.
-func (*ForecastList) Descriptor() ([]byte, []int) {
-	return file_weather_proto_rawDescGZIP(), []int{5}
-}
-
-func (x *ForecastList) GetForecasts() []*ForecastWeather {
+func (x *GetWeatherAlertResponse) GetForecasts() []*Forecast {
 	if x != nil {
 		return x.Forecasts
 	}
 	return nil
 }
 
+// Forecast 预报天气
+type Forecast struct {
+	state      protoimpl.MessageState `protogen:"open.v1"`
+	City       string                 `protobuf:"bytes,1,opt,name=city,proto3" json:"city,omitempty"`             // 城市名称
+	Adcode     string                 `protobuf:"bytes,2,opt,name=adcode,proto3" json:"adcode,omitempty"`         // 城市行政区划代码
+	Province   string                 `protobuf:"bytes,3,opt,name=province,proto3" json:"province,omitempty"`     // 所在省份名称
+	Reporttime string                 `protobuf:"bytes,4,opt,name=reporttime,proto3" json:"reporttime,omitempty"` // 发布时间
+	// 天气预报列表
+	Casts         []*Cast `protobuf:"bytes,5,rep,name=casts,proto3" json:"casts,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Forecast) Reset() {
+	*x = Forecast{}
+	mi := &file_weather_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Forecast) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Forecast) ProtoMessage() {}
+
+func (x *Forecast) ProtoReflect() protoreflect.Message {
+	mi := &file_weather_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Forecast.ProtoReflect.Descriptor instead.
+func (*Forecast) Descriptor() ([]byte, []int) {
+	return file_weather_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *Forecast) GetCity() string {
+	if x != nil {
+		return x.City
+	}
+	return ""
+}
+
+func (x *Forecast) GetAdcode() string {
+	if x != nil {
+		return x.Adcode
+	}
+	return ""
+}
+
+func (x *Forecast) GetProvince() string {
+	if x != nil {
+		return x.Province
+	}
+	return ""
+}
+
+func (x *Forecast) GetReporttime() string {
+	if x != nil {
+		return x.Reporttime
+	}
+	return ""
+}
+
+func (x *Forecast) GetCasts() []*Cast {
+	if x != nil {
+		return x.Casts
+	}
+	return nil
+}
+
+// Cast 天气预报详情
+type Cast struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	Date           string                 `protobuf:"bytes,1,opt,name=date,proto3" json:"date,omitempty"`                                           // 日期 yyyy-mm-dd
+	Week           string                 `protobuf:"bytes,2,opt,name=week,proto3" json:"week,omitempty"`                                           // 星期
+	Dayweather     string                 `protobuf:"bytes,3,opt,name=dayweather,proto3" json:"dayweather,omitempty"`                               // 白天天气状况
+	Nightweather   string                 `protobuf:"bytes,4,opt,name=nightweather,proto3" json:"nightweather,omitempty"`                           // 夜间天气状况
+	Daytemp        string                 `protobuf:"bytes,5,opt,name=daytemp,proto3" json:"daytemp,omitempty"`                                     // 白天温度（摄氏度）
+	Nighttemp      string                 `protobuf:"bytes,6,opt,name=nighttemp,proto3" json:"nighttemp,omitempty"`                                 // 夜间温度（摄氏度）
+	DaytempFloat   string                 `protobuf:"bytes,7,opt,name=daytemp_float,json=daytempFloat,proto3" json:"daytemp_float,omitempty"`       // 白天温度（浮点数）
+	NighttempFloat string                 `protobuf:"bytes,8,opt,name=nighttemp_float,json=nighttempFloat,proto3" json:"nighttemp_float,omitempty"` // 夜间温度（浮点数）
+	Daywind        string                 `protobuf:"bytes,9,opt,name=daywind,proto3" json:"daywind,omitempty"`                                     // 白天风力状况
+	Nightwind      string                 `protobuf:"bytes,10,opt,name=nightwind,proto3" json:"nightwind,omitempty"`                                // 夜间风力状况
+	Daypower       string                 `protobuf:"bytes,11,opt,name=daypower,proto3" json:"daypower,omitempty"`                                  // 白天风力信息
+	Nightpower     string                 `protobuf:"bytes,12,opt,name=nightpower,proto3" json:"nightpower,omitempty"`                              // 夜间风力信息
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *Cast) Reset() {
+	*x = Cast{}
+	mi := &file_weather_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Cast) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Cast) ProtoMessage() {}
+
+func (x *Cast) ProtoReflect() protoreflect.Message {
+	mi := &file_weather_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Cast.ProtoReflect.Descriptor instead.
+func (*Cast) Descriptor() ([]byte, []int) {
+	return file_weather_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *Cast) GetDate() string {
+	if x != nil {
+		return x.Date
+	}
+	return ""
+}
+
+func (x *Cast) GetWeek() string {
+	if x != nil {
+		return x.Week
+	}
+	return ""
+}
+
+func (x *Cast) GetDayweather() string {
+	if x != nil {
+		return x.Dayweather
+	}
+	return ""
+}
+
+func (x *Cast) GetNightweather() string {
+	if x != nil {
+		return x.Nightweather
+	}
+	return ""
+}
+
+func (x *Cast) GetDaytemp() string {
+	if x != nil {
+		return x.Daytemp
+	}
+	return ""
+}
+
+func (x *Cast) GetNighttemp() string {
+	if x != nil {
+		return x.Nighttemp
+	}
+	return ""
+}
+
+func (x *Cast) GetDaytempFloat() string {
+	if x != nil {
+		return x.DaytempFloat
+	}
+	return ""
+}
+
+func (x *Cast) GetNighttempFloat() string {
+	if x != nil {
+		return x.NighttempFloat
+	}
+	return ""
+}
+
+func (x *Cast) GetDaywind() string {
+	if x != nil {
+		return x.Daywind
+	}
+	return ""
+}
+
+func (x *Cast) GetNightwind() string {
+	if x != nil {
+		return x.Nightwind
+	}
+	return ""
+}
+
+func (x *Cast) GetDaypower() string {
+	if x != nil {
+		return x.Daypower
+	}
+	return ""
+}
+
+func (x *Cast) GetNightpower() string {
+	if x != nil {
+		return x.Nightpower
+	}
+	return ""
+}
+
+type GetWeatherRealRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserLat       float64                `protobuf:"fixed64,1,opt,name=user_lat,json=userLat,proto3" json:"user_lat,omitempty"` // 用户纬度
+	UserLng       float64                `protobuf:"fixed64,2,opt,name=user_lng,json=userLng,proto3" json:"user_lng,omitempty"` // 用户经度
+	Key           string                 `protobuf:"bytes,3,opt,name=key,proto3" json:"key,omitempty"`                          // 高德API密钥
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetWeatherRealRequest) Reset() {
+	*x = GetWeatherRealRequest{}
+	mi := &file_weather_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetWeatherRealRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetWeatherRealRequest) ProtoMessage() {}
+
+func (x *GetWeatherRealRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_weather_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetWeatherRealRequest.ProtoReflect.Descriptor instead.
+func (*GetWeatherRealRequest) Descriptor() ([]byte, []int) {
+	return file_weather_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *GetWeatherRealRequest) GetUserLat() float64 {
+	if x != nil {
+		return x.UserLat
+	}
+	return 0
+}
+
+func (x *GetWeatherRealRequest) GetUserLng() float64 {
+	if x != nil {
+		return x.UserLng
+	}
+	return 0
+}
+
+func (x *GetWeatherRealRequest) GetKey() string {
+	if x != nil {
+		return x.Key
+	}
+	return ""
+}
+
+type GetWeatherRealResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
+	RainIntensity float64                `protobuf:"fixed64,3,opt,name=rain_intensity,json=rainIntensity,proto3" json:"rain_intensity,omitempty"` // 降雨强度 mm/h
+	RainRange     float64                `protobuf:"fixed64,4,opt,name=rain_range,json=rainRange,proto3" json:"rain_range,omitempty"`             // 降雨范围 km
+	WaterPoints   []*WaterPoint          `protobuf:"bytes,5,rep,name=water_points,json=waterPoints,proto3" json:"water_points,omitempty"`         // 积水点列表
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetWeatherRealResponse) Reset() {
+	*x = GetWeatherRealResponse{}
+	mi := &file_weather_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetWeatherRealResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetWeatherRealResponse) ProtoMessage() {}
+
+func (x *GetWeatherRealResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_weather_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetWeatherRealResponse.ProtoReflect.Descriptor instead.
+func (*GetWeatherRealResponse) Descriptor() ([]byte, []int) {
+	return file_weather_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *GetWeatherRealResponse) GetSuccess() bool {
+	if x != nil {
+		return x.Success
+	}
+	return false
+}
+
+func (x *GetWeatherRealResponse) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
+func (x *GetWeatherRealResponse) GetRainIntensity() float64 {
+	if x != nil {
+		return x.RainIntensity
+	}
+	return 0
+}
+
+func (x *GetWeatherRealResponse) GetRainRange() float64 {
+	if x != nil {
+		return x.RainRange
+	}
+	return 0
+}
+
+func (x *GetWeatherRealResponse) GetWaterPoints() []*WaterPoint {
+	if x != nil {
+		return x.WaterPoints
+	}
+	return nil
+}
+
+type WaterPoint struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Lat           float64                `protobuf:"fixed64,1,opt,name=lat,proto3" json:"lat,omitempty"`         // 纬度
+	Lng           float64                `protobuf:"fixed64,2,opt,name=lng,proto3" json:"lng,omitempty"`         // 经度
+	Depth         int32                  `protobuf:"varint,3,opt,name=depth,proto3" json:"depth,omitempty"`      // 积水深度 cm
+	Location      string                 `protobuf:"bytes,4,opt,name=location,proto3" json:"location,omitempty"` // 位置描述
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *WaterPoint) Reset() {
+	*x = WaterPoint{}
+	mi := &file_weather_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *WaterPoint) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*WaterPoint) ProtoMessage() {}
+
+func (x *WaterPoint) ProtoReflect() protoreflect.Message {
+	mi := &file_weather_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use WaterPoint.ProtoReflect.Descriptor instead.
+func (*WaterPoint) Descriptor() ([]byte, []int) {
+	return file_weather_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *WaterPoint) GetLat() float64 {
+	if x != nil {
+		return x.Lat
+	}
+	return 0
+}
+
+func (x *WaterPoint) GetLng() float64 {
+	if x != nil {
+		return x.Lng
+	}
+	return 0
+}
+
+func (x *WaterPoint) GetDepth() int32 {
+	if x != nil {
+		return x.Depth
+	}
+	return 0
+}
+
+func (x *WaterPoint) GetLocation() string {
+	if x != nil {
+		return x.Location
+	}
+	return ""
+}
+
+type ReportWaterRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserId        int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`         // 用户ID
+	ImgBase64     string                 `protobuf:"bytes,2,opt,name=img_base64,json=imgBase64,proto3" json:"img_base64,omitempty"` // 图片Base64
+	Lat           float64                `protobuf:"fixed64,3,opt,name=lat,proto3" json:"lat,omitempty"`                            // 纬度
+	Lng           float64                `protobuf:"fixed64,4,opt,name=lng,proto3" json:"lng,omitempty"`                            // 经度
+	Key           string                 `protobuf:"bytes,5,opt,name=key,proto3" json:"key,omitempty"`                              // 高德API密钥
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ReportWaterRequest) Reset() {
+	*x = ReportWaterRequest{}
+	mi := &file_weather_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ReportWaterRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ReportWaterRequest) ProtoMessage() {}
+
+func (x *ReportWaterRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_weather_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ReportWaterRequest.ProtoReflect.Descriptor instead.
+func (*ReportWaterRequest) Descriptor() ([]byte, []int) {
+	return file_weather_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *ReportWaterRequest) GetUserId() int64 {
+	if x != nil {
+		return x.UserId
+	}
+	return 0
+}
+
+func (x *ReportWaterRequest) GetImgBase64() string {
+	if x != nil {
+		return x.ImgBase64
+	}
+	return ""
+}
+
+func (x *ReportWaterRequest) GetLat() float64 {
+	if x != nil {
+		return x.Lat
+	}
+	return 0
+}
+
+func (x *ReportWaterRequest) GetLng() float64 {
+	if x != nil {
+		return x.Lng
+	}
+	return 0
+}
+
+func (x *ReportWaterRequest) GetKey() string {
+	if x != nil {
+		return x.Key
+	}
+	return ""
+}
+
+type ReportWaterResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
+	WaterDepth    int32                  `protobuf:"varint,3,opt,name=water_depth,json=waterDepth,proto3" json:"water_depth,omitempty"`      // AI识别积水深度
+	ReportId      string                 `protobuf:"bytes,4,opt,name=report_id,json=reportId,proto3" json:"report_id,omitempty"`             // 上报ID
+	Coupon        *CouponInfo            `protobuf:"bytes,5,opt,name=coupon,proto3" json:"coupon,omitempty"`                                 // 奖励优惠券
+	ReportStatus  string                 `protobuf:"bytes,6,opt,name=report_status,json=reportStatus,proto3" json:"report_status,omitempty"` // 上报状态
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ReportWaterResponse) Reset() {
+	*x = ReportWaterResponse{}
+	mi := &file_weather_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ReportWaterResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ReportWaterResponse) ProtoMessage() {}
+
+func (x *ReportWaterResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_weather_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ReportWaterResponse.ProtoReflect.Descriptor instead.
+func (*ReportWaterResponse) Descriptor() ([]byte, []int) {
+	return file_weather_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *ReportWaterResponse) GetSuccess() bool {
+	if x != nil {
+		return x.Success
+	}
+	return false
+}
+
+func (x *ReportWaterResponse) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
+func (x *ReportWaterResponse) GetWaterDepth() int32 {
+	if x != nil {
+		return x.WaterDepth
+	}
+	return 0
+}
+
+func (x *ReportWaterResponse) GetReportId() string {
+	if x != nil {
+		return x.ReportId
+	}
+	return ""
+}
+
+func (x *ReportWaterResponse) GetCoupon() *CouponInfo {
+	if x != nil {
+		return x.Coupon
+	}
+	return nil
+}
+
+func (x *ReportWaterResponse) GetReportStatus() string {
+	if x != nil {
+		return x.ReportStatus
+	}
+	return ""
+}
+
+type CouponInfo struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	CouponId      int64                  `protobuf:"varint,1,opt,name=coupon_id,json=couponId,proto3" json:"coupon_id,omitempty"`
+	Amount        int32                  `protobuf:"varint,2,opt,name=amount,proto3" json:"amount,omitempty"` // 金额
+	Desc          string                 `protobuf:"bytes,3,opt,name=desc,proto3" json:"desc,omitempty"`      // 描述
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CouponInfo) Reset() {
+	*x = CouponInfo{}
+	mi := &file_weather_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CouponInfo) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CouponInfo) ProtoMessage() {}
+
+func (x *CouponInfo) ProtoReflect() protoreflect.Message {
+	mi := &file_weather_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CouponInfo.ProtoReflect.Descriptor instead.
+func (*CouponInfo) Descriptor() ([]byte, []int) {
+	return file_weather_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *CouponInfo) GetCouponId() int64 {
+	if x != nil {
+		return x.CouponId
+	}
+	return 0
+}
+
+func (x *CouponInfo) GetAmount() int32 {
+	if x != nil {
+		return x.Amount
+	}
+	return 0
+}
+
+func (x *CouponInfo) GetDesc() string {
+	if x != nil {
+		return x.Desc
+	}
+	return ""
+}
+
+type GetRideShelterRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserLat       float64                `protobuf:"fixed64,1,opt,name=user_lat,json=userLat,proto3" json:"user_lat,omitempty"` // 用户纬度
+	UserLng       float64                `protobuf:"fixed64,2,opt,name=user_lng,json=userLng,proto3" json:"user_lng,omitempty"` // 用户经度
+	Key           string                 `protobuf:"bytes,3,opt,name=key,proto3" json:"key,omitempty"`                          // 高德API密钥
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetRideShelterRequest) Reset() {
+	*x = GetRideShelterRequest{}
+	mi := &file_weather_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetRideShelterRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetRideShelterRequest) ProtoMessage() {}
+
+func (x *GetRideShelterRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_weather_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetRideShelterRequest.ProtoReflect.Descriptor instead.
+func (*GetRideShelterRequest) Descriptor() ([]byte, []int) {
+	return file_weather_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *GetRideShelterRequest) GetUserLat() float64 {
+	if x != nil {
+		return x.UserLat
+	}
+	return 0
+}
+
+func (x *GetRideShelterRequest) GetUserLng() float64 {
+	if x != nil {
+		return x.UserLng
+	}
+	return 0
+}
+
+func (x *GetRideShelterRequest) GetKey() string {
+	if x != nil {
+		return x.Key
+	}
+	return ""
+}
+
+type GetRideShelterResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
+	Shelters      []*Shelter             `protobuf:"bytes,3,rep,name=shelters,proto3" json:"shelters,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetRideShelterResponse) Reset() {
+	*x = GetRideShelterResponse{}
+	mi := &file_weather_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetRideShelterResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetRideShelterResponse) ProtoMessage() {}
+
+func (x *GetRideShelterResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_weather_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetRideShelterResponse.ProtoReflect.Descriptor instead.
+func (*GetRideShelterResponse) Descriptor() ([]byte, []int) {
+	return file_weather_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *GetRideShelterResponse) GetSuccess() bool {
+	if x != nil {
+		return x.Success
+	}
+	return false
+}
+
+func (x *GetRideShelterResponse) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
+func (x *GetRideShelterResponse) GetShelters() []*Shelter {
+	if x != nil {
+		return x.Shelters
+	}
+	return nil
+}
+
+type Shelter struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                             // 名称
+	Type          string                 `protobuf:"bytes,3,opt,name=type,proto3" json:"type,omitempty"`                             // 类型：地铁站/商场/写字楼
+	Distance      float64                `protobuf:"fixed64,4,opt,name=distance,proto3" json:"distance,omitempty"`                   // 距离（米）
+	WalkTime      int32                  `protobuf:"varint,5,opt,name=walk_time,json=walkTime,proto3" json:"walk_time,omitempty"`    // 步行时间（分钟）
+	EmptyCars     int32                  `protobuf:"varint,6,opt,name=empty_cars,json=emptyCars,proto3" json:"empty_cars,omitempty"` // 空车数
+	CoverType     string                 `protobuf:"bytes,7,opt,name=cover_type,json=coverType,proto3" json:"cover_type,omitempty"`  // 遮挡类型
+	Lat           float64                `protobuf:"fixed64,8,opt,name=lat,proto3" json:"lat,omitempty"`
+	Lng           float64                `protobuf:"fixed64,9,opt,name=lng,proto3" json:"lng,omitempty"`
+	Coupon        *CouponInfo            `protobuf:"bytes,10,opt,name=coupon,proto3" json:"coupon,omitempty"` // 优惠券
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Shelter) Reset() {
+	*x = Shelter{}
+	mi := &file_weather_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Shelter) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Shelter) ProtoMessage() {}
+
+func (x *Shelter) ProtoReflect() protoreflect.Message {
+	mi := &file_weather_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Shelter.ProtoReflect.Descriptor instead.
+func (*Shelter) Descriptor() ([]byte, []int) {
+	return file_weather_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *Shelter) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *Shelter) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *Shelter) GetType() string {
+	if x != nil {
+		return x.Type
+	}
+	return ""
+}
+
+func (x *Shelter) GetDistance() float64 {
+	if x != nil {
+		return x.Distance
+	}
+	return 0
+}
+
+func (x *Shelter) GetWalkTime() int32 {
+	if x != nil {
+		return x.WalkTime
+	}
+	return 0
+}
+
+func (x *Shelter) GetEmptyCars() int32 {
+	if x != nil {
+		return x.EmptyCars
+	}
+	return 0
+}
+
+func (x *Shelter) GetCoverType() string {
+	if x != nil {
+		return x.CoverType
+	}
+	return ""
+}
+
+func (x *Shelter) GetLat() float64 {
+	if x != nil {
+		return x.Lat
+	}
+	return 0
+}
+
+func (x *Shelter) GetLng() float64 {
+	if x != nil {
+		return x.Lng
+	}
+	return 0
+}
+
+func (x *Shelter) GetCoupon() *CouponInfo {
+	if x != nil {
+		return x.Coupon
+	}
+	return nil
+}
+
+type GetRouteRainRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Origin        *Location              `protobuf:"bytes,1,opt,name=origin,proto3" json:"origin,omitempty"`           // 起点
+	Destination   *Location              `protobuf:"bytes,2,opt,name=destination,proto3" json:"destination,omitempty"` // 终点
+	Avoid         []string               `protobuf:"bytes,3,rep,name=avoid,proto3" json:"avoid,omitempty"`             // 避开类型：water/traffic
+	Key           string                 `protobuf:"bytes,4,opt,name=key,proto3" json:"key,omitempty"`                 // 高德API密钥
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetRouteRainRequest) Reset() {
+	*x = GetRouteRainRequest{}
+	mi := &file_weather_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetRouteRainRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetRouteRainRequest) ProtoMessage() {}
+
+func (x *GetRouteRainRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_weather_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetRouteRainRequest.ProtoReflect.Descriptor instead.
+func (*GetRouteRainRequest) Descriptor() ([]byte, []int) {
+	return file_weather_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *GetRouteRainRequest) GetOrigin() *Location {
+	if x != nil {
+		return x.Origin
+	}
+	return nil
+}
+
+func (x *GetRouteRainRequest) GetDestination() *Location {
+	if x != nil {
+		return x.Destination
+	}
+	return nil
+}
+
+func (x *GetRouteRainRequest) GetAvoid() []string {
+	if x != nil {
+		return x.Avoid
+	}
+	return nil
+}
+
+func (x *GetRouteRainRequest) GetKey() string {
+	if x != nil {
+		return x.Key
+	}
+	return ""
+}
+
+type Location struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Lat           float64                `protobuf:"fixed64,1,opt,name=lat,proto3" json:"lat,omitempty"`
+	Lng           float64                `protobuf:"fixed64,2,opt,name=lng,proto3" json:"lng,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Location) Reset() {
+	*x = Location{}
+	mi := &file_weather_proto_msgTypes[14]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Location) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Location) ProtoMessage() {}
+
+func (x *Location) ProtoReflect() protoreflect.Message {
+	mi := &file_weather_proto_msgTypes[14]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Location.ProtoReflect.Descriptor instead.
+func (*Location) Descriptor() ([]byte, []int) {
+	return file_weather_proto_rawDescGZIP(), []int{14}
+}
+
+func (x *Location) GetLat() float64 {
+	if x != nil {
+		return x.Lat
+	}
+	return 0
+}
+
+func (x *Location) GetLng() float64 {
+	if x != nil {
+		return x.Lng
+	}
+	return 0
+}
+
+type GetRouteRainResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
+	Routes        []*Route               `protobuf:"bytes,3,rep,name=routes,proto3" json:"routes,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetRouteRainResponse) Reset() {
+	*x = GetRouteRainResponse{}
+	mi := &file_weather_proto_msgTypes[15]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetRouteRainResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetRouteRainResponse) ProtoMessage() {}
+
+func (x *GetRouteRainResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_weather_proto_msgTypes[15]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetRouteRainResponse.ProtoReflect.Descriptor instead.
+func (*GetRouteRainResponse) Descriptor() ([]byte, []int) {
+	return file_weather_proto_rawDescGZIP(), []int{15}
+}
+
+func (x *GetRouteRainResponse) GetSuccess() bool {
+	if x != nil {
+		return x.Success
+	}
+	return false
+}
+
+func (x *GetRouteRainResponse) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
+func (x *GetRouteRainResponse) GetRoutes() []*Route {
+	if x != nil {
+		return x.Routes
+	}
+	return nil
+}
+
+type Route struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	RouteId       int64                  `protobuf:"varint,1,opt,name=route_id,json=routeId,proto3" json:"route_id,omitempty"`
+	Distance      float64                `protobuf:"fixed64,2,opt,name=distance,proto3" json:"distance,omitempty"`                               // 距离（km）
+	Duration      int32                  `protobuf:"varint,3,opt,name=duration,proto3" json:"duration,omitempty"`                                // 时长（分钟）
+	RiskLevel     string                 `protobuf:"bytes,4,opt,name=risk_level,json=riskLevel,proto3" json:"risk_level,omitempty"`              // 风险等级：低/中/高
+	WaterPoints   int32                  `protobuf:"varint,5,opt,name=water_points,json=waterPoints,proto3" json:"water_points,omitempty"`       // 积水点数
+	TrafficLevel  string                 `protobuf:"bytes,6,opt,name=traffic_level,json=trafficLevel,proto3" json:"traffic_level,omitempty"`     // 拥堵程度
+	Price         float64                `protobuf:"fixed64,7,opt,name=price,proto3" json:"price,omitempty"`                                     // 预估费用
+	Polyline      string                 `protobuf:"bytes,8,opt,name=polyline,proto3" json:"polyline,omitempty"`                                 // 路线坐标串
+	IsRecommended bool                   `protobuf:"varint,9,opt,name=is_recommended,json=isRecommended,proto3" json:"is_recommended,omitempty"` // 是否推荐
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Route) Reset() {
+	*x = Route{}
+	mi := &file_weather_proto_msgTypes[16]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Route) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Route) ProtoMessage() {}
+
+func (x *Route) ProtoReflect() protoreflect.Message {
+	mi := &file_weather_proto_msgTypes[16]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Route.ProtoReflect.Descriptor instead.
+func (*Route) Descriptor() ([]byte, []int) {
+	return file_weather_proto_rawDescGZIP(), []int{16}
+}
+
+func (x *Route) GetRouteId() int64 {
+	if x != nil {
+		return x.RouteId
+	}
+	return 0
+}
+
+func (x *Route) GetDistance() float64 {
+	if x != nil {
+		return x.Distance
+	}
+	return 0
+}
+
+func (x *Route) GetDuration() int32 {
+	if x != nil {
+		return x.Duration
+	}
+	return 0
+}
+
+func (x *Route) GetRiskLevel() string {
+	if x != nil {
+		return x.RiskLevel
+	}
+	return ""
+}
+
+func (x *Route) GetWaterPoints() int32 {
+	if x != nil {
+		return x.WaterPoints
+	}
+	return 0
+}
+
+func (x *Route) GetTrafficLevel() string {
+	if x != nil {
+		return x.TrafficLevel
+	}
+	return ""
+}
+
+func (x *Route) GetPrice() float64 {
+	if x != nil {
+		return x.Price
+	}
+	return 0
+}
+
+func (x *Route) GetPolyline() string {
+	if x != nil {
+		return x.Polyline
+	}
+	return ""
+}
+
+func (x *Route) GetIsRecommended() bool {
+	if x != nil {
+		return x.IsRecommended
+	}
+	return false
+}
+
+type GetRideGuaranteeRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserId        int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	AlertLevel    int32                  `protobuf:"varint,2,opt,name=alert_level,json=alertLevel,proto3" json:"alert_level,omitempty"` // 预警等级
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetRideGuaranteeRequest) Reset() {
+	*x = GetRideGuaranteeRequest{}
+	mi := &file_weather_proto_msgTypes[17]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetRideGuaranteeRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetRideGuaranteeRequest) ProtoMessage() {}
+
+func (x *GetRideGuaranteeRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_weather_proto_msgTypes[17]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetRideGuaranteeRequest.ProtoReflect.Descriptor instead.
+func (*GetRideGuaranteeRequest) Descriptor() ([]byte, []int) {
+	return file_weather_proto_rawDescGZIP(), []int{17}
+}
+
+func (x *GetRideGuaranteeRequest) GetUserId() int64 {
+	if x != nil {
+		return x.UserId
+	}
+	return 0
+}
+
+func (x *GetRideGuaranteeRequest) GetAlertLevel() int32 {
+	if x != nil {
+		return x.AlertLevel
+	}
+	return 0
+}
+
+type GetRideGuaranteeResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
+	Guarantees    []*Guarantee           `protobuf:"bytes,3,rep,name=guarantees,proto3" json:"guarantees,omitempty"`
+	Tips          []string               `protobuf:"bytes,4,rep,name=tips,proto3" json:"tips,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetRideGuaranteeResponse) Reset() {
+	*x = GetRideGuaranteeResponse{}
+	mi := &file_weather_proto_msgTypes[18]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetRideGuaranteeResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetRideGuaranteeResponse) ProtoMessage() {}
+
+func (x *GetRideGuaranteeResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_weather_proto_msgTypes[18]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetRideGuaranteeResponse.ProtoReflect.Descriptor instead.
+func (*GetRideGuaranteeResponse) Descriptor() ([]byte, []int) {
+	return file_weather_proto_rawDescGZIP(), []int{18}
+}
+
+func (x *GetRideGuaranteeResponse) GetSuccess() bool {
+	if x != nil {
+		return x.Success
+	}
+	return false
+}
+
+func (x *GetRideGuaranteeResponse) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
+func (x *GetRideGuaranteeResponse) GetGuarantees() []*Guarantee {
+	if x != nil {
+		return x.Guarantees
+	}
+	return nil
+}
+
+func (x *GetRideGuaranteeResponse) GetTips() []string {
+	if x != nil {
+		return x.Tips
+	}
+	return nil
+}
+
+type Guarantee struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Type          string                 `protobuf:"bytes,1,opt,name=type,proto3" json:"type,omitempty"` // 保障类型
+	Title         string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
+	Desc          string                 `protobuf:"bytes,3,opt,name=desc,proto3" json:"desc,omitempty"`
+	Status        string                 `protobuf:"bytes,4,opt,name=status,proto3" json:"status,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Guarantee) Reset() {
+	*x = Guarantee{}
+	mi := &file_weather_proto_msgTypes[19]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Guarantee) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Guarantee) ProtoMessage() {}
+
+func (x *Guarantee) ProtoReflect() protoreflect.Message {
+	mi := &file_weather_proto_msgTypes[19]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Guarantee.ProtoReflect.Descriptor instead.
+func (*Guarantee) Descriptor() ([]byte, []int) {
+	return file_weather_proto_rawDescGZIP(), []int{19}
+}
+
+func (x *Guarantee) GetType() string {
+	if x != nil {
+		return x.Type
+	}
+	return ""
+}
+
+func (x *Guarantee) GetTitle() string {
+	if x != nil {
+		return x.Title
+	}
+	return ""
+}
+
+func (x *Guarantee) GetDesc() string {
+	if x != nil {
+		return x.Desc
+	}
+	return ""
+}
+
+func (x *Guarantee) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
+type GetRideEstimateRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Origin        *Location              `protobuf:"bytes,1,opt,name=origin,proto3" json:"origin,omitempty"`
+	Destination   *Location              `protobuf:"bytes,2,opt,name=destination,proto3" json:"destination,omitempty"`
+	DepartTime    string                 `protobuf:"bytes,3,opt,name=depart_time,json=departTime,proto3" json:"depart_time,omitempty"` // 出发时间
+	Key           string                 `protobuf:"bytes,4,opt,name=key,proto3" json:"key,omitempty"`                                 // 高德API密钥
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetRideEstimateRequest) Reset() {
+	*x = GetRideEstimateRequest{}
+	mi := &file_weather_proto_msgTypes[20]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetRideEstimateRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetRideEstimateRequest) ProtoMessage() {}
+
+func (x *GetRideEstimateRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_weather_proto_msgTypes[20]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetRideEstimateRequest.ProtoReflect.Descriptor instead.
+func (*GetRideEstimateRequest) Descriptor() ([]byte, []int) {
+	return file_weather_proto_rawDescGZIP(), []int{20}
+}
+
+func (x *GetRideEstimateRequest) GetOrigin() *Location {
+	if x != nil {
+		return x.Origin
+	}
+	return nil
+}
+
+func (x *GetRideEstimateRequest) GetDestination() *Location {
+	if x != nil {
+		return x.Destination
+	}
+	return nil
+}
+
+func (x *GetRideEstimateRequest) GetDepartTime() string {
+	if x != nil {
+		return x.DepartTime
+	}
+	return ""
+}
+
+func (x *GetRideEstimateRequest) GetKey() string {
+	if x != nil {
+		return x.Key
+	}
+	return ""
+}
+
+type GetRideEstimateResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
+	PriceRange    *PriceRange            `protobuf:"bytes,3,opt,name=price_range,json=priceRange,proto3" json:"price_range,omitempty"`
+	WaitTime      *WaitTime              `protobuf:"bytes,4,opt,name=wait_time,json=waitTime,proto3" json:"wait_time,omitempty"`
+	Distance      float64                `protobuf:"fixed64,5,opt,name=distance,proto3" json:"distance,omitempty"`
+	Duration      int32                  `protobuf:"varint,6,opt,name=duration,proto3" json:"duration,omitempty"`
+	CarTypes      []*CarType             `protobuf:"bytes,7,rep,name=car_types,json=carTypes,proto3" json:"car_types,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetRideEstimateResponse) Reset() {
+	*x = GetRideEstimateResponse{}
+	mi := &file_weather_proto_msgTypes[21]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetRideEstimateResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetRideEstimateResponse) ProtoMessage() {}
+
+func (x *GetRideEstimateResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_weather_proto_msgTypes[21]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetRideEstimateResponse.ProtoReflect.Descriptor instead.
+func (*GetRideEstimateResponse) Descriptor() ([]byte, []int) {
+	return file_weather_proto_rawDescGZIP(), []int{21}
+}
+
+func (x *GetRideEstimateResponse) GetSuccess() bool {
+	if x != nil {
+		return x.Success
+	}
+	return false
+}
+
+func (x *GetRideEstimateResponse) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
+func (x *GetRideEstimateResponse) GetPriceRange() *PriceRange {
+	if x != nil {
+		return x.PriceRange
+	}
+	return nil
+}
+
+func (x *GetRideEstimateResponse) GetWaitTime() *WaitTime {
+	if x != nil {
+		return x.WaitTime
+	}
+	return nil
+}
+
+func (x *GetRideEstimateResponse) GetDistance() float64 {
+	if x != nil {
+		return x.Distance
+	}
+	return 0
+}
+
+func (x *GetRideEstimateResponse) GetDuration() int32 {
+	if x != nil {
+		return x.Duration
+	}
+	return 0
+}
+
+func (x *GetRideEstimateResponse) GetCarTypes() []*CarType {
+	if x != nil {
+		return x.CarTypes
+	}
+	return nil
+}
+
+type PriceRange struct {
+	state            protoimpl.MessageState `protogen:"open.v1"`
+	Min              float64                `protobuf:"fixed64,1,opt,name=min,proto3" json:"min,omitempty"`
+	Max              float64                `protobuf:"fixed64,2,opt,name=max,proto3" json:"max,omitempty"`
+	Base             float64                `protobuf:"fixed64,3,opt,name=base,proto3" json:"base,omitempty"`
+	WeatherSurcharge float64                `protobuf:"fixed64,4,opt,name=weather_surcharge,json=weatherSurcharge,proto3" json:"weather_surcharge,omitempty"`
+	Reason           string                 `protobuf:"bytes,5,opt,name=reason,proto3" json:"reason,omitempty"`
+	unknownFields    protoimpl.UnknownFields
+	sizeCache        protoimpl.SizeCache
+}
+
+func (x *PriceRange) Reset() {
+	*x = PriceRange{}
+	mi := &file_weather_proto_msgTypes[22]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PriceRange) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PriceRange) ProtoMessage() {}
+
+func (x *PriceRange) ProtoReflect() protoreflect.Message {
+	mi := &file_weather_proto_msgTypes[22]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PriceRange.ProtoReflect.Descriptor instead.
+func (*PriceRange) Descriptor() ([]byte, []int) {
+	return file_weather_proto_rawDescGZIP(), []int{22}
+}
+
+func (x *PriceRange) GetMin() float64 {
+	if x != nil {
+		return x.Min
+	}
+	return 0
+}
+
+func (x *PriceRange) GetMax() float64 {
+	if x != nil {
+		return x.Max
+	}
+	return 0
+}
+
+func (x *PriceRange) GetBase() float64 {
+	if x != nil {
+		return x.Base
+	}
+	return 0
+}
+
+func (x *PriceRange) GetWeatherSurcharge() float64 {
+	if x != nil {
+		return x.WeatherSurcharge
+	}
+	return 0
+}
+
+func (x *PriceRange) GetReason() string {
+	if x != nil {
+		return x.Reason
+	}
+	return ""
+}
+
+type WaitTime struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Min           int32                  `protobuf:"varint,1,opt,name=min,proto3" json:"min,omitempty"`
+	Max           int32                  `protobuf:"varint,2,opt,name=max,proto3" json:"max,omitempty"`
+	Avg           int32                  `protobuf:"varint,3,opt,name=avg,proto3" json:"avg,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *WaitTime) Reset() {
+	*x = WaitTime{}
+	mi := &file_weather_proto_msgTypes[23]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *WaitTime) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*WaitTime) ProtoMessage() {}
+
+func (x *WaitTime) ProtoReflect() protoreflect.Message {
+	mi := &file_weather_proto_msgTypes[23]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use WaitTime.ProtoReflect.Descriptor instead.
+func (*WaitTime) Descriptor() ([]byte, []int) {
+	return file_weather_proto_rawDescGZIP(), []int{23}
+}
+
+func (x *WaitTime) GetMin() int32 {
+	if x != nil {
+		return x.Min
+	}
+	return 0
+}
+
+func (x *WaitTime) GetMax() int32 {
+	if x != nil {
+		return x.Max
+	}
+	return 0
+}
+
+func (x *WaitTime) GetAvg() int32 {
+	if x != nil {
+		return x.Avg
+	}
+	return 0
+}
+
+type CarType struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Type          string                 `protobuf:"bytes,1,opt,name=type,proto3" json:"type,omitempty"`
+	Price         float64                `protobuf:"fixed64,2,opt,name=price,proto3" json:"price,omitempty"`
+	Wait          int32                  `protobuf:"varint,3,opt,name=wait,proto3" json:"wait,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CarType) Reset() {
+	*x = CarType{}
+	mi := &file_weather_proto_msgTypes[24]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CarType) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CarType) ProtoMessage() {}
+
+func (x *CarType) ProtoReflect() protoreflect.Message {
+	mi := &file_weather_proto_msgTypes[24]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CarType.ProtoReflect.Descriptor instead.
+func (*CarType) Descriptor() ([]byte, []int) {
+	return file_weather_proto_rawDescGZIP(), []int{24}
+}
+
+func (x *CarType) GetType() string {
+	if x != nil {
+		return x.Type
+	}
+	return ""
+}
+
+func (x *CarType) GetPrice() float64 {
+	if x != nil {
+		return x.Price
+	}
+	return 0
+}
+
+func (x *CarType) GetWait() int32 {
+	if x != nil {
+		return x.Wait
+	}
+	return 0
+}
+
+type AIChatRainRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserId        int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	UserChoice    string                 `protobuf:"bytes,2,opt,name=user_choice,json=userChoice,proto3" json:"user_choice,omitempty"` // 用户选择/消息
+	UserLat       float64                `protobuf:"fixed64,3,opt,name=user_lat,json=userLat,proto3" json:"user_lat,omitempty"`
+	UserLng       float64                `protobuf:"fixed64,4,opt,name=user_lng,json=userLng,proto3" json:"user_lng,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AIChatRainRequest) Reset() {
+	*x = AIChatRainRequest{}
+	mi := &file_weather_proto_msgTypes[25]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AIChatRainRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AIChatRainRequest) ProtoMessage() {}
+
+func (x *AIChatRainRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_weather_proto_msgTypes[25]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AIChatRainRequest.ProtoReflect.Descriptor instead.
+func (*AIChatRainRequest) Descriptor() ([]byte, []int) {
+	return file_weather_proto_rawDescGZIP(), []int{25}
+}
+
+func (x *AIChatRainRequest) GetUserId() int64 {
+	if x != nil {
+		return x.UserId
+	}
+	return 0
+}
+
+func (x *AIChatRainRequest) GetUserChoice() string {
+	if x != nil {
+		return x.UserChoice
+	}
+	return ""
+}
+
+func (x *AIChatRainRequest) GetUserLat() float64 {
+	if x != nil {
+		return x.UserLat
+	}
+	return 0
+}
+
+func (x *AIChatRainRequest) GetUserLng() float64 {
+	if x != nil {
+		return x.UserLng
+	}
+	return 0
+}
+
+type AIChatRainResponse struct {
+	state            protoimpl.MessageState `protogen:"open.v1"`
+	Success          bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	Message          string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
+	AiReply          string                 `protobuf:"bytes,3,opt,name=ai_reply,json=aiReply,proto3" json:"ai_reply,omitempty"` // AI回复内容
+	RecommendOptions []*RecommendOption     `protobuf:"bytes,4,rep,name=recommend_options,json=recommendOptions,proto3" json:"recommend_options,omitempty"`
+	unknownFields    protoimpl.UnknownFields
+	sizeCache        protoimpl.SizeCache
+}
+
+func (x *AIChatRainResponse) Reset() {
+	*x = AIChatRainResponse{}
+	mi := &file_weather_proto_msgTypes[26]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AIChatRainResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AIChatRainResponse) ProtoMessage() {}
+
+func (x *AIChatRainResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_weather_proto_msgTypes[26]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AIChatRainResponse.ProtoReflect.Descriptor instead.
+func (*AIChatRainResponse) Descriptor() ([]byte, []int) {
+	return file_weather_proto_rawDescGZIP(), []int{26}
+}
+
+func (x *AIChatRainResponse) GetSuccess() bool {
+	if x != nil {
+		return x.Success
+	}
+	return false
+}
+
+func (x *AIChatRainResponse) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
+func (x *AIChatRainResponse) GetAiReply() string {
+	if x != nil {
+		return x.AiReply
+	}
+	return ""
+}
+
+func (x *AIChatRainResponse) GetRecommendOptions() []*RecommendOption {
+	if x != nil {
+		return x.RecommendOptions
+	}
+	return nil
+}
+
+type RecommendOption struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Type          string                 `protobuf:"bytes,1,opt,name=type,proto3" json:"type,omitempty"` // now/shelter/reserve
+	Title         string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
+	Desc          string                 `protobuf:"bytes,3,opt,name=desc,proto3" json:"desc,omitempty"`
+	Price         float64                `protobuf:"fixed64,4,opt,name=price,proto3" json:"price,omitempty"`
+	Coupon        *CouponInfo            `protobuf:"bytes,5,opt,name=coupon,proto3" json:"coupon,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RecommendOption) Reset() {
+	*x = RecommendOption{}
+	mi := &file_weather_proto_msgTypes[27]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RecommendOption) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RecommendOption) ProtoMessage() {}
+
+func (x *RecommendOption) ProtoReflect() protoreflect.Message {
+	mi := &file_weather_proto_msgTypes[27]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RecommendOption.ProtoReflect.Descriptor instead.
+func (*RecommendOption) Descriptor() ([]byte, []int) {
+	return file_weather_proto_rawDescGZIP(), []int{27}
+}
+
+func (x *RecommendOption) GetType() string {
+	if x != nil {
+		return x.Type
+	}
+	return ""
+}
+
+func (x *RecommendOption) GetTitle() string {
+	if x != nil {
+		return x.Title
+	}
+	return ""
+}
+
+func (x *RecommendOption) GetDesc() string {
+	if x != nil {
+		return x.Desc
+	}
+	return ""
+}
+
+func (x *RecommendOption) GetPrice() float64 {
+	if x != nil {
+		return x.Price
+	}
+	return 0
+}
+
+func (x *RecommendOption) GetCoupon() *CouponInfo {
+	if x != nil {
+		return x.Coupon
+	}
+	return nil
+}
+
+type GetTrafficRealRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	RouteId       int64                  `protobuf:"varint,1,opt,name=route_id,json=routeId,proto3" json:"route_id,omitempty"` // 路线ID
+	Key           string                 `protobuf:"bytes,2,opt,name=key,proto3" json:"key,omitempty"`                         // 高德API密钥
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetTrafficRealRequest) Reset() {
+	*x = GetTrafficRealRequest{}
+	mi := &file_weather_proto_msgTypes[28]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetTrafficRealRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetTrafficRealRequest) ProtoMessage() {}
+
+func (x *GetTrafficRealRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_weather_proto_msgTypes[28]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetTrafficRealRequest.ProtoReflect.Descriptor instead.
+func (*GetTrafficRealRequest) Descriptor() ([]byte, []int) {
+	return file_weather_proto_rawDescGZIP(), []int{28}
+}
+
+func (x *GetTrafficRealRequest) GetRouteId() int64 {
+	if x != nil {
+		return x.RouteId
+	}
+	return 0
+}
+
+func (x *GetTrafficRealRequest) GetKey() string {
+	if x != nil {
+		return x.Key
+	}
+	return ""
+}
+
+type GetTrafficRealResponse struct {
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	Success         bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	Message         string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
+	Speed           float64                `protobuf:"fixed64,3,opt,name=speed,proto3" json:"speed,omitempty"` // 平均车速
+	Incidents       []*Incident            `protobuf:"bytes,4,rep,name=incidents,proto3" json:"incidents,omitempty"`
+	TrafficLights   int32                  `protobuf:"varint,5,opt,name=traffic_lights,json=trafficLights,proto3" json:"traffic_lights,omitempty"`
+	CongestionLevel string                 `protobuf:"bytes,6,opt,name=congestion_level,json=congestionLevel,proto3" json:"congestion_level,omitempty"`
+	EtaUpdate       string                 `protobuf:"bytes,7,opt,name=eta_update,json=etaUpdate,proto3" json:"eta_update,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
+}
+
+func (x *GetTrafficRealResponse) Reset() {
+	*x = GetTrafficRealResponse{}
+	mi := &file_weather_proto_msgTypes[29]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetTrafficRealResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetTrafficRealResponse) ProtoMessage() {}
+
+func (x *GetTrafficRealResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_weather_proto_msgTypes[29]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetTrafficRealResponse.ProtoReflect.Descriptor instead.
+func (*GetTrafficRealResponse) Descriptor() ([]byte, []int) {
+	return file_weather_proto_rawDescGZIP(), []int{29}
+}
+
+func (x *GetTrafficRealResponse) GetSuccess() bool {
+	if x != nil {
+		return x.Success
+	}
+	return false
+}
+
+func (x *GetTrafficRealResponse) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
+func (x *GetTrafficRealResponse) GetSpeed() float64 {
+	if x != nil {
+		return x.Speed
+	}
+	return 0
+}
+
+func (x *GetTrafficRealResponse) GetIncidents() []*Incident {
+	if x != nil {
+		return x.Incidents
+	}
+	return nil
+}
+
+func (x *GetTrafficRealResponse) GetTrafficLights() int32 {
+	if x != nil {
+		return x.TrafficLights
+	}
+	return 0
+}
+
+func (x *GetTrafficRealResponse) GetCongestionLevel() string {
+	if x != nil {
+		return x.CongestionLevel
+	}
+	return ""
+}
+
+func (x *GetTrafficRealResponse) GetEtaUpdate() string {
+	if x != nil {
+		return x.EtaUpdate
+	}
+	return ""
+}
+
+type Incident struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Type          string                 `protobuf:"bytes,1,opt,name=type,proto3" json:"type,omitempty"` // 事故/积水
+	Location      string                 `protobuf:"bytes,2,opt,name=location,proto3" json:"location,omitempty"`
+	Desc          string                 `protobuf:"bytes,3,opt,name=desc,proto3" json:"desc,omitempty"`
+	Impact        string                 `protobuf:"bytes,4,opt,name=impact,proto3" json:"impact,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Incident) Reset() {
+	*x = Incident{}
+	mi := &file_weather_proto_msgTypes[30]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Incident) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Incident) ProtoMessage() {}
+
+func (x *Incident) ProtoReflect() protoreflect.Message {
+	mi := &file_weather_proto_msgTypes[30]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Incident.ProtoReflect.Descriptor instead.
+func (*Incident) Descriptor() ([]byte, []int) {
+	return file_weather_proto_rawDescGZIP(), []int{30}
+}
+
+func (x *Incident) GetType() string {
+	if x != nil {
+		return x.Type
+	}
+	return ""
+}
+
+func (x *Incident) GetLocation() string {
+	if x != nil {
+		return x.Location
+	}
+	return ""
+}
+
+func (x *Incident) GetDesc() string {
+	if x != nil {
+		return x.Desc
+	}
+	return ""
+}
+
+func (x *Incident) GetImpact() string {
+	if x != nil {
+		return x.Impact
+	}
+	return ""
+}
+
 var File_weather_proto protoreflect.FileDescriptor
 
 const file_weather_proto_rawDesc = "" +
 	"\n" +
-	"\rweather.proto\x12\x04ride\"^\n" +
+	"\rweather.proto\x12\fweatherproto\"^\n" +
 	"\x16GetWeatherAlertRequest\x12\x12\n" +
 	"\x04city\x18\x01 \x01(\tR\x04city\x12\x10\n" +
 	"\x03key\x18\x02 \x01(\tR\x03key\x12\x1e\n" +
 	"\n" +
 	"extensions\x18\x03 \x01(\tR\n" +
-	"extensions\"\xf4\x01\n" +
-	"\x17GetWeatherAlertResponse\x12\x18\n" +
-	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
-	"\amessage\x18\x02 \x01(\tR\amessage\x12'\n" +
-	"\x06alerts\x18\x03 \x03(\v2\x0f.ride.AlertItemR\x06alerts\x12=\n" +
-	"\x0fcurrent_weather\x18\x04 \x01(\v2\x14.ride.CurrentWeatherR\x0ecurrentWeather\x12=\n" +
-	"\x10weather_forecast\x18\x05 \x01(\v2\x12.ride.ForecastListR\x0fweatherForecast\"\xe5\x01\n" +
-	"\tAlertItem\x12\x1d\n" +
+	"extensions\"\xd9\x01\n" +
+	"\x17GetWeatherAlertResponse\x12\x16\n" +
+	"\x06status\x18\x01 \x01(\tR\x06status\x12\x14\n" +
+	"\x05count\x18\x02 \x01(\tR\x05count\x12\x12\n" +
+	"\x04info\x18\x03 \x01(\tR\x04info\x12\x1a\n" +
+	"\binfocode\x18\x04 \x01(\tR\binfocode\x12\x18\n" +
+	"\asuccess\x18\x05 \x01(\bR\asuccess\x12\x10\n" +
+	"\x03msg\x18\x06 \x01(\tR\x03msg\x124\n" +
+	"\tforecasts\x18\a \x03(\v2\x16.weatherproto.ForecastR\tforecasts\"\x9c\x01\n" +
+	"\bForecast\x12\x12\n" +
+	"\x04city\x18\x01 \x01(\tR\x04city\x12\x16\n" +
+	"\x06adcode\x18\x02 \x01(\tR\x06adcode\x12\x1a\n" +
+	"\bprovince\x18\x03 \x01(\tR\bprovince\x12\x1e\n" +
 	"\n" +
-	"alert_type\x18\x01 \x01(\tR\talertType\x12\x1f\n" +
-	"\valert_level\x18\x02 \x01(\x05R\n" +
-	"alertLevel\x12\x18\n" +
-	"\acontent\x18\x03 \x01(\tR\acontent\x12\x1d\n" +
-	"\n" +
-	"start_time\x18\x04 \x01(\x03R\tstartTime\x12\x19\n" +
-	"\bend_time\x18\x05 \x01(\x03R\aendTime\x12%\n" +
-	"\x0eeffective_time\x18\x06 \x01(\tR\reffectiveTime\x12\x1d\n" +
-	"\n" +
-	"issue_time\x18\a \x01(\tR\tissueTime\"\xee\x01\n" +
-	"\x0eCurrentWeather\x12\x18\n" +
-	"\aweather\x18\x01 \x01(\tR\aweather\x12 \n" +
-	"\vtemperature\x18\x02 \x01(\x01R\vtemperature\x12\x1a\n" +
-	"\bhumidity\x18\x03 \x01(\x01R\bhumidity\x12%\n" +
-	"\x0ewind_direction\x18\x04 \x01(\tR\rwindDirection\x12\x1d\n" +
-	"\n" +
-	"wind_speed\x18\x05 \x01(\x01R\twindSpeed\x12\x1d\n" +
-	"\n" +
-	"wind_power\x18\x06 \x01(\x01R\twindPower\x12\x1f\n" +
-	"\vreport_time\x18\a \x01(\tR\n" +
-	"reportTime\"\xfd\x01\n" +
-	"\x0fForecastWeather\x12\x12\n" +
+	"reporttime\x18\x04 \x01(\tR\n" +
+	"reporttime\x12(\n" +
+	"\x05casts\x18\x05 \x03(\v2\x12.weatherproto.CastR\x05casts\"\xec\x02\n" +
+	"\x04Cast\x12\x12\n" +
 	"\x04date\x18\x01 \x01(\tR\x04date\x12\x12\n" +
-	"\x04week\x18\x02 \x01(\tR\x04week\x12\x1f\n" +
-	"\vday_weather\x18\x03 \x01(\tR\n" +
-	"dayWeather\x12#\n" +
-	"\rnight_weather\x18\x04 \x01(\tR\fnightWeather\x12\x1b\n" +
-	"\ttemp_high\x18\x05 \x01(\x01R\btempHigh\x12\x19\n" +
-	"\btemp_low\x18\x06 \x01(\x01R\atempLow\x12%\n" +
-	"\x0ewind_direction\x18\a \x01(\tR\rwindDirection\x12\x1d\n" +
+	"\x04week\x18\x02 \x01(\tR\x04week\x12\x1e\n" +
 	"\n" +
-	"wind_speed\x18\b \x01(\x01R\twindSpeed\"C\n" +
-	"\fForecastList\x123\n" +
-	"\tforecasts\x18\x01 \x03(\v2\x15.ride.ForecastWeatherR\tforecasts2`\n" +
-	"\x0eWeatherService\x12N\n" +
-	"\x0fGetWeatherAlert\x12\x1c.ride.GetWeatherAlertRequest\x1a\x1d.ride.GetWeatherAlertResponseB3Z1github.com/cibeiwanjia/ride-proto/weather;weatherb\x06proto3"
+	"dayweather\x18\x03 \x01(\tR\n" +
+	"dayweather\x12\"\n" +
+	"\fnightweather\x18\x04 \x01(\tR\fnightweather\x12\x18\n" +
+	"\adaytemp\x18\x05 \x01(\tR\adaytemp\x12\x1c\n" +
+	"\tnighttemp\x18\x06 \x01(\tR\tnighttemp\x12#\n" +
+	"\rdaytemp_float\x18\a \x01(\tR\fdaytempFloat\x12'\n" +
+	"\x0fnighttemp_float\x18\b \x01(\tR\x0enighttempFloat\x12\x18\n" +
+	"\adaywind\x18\t \x01(\tR\adaywind\x12\x1c\n" +
+	"\tnightwind\x18\n" +
+	" \x01(\tR\tnightwind\x12\x1a\n" +
+	"\bdaypower\x18\v \x01(\tR\bdaypower\x12\x1e\n" +
+	"\n" +
+	"nightpower\x18\f \x01(\tR\n" +
+	"nightpower\"_\n" +
+	"\x15GetWeatherRealRequest\x12\x19\n" +
+	"\buser_lat\x18\x01 \x01(\x01R\auserLat\x12\x19\n" +
+	"\buser_lng\x18\x02 \x01(\x01R\auserLng\x12\x10\n" +
+	"\x03key\x18\x03 \x01(\tR\x03key\"\xcf\x01\n" +
+	"\x16GetWeatherRealResponse\x12\x18\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage\x12%\n" +
+	"\x0erain_intensity\x18\x03 \x01(\x01R\rrainIntensity\x12\x1d\n" +
+	"\n" +
+	"rain_range\x18\x04 \x01(\x01R\trainRange\x12;\n" +
+	"\fwater_points\x18\x05 \x03(\v2\x18.weatherproto.WaterPointR\vwaterPoints\"b\n" +
+	"\n" +
+	"WaterPoint\x12\x10\n" +
+	"\x03lat\x18\x01 \x01(\x01R\x03lat\x12\x10\n" +
+	"\x03lng\x18\x02 \x01(\x01R\x03lng\x12\x14\n" +
+	"\x05depth\x18\x03 \x01(\x05R\x05depth\x12\x1a\n" +
+	"\blocation\x18\x04 \x01(\tR\blocation\"\x82\x01\n" +
+	"\x12ReportWaterRequest\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\x03R\x06userId\x12\x1d\n" +
+	"\n" +
+	"img_base64\x18\x02 \x01(\tR\timgBase64\x12\x10\n" +
+	"\x03lat\x18\x03 \x01(\x01R\x03lat\x12\x10\n" +
+	"\x03lng\x18\x04 \x01(\x01R\x03lng\x12\x10\n" +
+	"\x03key\x18\x05 \x01(\tR\x03key\"\xde\x01\n" +
+	"\x13ReportWaterResponse\x12\x18\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage\x12\x1f\n" +
+	"\vwater_depth\x18\x03 \x01(\x05R\n" +
+	"waterDepth\x12\x1b\n" +
+	"\treport_id\x18\x04 \x01(\tR\breportId\x120\n" +
+	"\x06coupon\x18\x05 \x01(\v2\x18.weatherproto.CouponInfoR\x06coupon\x12#\n" +
+	"\rreport_status\x18\x06 \x01(\tR\freportStatus\"U\n" +
+	"\n" +
+	"CouponInfo\x12\x1b\n" +
+	"\tcoupon_id\x18\x01 \x01(\x03R\bcouponId\x12\x16\n" +
+	"\x06amount\x18\x02 \x01(\x05R\x06amount\x12\x12\n" +
+	"\x04desc\x18\x03 \x01(\tR\x04desc\"_\n" +
+	"\x15GetRideShelterRequest\x12\x19\n" +
+	"\buser_lat\x18\x01 \x01(\x01R\auserLat\x12\x19\n" +
+	"\buser_lng\x18\x02 \x01(\x01R\auserLng\x12\x10\n" +
+	"\x03key\x18\x03 \x01(\tR\x03key\"\x7f\n" +
+	"\x16GetRideShelterResponse\x12\x18\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage\x121\n" +
+	"\bshelters\x18\x03 \x03(\v2\x15.weatherproto.ShelterR\bshelters\"\x8e\x02\n" +
+	"\aShelter\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x12\x12\n" +
+	"\x04type\x18\x03 \x01(\tR\x04type\x12\x1a\n" +
+	"\bdistance\x18\x04 \x01(\x01R\bdistance\x12\x1b\n" +
+	"\twalk_time\x18\x05 \x01(\x05R\bwalkTime\x12\x1d\n" +
+	"\n" +
+	"empty_cars\x18\x06 \x01(\x05R\temptyCars\x12\x1d\n" +
+	"\n" +
+	"cover_type\x18\a \x01(\tR\tcoverType\x12\x10\n" +
+	"\x03lat\x18\b \x01(\x01R\x03lat\x12\x10\n" +
+	"\x03lng\x18\t \x01(\x01R\x03lng\x120\n" +
+	"\x06coupon\x18\n" +
+	" \x01(\v2\x18.weatherproto.CouponInfoR\x06coupon\"\xa7\x01\n" +
+	"\x13GetRouteRainRequest\x12.\n" +
+	"\x06origin\x18\x01 \x01(\v2\x16.weatherproto.LocationR\x06origin\x128\n" +
+	"\vdestination\x18\x02 \x01(\v2\x16.weatherproto.LocationR\vdestination\x12\x14\n" +
+	"\x05avoid\x18\x03 \x03(\tR\x05avoid\x12\x10\n" +
+	"\x03key\x18\x04 \x01(\tR\x03key\".\n" +
+	"\bLocation\x12\x10\n" +
+	"\x03lat\x18\x01 \x01(\x01R\x03lat\x12\x10\n" +
+	"\x03lng\x18\x02 \x01(\x01R\x03lng\"w\n" +
+	"\x14GetRouteRainResponse\x12\x18\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage\x12+\n" +
+	"\x06routes\x18\x03 \x03(\v2\x13.weatherproto.RouteR\x06routes\"\x9a\x02\n" +
+	"\x05Route\x12\x19\n" +
+	"\broute_id\x18\x01 \x01(\x03R\arouteId\x12\x1a\n" +
+	"\bdistance\x18\x02 \x01(\x01R\bdistance\x12\x1a\n" +
+	"\bduration\x18\x03 \x01(\x05R\bduration\x12\x1d\n" +
+	"\n" +
+	"risk_level\x18\x04 \x01(\tR\triskLevel\x12!\n" +
+	"\fwater_points\x18\x05 \x01(\x05R\vwaterPoints\x12#\n" +
+	"\rtraffic_level\x18\x06 \x01(\tR\ftrafficLevel\x12\x14\n" +
+	"\x05price\x18\a \x01(\x01R\x05price\x12\x1a\n" +
+	"\bpolyline\x18\b \x01(\tR\bpolyline\x12%\n" +
+	"\x0eis_recommended\x18\t \x01(\bR\risRecommended\"S\n" +
+	"\x17GetRideGuaranteeRequest\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\x03R\x06userId\x12\x1f\n" +
+	"\valert_level\x18\x02 \x01(\x05R\n" +
+	"alertLevel\"\x9b\x01\n" +
+	"\x18GetRideGuaranteeResponse\x12\x18\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage\x127\n" +
+	"\n" +
+	"guarantees\x18\x03 \x03(\v2\x17.weatherproto.GuaranteeR\n" +
+	"guarantees\x12\x12\n" +
+	"\x04tips\x18\x04 \x03(\tR\x04tips\"a\n" +
+	"\tGuarantee\x12\x12\n" +
+	"\x04type\x18\x01 \x01(\tR\x04type\x12\x14\n" +
+	"\x05title\x18\x02 \x01(\tR\x05title\x12\x12\n" +
+	"\x04desc\x18\x03 \x01(\tR\x04desc\x12\x16\n" +
+	"\x06status\x18\x04 \x01(\tR\x06status\"\xb5\x01\n" +
+	"\x16GetRideEstimateRequest\x12.\n" +
+	"\x06origin\x18\x01 \x01(\v2\x16.weatherproto.LocationR\x06origin\x128\n" +
+	"\vdestination\x18\x02 \x01(\v2\x16.weatherproto.LocationR\vdestination\x12\x1f\n" +
+	"\vdepart_time\x18\x03 \x01(\tR\n" +
+	"departTime\x12\x10\n" +
+	"\x03key\x18\x04 \x01(\tR\x03key\"\xa9\x02\n" +
+	"\x17GetRideEstimateResponse\x12\x18\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage\x129\n" +
+	"\vprice_range\x18\x03 \x01(\v2\x18.weatherproto.PriceRangeR\n" +
+	"priceRange\x123\n" +
+	"\twait_time\x18\x04 \x01(\v2\x16.weatherproto.WaitTimeR\bwaitTime\x12\x1a\n" +
+	"\bdistance\x18\x05 \x01(\x01R\bdistance\x12\x1a\n" +
+	"\bduration\x18\x06 \x01(\x05R\bduration\x122\n" +
+	"\tcar_types\x18\a \x03(\v2\x15.weatherproto.CarTypeR\bcarTypes\"\x89\x01\n" +
+	"\n" +
+	"PriceRange\x12\x10\n" +
+	"\x03min\x18\x01 \x01(\x01R\x03min\x12\x10\n" +
+	"\x03max\x18\x02 \x01(\x01R\x03max\x12\x12\n" +
+	"\x04base\x18\x03 \x01(\x01R\x04base\x12+\n" +
+	"\x11weather_surcharge\x18\x04 \x01(\x01R\x10weatherSurcharge\x12\x16\n" +
+	"\x06reason\x18\x05 \x01(\tR\x06reason\"@\n" +
+	"\bWaitTime\x12\x10\n" +
+	"\x03min\x18\x01 \x01(\x05R\x03min\x12\x10\n" +
+	"\x03max\x18\x02 \x01(\x05R\x03max\x12\x10\n" +
+	"\x03avg\x18\x03 \x01(\x05R\x03avg\"G\n" +
+	"\aCarType\x12\x12\n" +
+	"\x04type\x18\x01 \x01(\tR\x04type\x12\x14\n" +
+	"\x05price\x18\x02 \x01(\x01R\x05price\x12\x12\n" +
+	"\x04wait\x18\x03 \x01(\x05R\x04wait\"\x83\x01\n" +
+	"\x11AIChatRainRequest\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\x03R\x06userId\x12\x1f\n" +
+	"\vuser_choice\x18\x02 \x01(\tR\n" +
+	"userChoice\x12\x19\n" +
+	"\buser_lat\x18\x03 \x01(\x01R\auserLat\x12\x19\n" +
+	"\buser_lng\x18\x04 \x01(\x01R\auserLng\"\xaf\x01\n" +
+	"\x12AIChatRainResponse\x12\x18\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage\x12\x19\n" +
+	"\bai_reply\x18\x03 \x01(\tR\aaiReply\x12J\n" +
+	"\x11recommend_options\x18\x04 \x03(\v2\x1d.weatherproto.RecommendOptionR\x10recommendOptions\"\x97\x01\n" +
+	"\x0fRecommendOption\x12\x12\n" +
+	"\x04type\x18\x01 \x01(\tR\x04type\x12\x14\n" +
+	"\x05title\x18\x02 \x01(\tR\x05title\x12\x12\n" +
+	"\x04desc\x18\x03 \x01(\tR\x04desc\x12\x14\n" +
+	"\x05price\x18\x04 \x01(\x01R\x05price\x120\n" +
+	"\x06coupon\x18\x05 \x01(\v2\x18.weatherproto.CouponInfoR\x06coupon\"D\n" +
+	"\x15GetTrafficRealRequest\x12\x19\n" +
+	"\broute_id\x18\x01 \x01(\x03R\arouteId\x12\x10\n" +
+	"\x03key\x18\x02 \x01(\tR\x03key\"\x89\x02\n" +
+	"\x16GetTrafficRealResponse\x12\x18\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage\x12\x14\n" +
+	"\x05speed\x18\x03 \x01(\x01R\x05speed\x124\n" +
+	"\tincidents\x18\x04 \x03(\v2\x16.weatherproto.IncidentR\tincidents\x12%\n" +
+	"\x0etraffic_lights\x18\x05 \x01(\x05R\rtrafficLights\x12)\n" +
+	"\x10congestion_level\x18\x06 \x01(\tR\x0fcongestionLevel\x12\x1d\n" +
+	"\n" +
+	"eta_update\x18\a \x01(\tR\tetaUpdate\"f\n" +
+	"\bIncident\x12\x12\n" +
+	"\x04type\x18\x01 \x01(\tR\x04type\x12\x1a\n" +
+	"\blocation\x18\x02 \x01(\tR\blocation\x12\x12\n" +
+	"\x04desc\x18\x03 \x01(\tR\x04desc\x12\x16\n" +
+	"\x06impact\x18\x04 \x01(\tR\x06impact2\xc6\x06\n" +
+	"\x0eWeatherService\x12^\n" +
+	"\x0fGetWeatherAlert\x12$.weatherproto.GetWeatherAlertRequest\x1a%.weatherproto.GetWeatherAlertResponse\x12[\n" +
+	"\x0eGetWeatherReal\x12#.weatherproto.GetWeatherRealRequest\x1a$.weatherproto.GetWeatherRealResponse\x12R\n" +
+	"\vReportWater\x12 .weatherproto.ReportWaterRequest\x1a!.weatherproto.ReportWaterResponse\x12[\n" +
+	"\x0eGetRideShelter\x12#.weatherproto.GetRideShelterRequest\x1a$.weatherproto.GetRideShelterResponse\x12U\n" +
+	"\fGetRouteRain\x12!.weatherproto.GetRouteRainRequest\x1a\".weatherproto.GetRouteRainResponse\x12a\n" +
+	"\x10GetRideGuarantee\x12%.weatherproto.GetRideGuaranteeRequest\x1a&.weatherproto.GetRideGuaranteeResponse\x12^\n" +
+	"\x0fGetRideEstimate\x12$.weatherproto.GetRideEstimateRequest\x1a%.weatherproto.GetRideEstimateResponse\x12O\n" +
+	"\n" +
+	"AIChatRain\x12\x1f.weatherproto.AIChatRainRequest\x1a .weatherproto.AIChatRainResponse\x12[\n" +
+	"\x0eGetTrafficReal\x12#.weatherproto.GetTrafficRealRequest\x1a$.weatherproto.GetTrafficRealResponseB\vZ\t./weatherb\x06proto3"
 
 var (
 	file_weather_proto_rawDescOnce sync.Once
@@ -562,27 +2534,82 @@ func file_weather_proto_rawDescGZIP() []byte {
 	return file_weather_proto_rawDescData
 }
 
-var file_weather_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_weather_proto_msgTypes = make([]protoimpl.MessageInfo, 31)
 var file_weather_proto_goTypes = []any{
-	(*GetWeatherAlertRequest)(nil),  // 0: ride.GetWeatherAlertRequest
-	(*GetWeatherAlertResponse)(nil), // 1: ride.GetWeatherAlertResponse
-	(*AlertItem)(nil),               // 2: ride.AlertItem
-	(*CurrentWeather)(nil),          // 3: ride.CurrentWeather
-	(*ForecastWeather)(nil),         // 4: ride.ForecastWeather
-	(*ForecastList)(nil),            // 5: ride.ForecastList
+	(*GetWeatherAlertRequest)(nil),   // 0: weatherproto.GetWeatherAlertRequest
+	(*GetWeatherAlertResponse)(nil),  // 1: weatherproto.GetWeatherAlertResponse
+	(*Forecast)(nil),                 // 2: weatherproto.Forecast
+	(*Cast)(nil),                     // 3: weatherproto.Cast
+	(*GetWeatherRealRequest)(nil),    // 4: weatherproto.GetWeatherRealRequest
+	(*GetWeatherRealResponse)(nil),   // 5: weatherproto.GetWeatherRealResponse
+	(*WaterPoint)(nil),               // 6: weatherproto.WaterPoint
+	(*ReportWaterRequest)(nil),       // 7: weatherproto.ReportWaterRequest
+	(*ReportWaterResponse)(nil),      // 8: weatherproto.ReportWaterResponse
+	(*CouponInfo)(nil),               // 9: weatherproto.CouponInfo
+	(*GetRideShelterRequest)(nil),    // 10: weatherproto.GetRideShelterRequest
+	(*GetRideShelterResponse)(nil),   // 11: weatherproto.GetRideShelterResponse
+	(*Shelter)(nil),                  // 12: weatherproto.Shelter
+	(*GetRouteRainRequest)(nil),      // 13: weatherproto.GetRouteRainRequest
+	(*Location)(nil),                 // 14: weatherproto.Location
+	(*GetRouteRainResponse)(nil),     // 15: weatherproto.GetRouteRainResponse
+	(*Route)(nil),                    // 16: weatherproto.Route
+	(*GetRideGuaranteeRequest)(nil),  // 17: weatherproto.GetRideGuaranteeRequest
+	(*GetRideGuaranteeResponse)(nil), // 18: weatherproto.GetRideGuaranteeResponse
+	(*Guarantee)(nil),                // 19: weatherproto.Guarantee
+	(*GetRideEstimateRequest)(nil),   // 20: weatherproto.GetRideEstimateRequest
+	(*GetRideEstimateResponse)(nil),  // 21: weatherproto.GetRideEstimateResponse
+	(*PriceRange)(nil),               // 22: weatherproto.PriceRange
+	(*WaitTime)(nil),                 // 23: weatherproto.WaitTime
+	(*CarType)(nil),                  // 24: weatherproto.CarType
+	(*AIChatRainRequest)(nil),        // 25: weatherproto.AIChatRainRequest
+	(*AIChatRainResponse)(nil),       // 26: weatherproto.AIChatRainResponse
+	(*RecommendOption)(nil),          // 27: weatherproto.RecommendOption
+	(*GetTrafficRealRequest)(nil),    // 28: weatherproto.GetTrafficRealRequest
+	(*GetTrafficRealResponse)(nil),   // 29: weatherproto.GetTrafficRealResponse
+	(*Incident)(nil),                 // 30: weatherproto.Incident
 }
 var file_weather_proto_depIdxs = []int32{
-	2, // 0: ride.GetWeatherAlertResponse.alerts:type_name -> ride.AlertItem
-	3, // 1: ride.GetWeatherAlertResponse.current_weather:type_name -> ride.CurrentWeather
-	5, // 2: ride.GetWeatherAlertResponse.weather_forecast:type_name -> ride.ForecastList
-	4, // 3: ride.ForecastList.forecasts:type_name -> ride.ForecastWeather
-	0, // 4: ride.WeatherService.GetWeatherAlert:input_type -> ride.GetWeatherAlertRequest
-	1, // 5: ride.WeatherService.GetWeatherAlert:output_type -> ride.GetWeatherAlertResponse
-	5, // [5:6] is the sub-list for method output_type
-	4, // [4:5] is the sub-list for method input_type
-	4, // [4:4] is the sub-list for extension type_name
-	4, // [4:4] is the sub-list for extension extendee
-	0, // [0:4] is the sub-list for field type_name
+	2,  // 0: weatherproto.GetWeatherAlertResponse.forecasts:type_name -> weatherproto.Forecast
+	3,  // 1: weatherproto.Forecast.casts:type_name -> weatherproto.Cast
+	6,  // 2: weatherproto.GetWeatherRealResponse.water_points:type_name -> weatherproto.WaterPoint
+	9,  // 3: weatherproto.ReportWaterResponse.coupon:type_name -> weatherproto.CouponInfo
+	12, // 4: weatherproto.GetRideShelterResponse.shelters:type_name -> weatherproto.Shelter
+	9,  // 5: weatherproto.Shelter.coupon:type_name -> weatherproto.CouponInfo
+	14, // 6: weatherproto.GetRouteRainRequest.origin:type_name -> weatherproto.Location
+	14, // 7: weatherproto.GetRouteRainRequest.destination:type_name -> weatherproto.Location
+	16, // 8: weatherproto.GetRouteRainResponse.routes:type_name -> weatherproto.Route
+	19, // 9: weatherproto.GetRideGuaranteeResponse.guarantees:type_name -> weatherproto.Guarantee
+	14, // 10: weatherproto.GetRideEstimateRequest.origin:type_name -> weatherproto.Location
+	14, // 11: weatherproto.GetRideEstimateRequest.destination:type_name -> weatherproto.Location
+	22, // 12: weatherproto.GetRideEstimateResponse.price_range:type_name -> weatherproto.PriceRange
+	23, // 13: weatherproto.GetRideEstimateResponse.wait_time:type_name -> weatherproto.WaitTime
+	24, // 14: weatherproto.GetRideEstimateResponse.car_types:type_name -> weatherproto.CarType
+	27, // 15: weatherproto.AIChatRainResponse.recommend_options:type_name -> weatherproto.RecommendOption
+	9,  // 16: weatherproto.RecommendOption.coupon:type_name -> weatherproto.CouponInfo
+	30, // 17: weatherproto.GetTrafficRealResponse.incidents:type_name -> weatherproto.Incident
+	0,  // 18: weatherproto.WeatherService.GetWeatherAlert:input_type -> weatherproto.GetWeatherAlertRequest
+	4,  // 19: weatherproto.WeatherService.GetWeatherReal:input_type -> weatherproto.GetWeatherRealRequest
+	7,  // 20: weatherproto.WeatherService.ReportWater:input_type -> weatherproto.ReportWaterRequest
+	10, // 21: weatherproto.WeatherService.GetRideShelter:input_type -> weatherproto.GetRideShelterRequest
+	13, // 22: weatherproto.WeatherService.GetRouteRain:input_type -> weatherproto.GetRouteRainRequest
+	17, // 23: weatherproto.WeatherService.GetRideGuarantee:input_type -> weatherproto.GetRideGuaranteeRequest
+	20, // 24: weatherproto.WeatherService.GetRideEstimate:input_type -> weatherproto.GetRideEstimateRequest
+	25, // 25: weatherproto.WeatherService.AIChatRain:input_type -> weatherproto.AIChatRainRequest
+	28, // 26: weatherproto.WeatherService.GetTrafficReal:input_type -> weatherproto.GetTrafficRealRequest
+	1,  // 27: weatherproto.WeatherService.GetWeatherAlert:output_type -> weatherproto.GetWeatherAlertResponse
+	5,  // 28: weatherproto.WeatherService.GetWeatherReal:output_type -> weatherproto.GetWeatherRealResponse
+	8,  // 29: weatherproto.WeatherService.ReportWater:output_type -> weatherproto.ReportWaterResponse
+	11, // 30: weatherproto.WeatherService.GetRideShelter:output_type -> weatherproto.GetRideShelterResponse
+	15, // 31: weatherproto.WeatherService.GetRouteRain:output_type -> weatherproto.GetRouteRainResponse
+	18, // 32: weatherproto.WeatherService.GetRideGuarantee:output_type -> weatherproto.GetRideGuaranteeResponse
+	21, // 33: weatherproto.WeatherService.GetRideEstimate:output_type -> weatherproto.GetRideEstimateResponse
+	26, // 34: weatherproto.WeatherService.AIChatRain:output_type -> weatherproto.AIChatRainResponse
+	29, // 35: weatherproto.WeatherService.GetTrafficReal:output_type -> weatherproto.GetTrafficRealResponse
+	27, // [27:36] is the sub-list for method output_type
+	18, // [18:27] is the sub-list for method input_type
+	18, // [18:18] is the sub-list for extension type_name
+	18, // [18:18] is the sub-list for extension extendee
+	0,  // [0:18] is the sub-list for field type_name
 }
 
 func init() { file_weather_proto_init() }
@@ -596,7 +2623,7 @@ func file_weather_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_weather_proto_rawDesc), len(file_weather_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   6,
+			NumMessages:   31,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

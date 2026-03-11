@@ -19,7 +19,15 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	WeatherService_GetWeatherAlert_FullMethodName = "/ride.WeatherService/GetWeatherAlert"
+	WeatherService_GetWeatherAlert_FullMethodName  = "/weatherproto.WeatherService/GetWeatherAlert"
+	WeatherService_GetWeatherReal_FullMethodName   = "/weatherproto.WeatherService/GetWeatherReal"
+	WeatherService_ReportWater_FullMethodName      = "/weatherproto.WeatherService/ReportWater"
+	WeatherService_GetRideShelter_FullMethodName   = "/weatherproto.WeatherService/GetRideShelter"
+	WeatherService_GetRouteRain_FullMethodName     = "/weatherproto.WeatherService/GetRouteRain"
+	WeatherService_GetRideGuarantee_FullMethodName = "/weatherproto.WeatherService/GetRideGuarantee"
+	WeatherService_GetRideEstimate_FullMethodName  = "/weatherproto.WeatherService/GetRideEstimate"
+	WeatherService_AIChatRain_FullMethodName       = "/weatherproto.WeatherService/AIChatRain"
+	WeatherService_GetTrafficReal_FullMethodName   = "/weatherproto.WeatherService/GetTrafficReal"
 )
 
 // WeatherServiceClient is the client API for WeatherService service.
@@ -28,6 +36,22 @@ const (
 type WeatherServiceClient interface {
 	// 获取天气预警信息
 	GetWeatherAlert(ctx context.Context, in *GetWeatherAlertRequest, opts ...grpc.CallOption) (*GetWeatherAlertResponse, error)
+	// 获取实时天气（降雨强度/积水点）
+	GetWeatherReal(ctx context.Context, in *GetWeatherRealRequest, opts ...grpc.CallOption) (*GetWeatherRealResponse, error)
+	// 积水上报
+	ReportWater(ctx context.Context, in *ReportWaterRequest, opts ...grpc.CallOption) (*ReportWaterResponse, error)
+	// 获取避雨上车点
+	GetRideShelter(ctx context.Context, in *GetRideShelterRequest, opts ...grpc.CallOption) (*GetRideShelterResponse, error)
+	// 雨天路线规划
+	GetRouteRain(ctx context.Context, in *GetRouteRainRequest, opts ...grpc.CallOption) (*GetRouteRainResponse, error)
+	// 行程保障查询
+	GetRideGuarantee(ctx context.Context, in *GetRideGuaranteeRequest, opts ...grpc.CallOption) (*GetRideGuaranteeResponse, error)
+	// 费用预估
+	GetRideEstimate(ctx context.Context, in *GetRideEstimateRequest, opts ...grpc.CallOption) (*GetRideEstimateResponse, error)
+	// AI对话
+	AIChatRain(ctx context.Context, in *AIChatRainRequest, opts ...grpc.CallOption) (*AIChatRainResponse, error)
+	// 实时交通
+	GetTrafficReal(ctx context.Context, in *GetTrafficRealRequest, opts ...grpc.CallOption) (*GetTrafficRealResponse, error)
 }
 
 type weatherServiceClient struct {
@@ -48,12 +72,108 @@ func (c *weatherServiceClient) GetWeatherAlert(ctx context.Context, in *GetWeath
 	return out, nil
 }
 
+func (c *weatherServiceClient) GetWeatherReal(ctx context.Context, in *GetWeatherRealRequest, opts ...grpc.CallOption) (*GetWeatherRealResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetWeatherRealResponse)
+	err := c.cc.Invoke(ctx, WeatherService_GetWeatherReal_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *weatherServiceClient) ReportWater(ctx context.Context, in *ReportWaterRequest, opts ...grpc.CallOption) (*ReportWaterResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ReportWaterResponse)
+	err := c.cc.Invoke(ctx, WeatherService_ReportWater_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *weatherServiceClient) GetRideShelter(ctx context.Context, in *GetRideShelterRequest, opts ...grpc.CallOption) (*GetRideShelterResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetRideShelterResponse)
+	err := c.cc.Invoke(ctx, WeatherService_GetRideShelter_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *weatherServiceClient) GetRouteRain(ctx context.Context, in *GetRouteRainRequest, opts ...grpc.CallOption) (*GetRouteRainResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetRouteRainResponse)
+	err := c.cc.Invoke(ctx, WeatherService_GetRouteRain_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *weatherServiceClient) GetRideGuarantee(ctx context.Context, in *GetRideGuaranteeRequest, opts ...grpc.CallOption) (*GetRideGuaranteeResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetRideGuaranteeResponse)
+	err := c.cc.Invoke(ctx, WeatherService_GetRideGuarantee_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *weatherServiceClient) GetRideEstimate(ctx context.Context, in *GetRideEstimateRequest, opts ...grpc.CallOption) (*GetRideEstimateResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetRideEstimateResponse)
+	err := c.cc.Invoke(ctx, WeatherService_GetRideEstimate_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *weatherServiceClient) AIChatRain(ctx context.Context, in *AIChatRainRequest, opts ...grpc.CallOption) (*AIChatRainResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AIChatRainResponse)
+	err := c.cc.Invoke(ctx, WeatherService_AIChatRain_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *weatherServiceClient) GetTrafficReal(ctx context.Context, in *GetTrafficRealRequest, opts ...grpc.CallOption) (*GetTrafficRealResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetTrafficRealResponse)
+	err := c.cc.Invoke(ctx, WeatherService_GetTrafficReal_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // WeatherServiceServer is the server API for WeatherService service.
 // All implementations must embed UnimplementedWeatherServiceServer
 // for forward compatibility.
 type WeatherServiceServer interface {
 	// 获取天气预警信息
 	GetWeatherAlert(context.Context, *GetWeatherAlertRequest) (*GetWeatherAlertResponse, error)
+	// 获取实时天气（降雨强度/积水点）
+	GetWeatherReal(context.Context, *GetWeatherRealRequest) (*GetWeatherRealResponse, error)
+	// 积水上报
+	ReportWater(context.Context, *ReportWaterRequest) (*ReportWaterResponse, error)
+	// 获取避雨上车点
+	GetRideShelter(context.Context, *GetRideShelterRequest) (*GetRideShelterResponse, error)
+	// 雨天路线规划
+	GetRouteRain(context.Context, *GetRouteRainRequest) (*GetRouteRainResponse, error)
+	// 行程保障查询
+	GetRideGuarantee(context.Context, *GetRideGuaranteeRequest) (*GetRideGuaranteeResponse, error)
+	// 费用预估
+	GetRideEstimate(context.Context, *GetRideEstimateRequest) (*GetRideEstimateResponse, error)
+	// AI对话
+	AIChatRain(context.Context, *AIChatRainRequest) (*AIChatRainResponse, error)
+	// 实时交通
+	GetTrafficReal(context.Context, *GetTrafficRealRequest) (*GetTrafficRealResponse, error)
 	mustEmbedUnimplementedWeatherServiceServer()
 }
 
@@ -66,6 +186,30 @@ type UnimplementedWeatherServiceServer struct{}
 
 func (UnimplementedWeatherServiceServer) GetWeatherAlert(context.Context, *GetWeatherAlertRequest) (*GetWeatherAlertResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetWeatherAlert not implemented")
+}
+func (UnimplementedWeatherServiceServer) GetWeatherReal(context.Context, *GetWeatherRealRequest) (*GetWeatherRealResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetWeatherReal not implemented")
+}
+func (UnimplementedWeatherServiceServer) ReportWater(context.Context, *ReportWaterRequest) (*ReportWaterResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ReportWater not implemented")
+}
+func (UnimplementedWeatherServiceServer) GetRideShelter(context.Context, *GetRideShelterRequest) (*GetRideShelterResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetRideShelter not implemented")
+}
+func (UnimplementedWeatherServiceServer) GetRouteRain(context.Context, *GetRouteRainRequest) (*GetRouteRainResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetRouteRain not implemented")
+}
+func (UnimplementedWeatherServiceServer) GetRideGuarantee(context.Context, *GetRideGuaranteeRequest) (*GetRideGuaranteeResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetRideGuarantee not implemented")
+}
+func (UnimplementedWeatherServiceServer) GetRideEstimate(context.Context, *GetRideEstimateRequest) (*GetRideEstimateResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetRideEstimate not implemented")
+}
+func (UnimplementedWeatherServiceServer) AIChatRain(context.Context, *AIChatRainRequest) (*AIChatRainResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method AIChatRain not implemented")
+}
+func (UnimplementedWeatherServiceServer) GetTrafficReal(context.Context, *GetTrafficRealRequest) (*GetTrafficRealResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetTrafficReal not implemented")
 }
 func (UnimplementedWeatherServiceServer) mustEmbedUnimplementedWeatherServiceServer() {}
 func (UnimplementedWeatherServiceServer) testEmbeddedByValue()                        {}
@@ -106,16 +250,192 @@ func _WeatherService_GetWeatherAlert_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _WeatherService_GetWeatherReal_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetWeatherRealRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WeatherServiceServer).GetWeatherReal(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: WeatherService_GetWeatherReal_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WeatherServiceServer).GetWeatherReal(ctx, req.(*GetWeatherRealRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _WeatherService_ReportWater_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ReportWaterRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WeatherServiceServer).ReportWater(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: WeatherService_ReportWater_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WeatherServiceServer).ReportWater(ctx, req.(*ReportWaterRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _WeatherService_GetRideShelter_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetRideShelterRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WeatherServiceServer).GetRideShelter(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: WeatherService_GetRideShelter_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WeatherServiceServer).GetRideShelter(ctx, req.(*GetRideShelterRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _WeatherService_GetRouteRain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetRouteRainRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WeatherServiceServer).GetRouteRain(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: WeatherService_GetRouteRain_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WeatherServiceServer).GetRouteRain(ctx, req.(*GetRouteRainRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _WeatherService_GetRideGuarantee_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetRideGuaranteeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WeatherServiceServer).GetRideGuarantee(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: WeatherService_GetRideGuarantee_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WeatherServiceServer).GetRideGuarantee(ctx, req.(*GetRideGuaranteeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _WeatherService_GetRideEstimate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetRideEstimateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WeatherServiceServer).GetRideEstimate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: WeatherService_GetRideEstimate_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WeatherServiceServer).GetRideEstimate(ctx, req.(*GetRideEstimateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _WeatherService_AIChatRain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AIChatRainRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WeatherServiceServer).AIChatRain(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: WeatherService_AIChatRain_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WeatherServiceServer).AIChatRain(ctx, req.(*AIChatRainRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _WeatherService_GetTrafficReal_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetTrafficRealRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WeatherServiceServer).GetTrafficReal(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: WeatherService_GetTrafficReal_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WeatherServiceServer).GetTrafficReal(ctx, req.(*GetTrafficRealRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // WeatherService_ServiceDesc is the grpc.ServiceDesc for WeatherService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var WeatherService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "ride.WeatherService",
+	ServiceName: "weatherproto.WeatherService",
 	HandlerType: (*WeatherServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "GetWeatherAlert",
 			Handler:    _WeatherService_GetWeatherAlert_Handler,
+		},
+		{
+			MethodName: "GetWeatherReal",
+			Handler:    _WeatherService_GetWeatherReal_Handler,
+		},
+		{
+			MethodName: "ReportWater",
+			Handler:    _WeatherService_ReportWater_Handler,
+		},
+		{
+			MethodName: "GetRideShelter",
+			Handler:    _WeatherService_GetRideShelter_Handler,
+		},
+		{
+			MethodName: "GetRouteRain",
+			Handler:    _WeatherService_GetRouteRain_Handler,
+		},
+		{
+			MethodName: "GetRideGuarantee",
+			Handler:    _WeatherService_GetRideGuarantee_Handler,
+		},
+		{
+			MethodName: "GetRideEstimate",
+			Handler:    _WeatherService_GetRideEstimate_Handler,
+		},
+		{
+			MethodName: "AIChatRain",
+			Handler:    _WeatherService_AIChatRain_Handler,
+		},
+		{
+			MethodName: "GetTrafficReal",
+			Handler:    _WeatherService_GetTrafficReal_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

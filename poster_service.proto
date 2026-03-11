@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package posterProto;
+
+option go_package = "./poster";
+
+// 生成海报请求
+message GeneratePosterRequest {
+  string qr_content = 1;       // 二维码内容（链接）
+  int32 qr_size = 2;           // 二维码尺寸
+  string avatar_path = 3;      // 头像图片路径（本地路径或URL）
+  int32 avatar_size = 4;       // 头像尺寸
+  string poster_path = 5;      // 海报背景图片路径（本地路径）
+  int32 qr_x = 6;              // 二维码在海报上的 X 坐标
+  int32 qr_y = 7;              // 二维码在海报上的 Y 坐标
+  string output_dir = 8;       // 输出目录（可选，默认 ./output）
+  string output_filename = 9;  // 输出文件名（可选，自动生成时间戳文件名）
+}
+
+// 生成海报响应
+message GeneratePosterResponse {
+  bool success = 1;            // 是否成功
+  string message = 2;          // 响应消息
+  string poster_url = 3;       // 生成的海报图片URL
+  string poster_path = 4;      // 生成的海报图片本地路径
+}
+
+// 海报服务
+service PosterService {
+  // 生成带二维码的海报
+  rpc GeneratePoster(GeneratePosterRequest) returns (GeneratePosterResponse);
+}

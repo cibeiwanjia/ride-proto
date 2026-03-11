@@ -11,10 +11,34 @@ option go_package = "./weather";
 service WeatherService {
   // 获取天气预警信息
   rpc GetWeatherAlert(GetWeatherAlertRequest) returns (GetWeatherAlertResponse);
+  
+  // 获取实时天气（降雨强度/积水点）
+  rpc GetWeatherReal(GetWeatherRealRequest) returns (GetWeatherRealResponse);
+  
+  // 积水上报
+  rpc ReportWater(ReportWaterRequest) returns (ReportWaterResponse);
+  
+  // 获取避雨上车点
+  rpc GetRideShelter(GetRideShelterRequest) returns (GetRideShelterResponse);
+  
+  // 雨天路线规划
+  rpc GetRouteRain(GetRouteRainRequest) returns (GetRouteRainResponse);
+  
+  // 行程保障查询
+  rpc GetRideGuarantee(GetRideGuaranteeRequest) returns (GetRideGuaranteeResponse);
+  
+  // 费用预估
+  rpc GetRideEstimate(GetRideEstimateRequest) returns (GetRideEstimateResponse);
+  
+  // AI对话
+  rpc AIChatRain(AIChatRainRequest) returns (AIChatRainResponse);
+  
+  // 实时交通
+  rpc GetTrafficReal(GetTrafficRealRequest) returns (GetTrafficRealResponse);
 }
 
 // ============================================================
-// 请求/响应定义
+// 请求/响应定义（完全匹配高德天气API返回结构）
 // ============================================================
 
 // GetWeatherAlertRequest 获取天气预警请求
@@ -24,56 +48,283 @@ message GetWeatherAlertRequest {
   string extensions = 3;        // 查询类型：base=实况，all=预报
 }
 
-// GetWeatherAlertResponse 获取天气预警响应
+// GetWeatherAlertResponse 获取天气预警响应（高德API返回结构）
 message GetWeatherAlertResponse {
+  string status = 1;            // 查询结果状态
+  string count = 2;             // 查询结果的数量
+  string info = 3;              // 天气信息摘要
+  string infocode = 4;          // 状态码
+  bool success=5;
+  string msg=6;
+  
+  // 预报天气列表
+  repeated Forecast forecasts = 7;
+}
+
+// Forecast 预报天气
+message Forecast {
+  string city = 1;              // 城市名称
+  string adcode = 2;            // 城市行政区划代码
+  string province = 3;          // 所在省份名称
+  string reporttime = 4;        // 发布时间
+  
+  // 天气预报列表
+  repeated Cast casts = 5;
+}
+
+// Cast 天气预报详情
+message Cast {
+  string date = 1;                  // 日期 yyyy-mm-dd
+  string week = 2;                  // 星期
+  string dayweather = 3;            // 白天天气状况
+  string nightweather = 4;          // 夜间天气状况
+  string daytemp = 5;               // 白天温度（摄氏度）
+  string nighttemp = 6;             // 夜间温度（摄氏度）
+  string daytemp_float = 7;         // 白天温度（浮点数）
+  string nighttemp_float = 8;       // 夜间温度（浮点数）
+  string daywind = 9;               // 白天风力状况
+  string nightwind = 10;            // 夜间风力状况
+  string daypower = 11;             // 白天风力信息
+  string nightpower = 12;           // 夜间风力信息
+}
+
+// ============================================================
+// 实时天气查询接口
+// ============================================================
+
+message GetWeatherRealRequest {
+  double user_lat = 1;    // 用户纬度
+  double user_lng = 2;    // 用户经度
+  string key = 3;         // 高德API密钥
+}
+
+message GetWeatherRealResponse {
   bool success = 1;
   string message = 2;
   
-  // 预警信息
-  repeated AlertItem alerts = 3;
+  double rain_intensity = 3;      // 降雨强度 mm/h
+  double rain_range = 4;          // 降雨范围 km
   
-  // 实况天气
-  CurrentWeather current_weather = 4;
+  repeated WaterPoint water_points = 5;  // 积水点列表
+}
+
+message WaterPoint {
+  double lat = 1;         // 纬度
+  double lng = 2;         // 经度
+  int32 depth = 3;        // 积水深度 cm
+  string location = 4;    // 位置描述
+}
+
+// ============================================================
+// 积水上报接口
+// ============================================================
+
+message ReportWaterRequest {
+  int64 user_id = 1;      // 用户ID
+  string img_base64 = 2;  // 图片Base64
+  double lat = 3;         // 纬度
+  double lng = 4;         // 经度
+  string key = 5;         // 高德API密钥
+}
+
+message ReportWaterResponse {
+  bool success = 1;
+  string message = 2;
   
-  // 预报天气列表
-  ForecastList weather_forecast = 5;
+  int32 water_depth = 3;          // AI识别积水深度
+  string report_id = 4;           // 上报ID
+  
+  CouponInfo coupon = 5;          // 奖励优惠券
+  string report_status = 6;       // 上报状态
 }
 
-// AlertItem 预警条目
-message AlertItem {
-  string alert_type = 1;        // 预警类型，如：暴雨黄色预警
-  int32 alert_level = 2;        // 预警级别：1-蓝 2-黄 3-橙 4-红
-  string content = 3;           // 预警内容
-  int64 start_time = 4;         // 预警开始时间（Unix时间戳）
-  int64 end_time = 5;           // 预警结束时间（Unix时间戳）
-  string effective_time = 6;    // 生效时间
-  string issue_time = 7;        // 发布时间
+message CouponInfo {
+  int64 coupon_id = 1;
+  int32 amount = 2;       // 金额
+  string desc = 3;        // 描述
 }
 
-// CurrentWeather 实况天气
-message CurrentWeather {
-  string weather = 1;           // 天气现象，如：多云
-  double temperature = 2;       // 实时气温（摄氏度）
-  double humidity = 3;          // 湿度（%）
-  string wind_direction = 4;    // 风向
-  double wind_speed = 5;        // 风速（km/h）
-  double wind_power = 6;        // 风力等级
-  string report_time = 7;       // 数据发布时间
+// ============================================================
+// 避雨上车点接口
+// ============================================================
+
+message GetRideShelterRequest {
+  double user_lat = 1;    // 用户纬度
+  double user_lng = 2;    // 用户经度
+  string key = 3;         // 高德API密钥
 }
 
-// ForecastWeather 预报天气
-message ForecastWeather {
-  string date = 1;              // 日期
-  string week = 2;              // 星期
-  string day_weather = 3;       // 白天天气
-  string night_weather = 4;     // 晚上天气
-  double temp_high = 5;         // 最高温度
-  double temp_low = 6;          // 最低温度
-  string wind_direction = 7;    // 风向
-  double wind_speed = 8;        // 风速
+message GetRideShelterResponse {
+  bool success = 1;
+  string message = 2;
+  
+  repeated Shelter shelters = 3;
 }
 
-// ForecastList 预报天气列表
-message ForecastList {
-  repeated ForecastWeather forecasts = 1;
+message Shelter {
+  int64 id = 1;
+  string name = 2;            // 名称
+  string type = 3;            // 类型：地铁站/商场/写字楼
+  double distance = 4;        // 距离（米）
+  int32 walk_time = 5;        // 步行时间（分钟）
+  int32 empty_cars = 6;       // 空车数
+  string cover_type = 7;      // 遮挡类型
+  double lat = 8;
+  double lng = 9;
+  CouponInfo coupon = 10;     // 优惠券
+}
+
+// ============================================================
+// 雨天路线规划接口
+// ============================================================
+
+message GetRouteRainRequest {
+  Location origin = 1;        // 起点
+  Location destination = 2;   // 终点
+  repeated string avoid = 3;  // 避开类型：water/traffic
+  string key = 4;             // 高德API密钥
+}
+
+message Location {
+  double lat = 1;
+  double lng = 2;
+}
+
+message GetRouteRainResponse {
+  bool success = 1;
+  string message = 2;
+  
+  repeated Route routes = 3;
+}
+
+message Route {
+  int64 route_id = 1;
+  double distance = 2;        // 距离（km）
+  int32 duration = 3;         // 时长（分钟）
+  string risk_level = 4;      // 风险等级：低/中/高
+  int32 water_points = 5;     // 积水点数
+  string traffic_level = 6;   // 拥堵程度
+  double price = 7;           // 预估费用
+  string polyline = 8;        // 路线坐标串
+  bool is_recommended = 9;    // 是否推荐
+}
+
+// ============================================================
+// 行程保障接口
+// ============================================================
+
+message GetRideGuaranteeRequest {
+  int64 user_id = 1;
+  int32 alert_level = 2;      // 预警等级
+}
+
+message GetRideGuaranteeResponse {
+  bool success = 1;
+  string message = 2;
+  
+  repeated Guarantee guarantees = 3;
+  repeated string tips = 4;
+}
+
+message Guarantee {
+  string type = 1;            // 保障类型
+  string title = 2;
+  string desc = 3;
+  string status = 4;
+}
+
+// ============================================================
+// 费用预估接口
+// ============================================================
+
+message GetRideEstimateRequest {
+  Location origin = 1;
+  Location destination = 2;
+  string depart_time = 3;     // 出发时间
+  string key = 4;             // 高德API密钥
+}
+
+message GetRideEstimateResponse {
+  bool success = 1;
+  string message = 2;
+  
+  PriceRange price_range = 3;
+  WaitTime wait_time = 4;
+  double distance = 5;
+  int32 duration = 6;
+  repeated CarType car_types = 7;
+}
+
+message PriceRange {
+  double min = 1;
+  double max = 2;
+  double base = 3;
+  double weather_surcharge = 4;
+  string reason = 5;
+}
+
+message WaitTime {
+  int32 min = 1;
+  int32 max = 2;
+  int32 avg = 3;
+}
+
+message CarType {
+  string type = 1;
+  double price = 2;
+  int32 wait = 3;
+}
+
+// ============================================================
+// AI对话接口
+// ============================================================
+
+message AIChatRainRequest {
+  int64 user_id = 1;
+  string user_choice = 2;     // 用户选择/消息
+  double user_lat = 3;
+  double user_lng = 4;
+}
+
+message AIChatRainResponse {
+  bool success = 1;
+  string message = 2;
+  
+  string ai_reply = 3;        // AI回复内容
+  repeated RecommendOption recommend_options = 4;
+}
+
+message RecommendOption {
+  string type = 1;            // now/shelter/reserve
+  string title = 2;
+  string desc = 3;
+  double price = 4;
+  CouponInfo coupon = 5;
+}
+
+// ============================================================
+// 实时交通接口
+// ============================================================
+
+message GetTrafficRealRequest {
+  int64 route_id = 1;         // 路线ID
+  string key = 2;             // 高德API密钥
+}
+
+message GetTrafficRealResponse {
+  bool success = 1;
+  string message = 2;
+  
+  double speed = 3;           // 平均车速
+  repeated Incident incidents = 4;
+  int32 traffic_lights = 5;
+  string congestion_level = 6;
+  string eta_update = 7;
+}
+
+message Incident {
+  string type = 1;            // 事故/积水
+  string location = 2;
+  string desc = 3;
+  string impact = 4;
 }

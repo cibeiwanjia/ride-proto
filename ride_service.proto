@@ -1,0 +1,475 @@
+syntax = "proto3";
+
+package rideProto;
+
+option go_package = "./ride";
+
+// ==================== 定位与城市选择服务 ====================
+
+// 定位信息
+message LocationInfo {
+  double latitude = 1;        // 纬度
+  double longitude = 2;       // 经度
+  float accuracy = 3;         // 精度（米）
+  string address = 4;         // 逆解析地址
+  string city = 5;            // 城市
+  string district = 6;        // 区县
+}
+
+// 城市信息
+message CityInfo {
+  string city_code = 1;       // 城市编码
+  string city_name = 2;       // 城市名称
+  string province = 3;        // 省份
+  bool is_service_available = 4; // 是否开通服务
+}
+
+// 定位请求
+message LocationReq {
+  double latitude = 1;        // 纬度（GPS 定位时必填）
+  double longitude = 2;       // 经度（GPS 定位时必填）
+  string city_code = 3;       // 城市编码（手动选择城市时必填）
+}
+
+// 定位响应
+message LocationRes {
+  bool success = 1;
+  string message = 2;
+  LocationInfo location = 3;
+}
+
+// 获取支持的城市列表请求
+message GetCitiesReq {
+}
+
+// 获取支持的城市列表响应
+message GetCitiesRes {
+  repeated CityInfo cities = 1;
+}
+
+// 切换服务城市请求
+message SwitchCityReq {
+  uint32 user_id = 1;         // 用户 ID
+  string city_code = 2;       // 目标城市编码
+}
+
+// 切换服务城市响应
+message SwitchCityRes {
+  bool success = 1;
+  string message = 2;
+  CityInfo city = 3;
+}
+
+// ==================== 乘客叫车服务 ====================
+
+// 车型信息
+message CarTypeInfo {
+  uint32 car_type = 1;        // 车型 ID(1-经济型 2-舒适型 3-豪华型 4-拼车)
+  string car_name = 2;        // 车型名称
+  double base_price = 3;      // 起步价
+  double unit_price = 4;      // 单价（元/公里）
+  int32 min_distance = 5;     // 最小距离（公里）
+  string description = 6;     // 车型描述
+}
+
+// 价格预估请求
+message PriceEstimateReq {
+  double start_lat = 1;       // 起点纬度
+  double start_lng = 2;       // 起点经度
+  double end_lat = 3;         // 终点纬度
+  double end_lng = 4;         // 终点经度
+  uint32 car_type = 5;        // 车型类型
+}
+
+// 价格预估响应
+message PriceEstimateRes {
+  bool success = 1;
+  string message = 2;
+  double estimated_price = 3; // 预估价格
+  double estimated_distance = 4; // 预估距离（公里）
+  double estimated_duration = 5; // 预估时长（分钟）
+}
+
+// 创建订单请求
+message CreateOrderReq {
+  uint32 user_id = 1;         // 用户 ID
+  double start_lat = 2;       // 起点纬度
+  double start_lng = 3;       // 起点经度
+  string start_address = 4;   // 起点地址
+  double end_lat = 5;         // 终点纬度
+  double end_lng = 6;         // 终点经度
+  string end_address = 7;     // 终点地址
+  uint32 car_type = 8;        // 车型类型
+  int32 pay_type = 9;         // 支付方式 (1-微信 2-支付宝 3-现金)
+  string passenger_phone = 10; // 乘客手机号
+  int32 passengers = 11;      // 乘车人数
+  string remark = 12;         // 备注
+}
+
+// 创建订单响应
+message CreateOrderRes {
+  bool success = 1;
+  string message = 2;
+  string order_sn = 3;        // 订单编号
+  double price = 4;           // 预估价格
+  int64 created_at = 5;       // 创建时间戳
+}
+
+// 取消订单请求
+message CancelOrderReq {
+  string order_sn = 1;        // 订单编号
+  uint32 user_id = 2;         // 用户 ID
+  string reason = 3;          // 取消原因
+  int32 cancel_type = 4;      // 取消类型 (1-乘客取消 2-司机取消 3-系统取消)
+}
+
+// 取消订单响应
+message CancelOrderRes {
+  bool success = 1;
+  string message = 2;
+  bool has_penalty = 3;       // 是否有取消费
+  double penalty_amount = 4;  // 取消费金额
+}
+
+// ==================== 派单与路径规划服务 ====================
+
+// 司机位置信息
+message DriverLocation {
+  uint32 driver_id = 1;       // 司机 ID
+  double latitude = 2;        // 纬度
+  double longitude = 3;       // 经度
+  float distance = 4;         // 距离乘客位置的距离（公里）
+  int32 status = 5;           // 司机状态 (0-空闲 1-接单中 2-行程中)
+}
+
+// 派单请求
+message DispatchReq {
+  string order_sn = 1;        // 订单编号
+  double start_lat = 2;       // 起点纬度
+  double start_lng = 3;       // 起点经度
+  uint32 car_type = 4;        // 车型类型
+  float search_radius = 5;    // 搜索半径（公里）
+  int32 max_drivers = 6;      // 最大推送司机数
+}
+
+// 派单响应
+message DispatchRes {
+  bool success = 1;
+  string message = 2;
+  repeated DriverLocation drivers = 3; // 推送的司机列表
+  int32 pushed_count = 4;              // 实际推送数量
+}
+
+// 路径规划请求
+message RoutePlanReq {
+  double start_lat = 1;       // 起点纬度
+  double start_lng = 2;       // 起点经度
+  double end_lat = 3;         // 终点纬度
+  double end_lng = 4;         // 终点经度
+  int32 route_type = 5;       // 路线类型 (1-推荐 2-最短 3-避开拥堵)
+}
+
+// 路径规划响应
+message RoutePlanRes {
+  bool success = 1;
+  string message = 2;
+  double distance = 3;        // 距离（公里）
+  int32 duration = 4;         // 预计时长（分钟）
+  repeated RouteStep steps = 5; // 路径步骤
+}
+
+// 路径步骤
+message RouteStep {
+  string instruction = 1;     // 行驶指令
+  double distance = 2;        // 该段距离（公里）
+  int32 duration = 3;         // 该段时长（分钟）
+  double start_lat = 4;       // 起点纬度
+  double start_lng = 5;       // 起点经度
+  double end_lat = 6;         // 终点纬度
+  double end_lng = 7;         // 终点经度
+}
+
+// ==================== 行程执行服务 ====================
+
+// 行程状态
+enum TripStatus {
+  TRIP_STATUS_UNKNOWN = 0;    // 未知状态
+  TRIP_STATUS_PENDING = 1;    // 待接单
+  TRIP_STATUS_ACCEPTED = 2;   // 已接单
+  TRIP_STATUS_ARRIVED = 3;    // 已到达
+  TRIP_STATUS_STARTED = 4;    // 行程中
+  TRIP_STATUS_COMPLETED = 5;  // 已完成
+  TRIP_STATUS_CANCELLED = 6;  // 已取消
+}
+
+// 行程信息
+message TripInfo {
+  string order_sn = 1;        // 订单编号
+  uint32 user_id = 2;         // 乘客 ID
+  uint32 driver_id = 3;       // 司机 ID
+  TripStatus status = 4;      // 行程状态
+  double driver_lat = 5;      // 司机当前位置纬度
+  double driver_lng = 6;      // 司机当前位置经度
+  int32 eta_minutes = 7;      // 预计到达时间（分钟）
+  string vehicle_info = 8;    // 车辆信息
+  string driver_info = 9;     // 司机信息
+}
+
+// 司机接单请求
+message DriverAcceptReq {
+  uint32 driver_id = 1;       // 司机 ID
+  string order_sn = 2;        // 订单编号
+}
+
+// 司机接单响应
+message DriverAcceptRes {
+  bool success = 1;
+  string message = 2;
+  string order_sn = 3;
+}
+
+// 到达上车点请求
+message DriverArrivedReq {
+  string order_sn = 1;        // 订单编号
+  uint32 driver_id = 2;       // 司机 ID
+}
+
+// 到达上车点响应
+message DriverArrivedRes {
+  bool success = 1;
+  string message = 2;
+}
+
+// 开始行程请求
+message StartTripReq {
+  string order_sn = 1;        // 订单编号
+  uint32 driver_id = 2;       // 司机 ID
+}
+
+// 开始行程响应
+message StartTripRes {
+  bool success = 1;
+  string message = 2;
+  int64 start_time = 3;       // 行程开始时间戳
+}
+
+// 结束行程请求
+message EndTripReq {
+  string order_sn = 1;        // 订单编号
+  uint32 driver_id = 2;       // 司机 ID
+  double actual_distance = 3; // 实际距离（公里）
+  double actual_price = 4;    // 实际价格
+}
+
+// 结束行程响应
+message EndTripRes {
+  bool success = 1;
+  string message = 2;
+  double final_price = 3;     // 最终价格
+  int64 end_time = 4;         // 行程结束时间戳
+}
+
+// 实时位置同步请求
+message SyncLocationReq {
+  string order_sn = 1;        // 订单编号
+  uint32 driver_id = 2;       // 司机 ID
+  double latitude = 3;        // 纬度
+  double longitude = 4;       // 经度
+  float speed = 5;            // 速度（km/h）
+}
+
+// 实时位置同步响应
+message SyncLocationRes {
+  bool success = 1;
+  string message = 2;
+}
+
+// ==================== 支付回调服务 ====================
+
+// 支付请求
+message PaymentReq {
+  string order_sn = 1;        // 订单编号
+  uint32 user_id = 2;         // 用户 ID
+  int32 pay_type = 3;         // 支付方式 (1-微信 2-支付宝 3-现金)
+  string auth_code = 4;       // 支付授权码（扫码支付时）
+}
+
+// 支付响应
+message PaymentRes {
+  bool success = 1;
+  string message = 2;
+  string pay_url = 3;         // 支付链接（需要跳转时）
+  string trade_no = 4;        // 第三方支付流水号
+}
+
+// 支付回调请求
+message PaymentNotifyReq {
+  string order_sn = 1;        // 订单编号
+  string trade_no = 2;        // 第三方支付流水号
+  string trade_status = 3;    // 交易状态 (TRADE_SUCCESS 等)
+  double total_amount = 4;    // 实际支付金额
+  string notify_time = 5;     // 回调时间
+}
+
+// 支付回调响应
+message PaymentNotifyRes {
+  bool success = 1;
+  string message = 2;
+}
+
+// 查询支付状态请求
+message PaymentStatusReq {
+  string order_sn = 1;        // 订单编号
+}
+
+// 查询支付状态响应
+message PaymentStatusRes {
+  bool success = 1;
+  string message = 2;
+  int32 pay_status = 3;       // 支付状态 (0-未支付 1-已支付)
+  string trade_no = 4;        // 交易流水号
+  double paid_amount = 5;     // 已支付金额
+  string paid_time = 6;       // 支付时间
+}
+
+// ==================== 结算与统计服务 ====================
+
+// 司机收入明细
+message DriverIncome {
+  uint32 id = 1;              // 收入记录 ID
+  uint32 driver_id = 2;       // 司机 ID
+  string order_sn = 3;        // 订单编号
+  double order_amount = 4;    // 订单金额
+  double driver_amount = 5;   // 司机实际收入
+  double platform_fee = 6;    // 平台抽成
+  double platform_rate = 7;   // 平台抽成比例
+  string order_time = 8;      // 订单时间
+  string status = 9;          // 结算状态 (pending/settled)
+}
+
+// 司机收入汇总
+message DriverIncomeSummary {
+  uint32 driver_id = 1;       // 司机 ID
+  string period = 2;          // 统计周期 (day/week/month)
+  double total_amount = 3;    // 总收入
+  double platform_fee = 4;    // 平台总抽成
+  int32 order_count = 5;      // 订单数量
+  double average_amount = 6;  // 平均收入
+}
+
+// 获取司机收入列表请求
+message GetDriverIncomeListReq {
+  uint32 driver_id = 1;       // 司机 ID
+  string start_date = 2;      // 开始日期 (YYYY-MM-DD)
+  string end_date = 3;        // 结束日期 (YYYY-MM-DD)
+  uint32 page = 4;            // 页码
+  uint32 page_size = 5;       // 每页数量
+}
+
+// 获取司机收入列表响应
+message GetDriverIncomeListRes {
+  repeated DriverIncome incomes = 1;
+  int32 total = 2;
+  double total_amount = 3;
+}
+
+// 获取司机收入汇总请求
+message GetDriverIncomeSummaryReq {
+  uint32 driver_id = 1;       // 司机 ID
+  string period = 2;          // 统计周期 (day/week/month)
+  string date = 3;            // 统计日期
+}
+
+// 获取司机收入汇总响应
+message GetDriverIncomeSummaryRes {
+  DriverIncomeSummary summary = 1;
+}
+
+// 平台统计数据
+message PlatformStatistics {
+  string date = 1;            // 统计日期
+  int32 total_orders = 2;     // 总订单数
+  double total_revenue = 3;   // 总营收
+  double platform_fee = 4;    // 平台总抽成
+  int32 active_drivers = 5;   // 活跃司机数
+  int32 active_users = 6;     // 活跃用户数
+  double average_price = 7;   // 平均客单价
+}
+
+// 获取平台统计数据请求
+message GetPlatformStatisticsReq {
+  string start_date = 1;      // 开始日期
+  string end_date = 2;        // 结束日期
+  int32 stat_type = 3;        // 统计类型 (1-按日 2-按周 3-按月)
+}
+
+// 获取平台统计数据响应
+message GetPlatformStatisticsRes {
+  repeated PlatformStatistics statistics = 1;
+  PlatformStatistics summary = 2;
+}
+
+// ==================== 行程状态推送（WebSocket） ====================
+
+// 行程状态变更推送
+message TripStatusPush {
+  string order_sn = 1;        // 订单编号
+  TripStatus status = 2;      // 行程状态
+  uint32 driver_id = 3;       // 司机 ID
+  string driver_name = 4;     // 司机姓名
+  string vehicle_no = 5;      // 车牌号
+  double driver_lat = 6;      // 司机纬度
+  double driver_lng = 7;      // 司机经度
+  int32 eta_minutes = 8;      // 预计到达时间
+  string message = 9;         // 推送消息
+}
+
+// ==================== Ride 服务定义 ====================
+
+service RideService {
+  // 定位与城市选择
+  rpc GetLocation(LocationReq) returns (LocationRes);
+  rpc GetCities(GetCitiesReq) returns (GetCitiesRes);
+  rpc SwitchCity(SwitchCityReq) returns (SwitchCityRes);
+  
+  // 乘客叫车
+  rpc GetCarTypes(GetCitiesReq) returns (GetCarTypesRes);
+  rpc PriceEstimate(PriceEstimateReq) returns (PriceEstimateRes);
+  rpc CreateOrder(CreateOrderReq) returns (CreateOrderRes);
+  rpc CancelOrder(CancelOrderReq) returns (CancelOrderRes);
+  
+  // 派单与路径规划
+  rpc Dispatch(DispatchReq) returns (DispatchRes);
+  rpc RoutePlan(RoutePlanReq) returns (RoutePlanRes);
+  
+  // 行程执行
+  rpc GetTripInfo(GetTripInfoReq) returns (GetTripInfoRes);
+  rpc DriverAccept(DriverAcceptReq) returns (DriverAcceptRes);
+  rpc DriverArrived(DriverArrivedReq) returns (DriverArrivedRes);
+  rpc StartTrip(StartTripReq) returns (StartTripRes);
+  rpc EndTrip(EndTripReq) returns (EndTripRes);
+  rpc SyncLocation(SyncLocationReq) returns (SyncLocationRes);
+  
+  // 支付
+  rpc Payment(PaymentReq) returns (PaymentRes);
+  rpc PaymentNotify(PaymentNotifyReq) returns (PaymentNotifyRes);
+  rpc GetPaymentStatus(PaymentStatusReq) returns (PaymentStatusRes);
+  
+  // 结算与统计
+  rpc GetDriverIncomeList(GetDriverIncomeListReq) returns (GetDriverIncomeListRes);
+  rpc GetDriverIncomeSummary(GetDriverIncomeSummaryReq) returns (GetDriverIncomeSummaryRes);
+  rpc GetPlatformStatistics(GetPlatformStatisticsReq) returns (GetPlatformStatisticsRes);
+}
+
+// 补充缺失的消息类型
+message GetCarTypesRes {
+  repeated CarTypeInfo car_types = 1;
+}
+
+message GetTripInfoReq {
+  string order_sn = 1;
+}
+
+message GetTripInfoRes {
+  TripInfo trip_info = 1;
+}

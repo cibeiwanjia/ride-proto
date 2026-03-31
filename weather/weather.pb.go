@@ -24,9 +24,11 @@ const (
 // GetWeatherAlertRequest 获取天气预警请求
 type GetWeatherAlertRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	City          string                 `protobuf:"bytes,1,opt,name=city,proto3" json:"city,omitempty"`             // 城市名称或城市编码
-	Key           string                 `protobuf:"bytes,2,opt,name=key,proto3" json:"key,omitempty"`               // 高德API密钥
-	Extensions    string                 `protobuf:"bytes,3,opt,name=extensions,proto3" json:"extensions,omitempty"` // 查询类型：base=实况，all=预报
+	City          string                 `protobuf:"bytes,1,opt,name=city,proto3" json:"city,omitempty"`                        // 城市名称或城市编码
+	Key           string                 `protobuf:"bytes,2,opt,name=key,proto3" json:"key,omitempty"`                          // 高德API密钥
+	Extensions    string                 `protobuf:"bytes,3,opt,name=extensions,proto3" json:"extensions,omitempty"`            // 查询类型：base=实况，all=预报
+	UserLat       float64                `protobuf:"fixed64,4,opt,name=user_lat,json=userLat,proto3" json:"user_lat,omitempty"` // 用户纬度
+	UserLng       float64                `protobuf:"fixed64,5,opt,name=user_lng,json=userLng,proto3" json:"user_lng,omitempty"` // 用户经度
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -80,6 +82,20 @@ func (x *GetWeatherAlertRequest) GetExtensions() string {
 		return x.Extensions
 	}
 	return ""
+}
+
+func (x *GetWeatherAlertRequest) GetUserLat() float64 {
+	if x != nil {
+		return x.UserLat
+	}
+	return 0
+}
+
+func (x *GetWeatherAlertRequest) GetUserLng() float64 {
+	if x != nil {
+		return x.UserLng
+	}
+	return 0
 }
 
 // GetWeatherAlertResponse 获取天气预警响应（高德API返回结构）
@@ -2307,13 +2323,15 @@ var File_weather_proto protoreflect.FileDescriptor
 
 const file_weather_proto_rawDesc = "" +
 	"\n" +
-	"\rweather.proto\x12\fweatherproto\"^\n" +
+	"\rweather.proto\x12\fweatherproto\"\x94\x01\n" +
 	"\x16GetWeatherAlertRequest\x12\x12\n" +
 	"\x04city\x18\x01 \x01(\tR\x04city\x12\x10\n" +
 	"\x03key\x18\x02 \x01(\tR\x03key\x12\x1e\n" +
 	"\n" +
 	"extensions\x18\x03 \x01(\tR\n" +
-	"extensions\"\xd9\x01\n" +
+	"extensions\x12\x19\n" +
+	"\buser_lat\x18\x04 \x01(\x01R\auserLat\x12\x19\n" +
+	"\buser_lng\x18\x05 \x01(\x01R\auserLng\"\xd9\x01\n" +
 	"\x17GetWeatherAlertResponse\x12\x16\n" +
 	"\x06status\x18\x01 \x01(\tR\x06status\x12\x14\n" +
 	"\x05count\x18\x02 \x01(\tR\x05count\x12\x12\n" +

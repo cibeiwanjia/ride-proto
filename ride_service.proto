@@ -2,12 +2,13 @@ syntax = "proto3";
 
 package rideProto;
 
-option go_package = "./ride";
+option go_package = "github.com/cibeiwanjia/ride-proto/ride";
 
 // ==================== 定位与城市选择服务 ====================
 
 // 定位信息
 message LocationInfo {
+  uint32 user_id = 7;         // 用户 ID
   double latitude = 1;        // 纬度
   double longitude = 2;       // 经度
   float accuracy = 3;         // 精度（米）
@@ -26,9 +27,11 @@ message CityInfo {
 
 // 定位请求
 message LocationReq {
-  double latitude = 1;        // 纬度（GPS 定位时必填）
-  double longitude = 2;       // 经度（GPS 定位时必填）
-  string city_code = 3;       // 城市编码（手动选择城市时必填）
+  uint32 user_id = 1;         // 用户 ID
+  double latitude = 2;        // 纬度（GPS 定位时必填）
+  double longitude = 3;       // 经度（GPS 定位时必填）
+  float accuracy = 4;         // 精度（米）
+  string city_code = 5;       // 城市编码（手动选择城市时必填）
 }
 
 // 定位响应
@@ -166,7 +169,7 @@ message RoutePlanReq {
   double start_lng = 2;       // 起点经度
   double end_lat = 3;         // 终点纬度
   double end_lng = 4;         // 终点经度
-  int32 route_type = 5;       // 路线类型 (1-推荐 2-最短 3-避开拥堵)
+  int32 route_type = 5;       // 路径类型 (1-推荐 2-最短 3-避开拥堵)
 }
 
 // 路径规划响应
@@ -213,6 +216,14 @@ message TripInfo {
   int32 eta_minutes = 7;      // 预计到达时间（分钟）
   string vehicle_info = 8;    // 车辆信息
   string driver_info = 9;     // 司机信息
+  string start_address = 10;  // 起点地址
+  string end_address = 11;    // 终点地址
+  double start_lat = 12;      // 起点纬度
+  double start_lng = 13;      // 起点经度
+  double end_lat = 14;        // 终点纬度
+  double end_lng = 15;        // 终点经度
+  double price = 16;          // 预估价格
+  double actual_price = 17;   // 实际价格
 }
 
 // 司机接单请求
@@ -240,6 +251,20 @@ message DriverArrivedRes {
   string message = 2;
 }
 
+// 确认乘客请求（司机输入乘客手机号后4位）
+message ConfirmPassengerReq {
+  string order_sn = 1;              // 订单编号
+  uint32 driver_id = 2;             // 司机 ID
+  string passenger_phone_last4 = 3; // 乘客手机号后4位
+}
+
+// 确认乘客响应
+message ConfirmPassengerRes {
+  bool success = 1;
+  string message = 2;
+  string passenger_name = 3;        // 乘客姓名（脱敏）
+}
+
 // 开始行程请求
 message StartTripReq {
   string order_sn = 1;        // 订单编号
@@ -250,7 +275,7 @@ message StartTripReq {
 message StartTripRes {
   bool success = 1;
   string message = 2;
-  int64 start_time = 3;       // 行程开始时间戳
+  string start_time = 3;       // 行程开始时间（格式：2006-01-02 15:04:05）
 }
 
 // 结束行程请求
@@ -266,7 +291,7 @@ message EndTripRes {
   bool success = 1;
   string message = 2;
   double final_price = 3;     // 最终价格
-  int64 end_time = 4;         // 行程结束时间戳
+  string end_time = 4;        // 行程结束时间（格式：2006-01-02 15:04:05）
 }
 
 // 实时位置同步请求
@@ -345,6 +370,7 @@ message DriverIncome {
   double platform_rate = 7;   // 平台抽成比例
   string order_time = 8;      // 订单时间
   string status = 9;          // 结算状态 (pending/settled)
+  string income_type = 10;    // 收入类型
 }
 
 // 司机收入汇总
@@ -409,6 +435,11 @@ message GetPlatformStatisticsRes {
   PlatformStatistics summary = 2;
 }
 
+// 获取行程信息响应
+message GetTripInfoRes {
+  TripInfo trip_info = 1;
+}
+
 // ==================== 行程状态推送（WebSocket） ====================
 
 // 行程状态变更推送
@@ -422,6 +453,54 @@ message TripStatusPush {
   double driver_lng = 7;      // 司机经度
   int32 eta_minutes = 8;      // 预计到达时间
   string message = 9;         // 推送消息
+  int64 update_time = 10;     // 更新时间戳
+}
+
+
+// ==================== 司机接单回调相关 ====================
+
+// 司机接单回调请求
+message DriverAcceptCallbackReq {
+  string order_sn = 1;        // 订单号
+  uint32 driver_id = 2;       // 司机 ID
+  int64 accept_time = 3;      // 接单时间
+}
+
+// 司机接单回调响应
+message DriverAcceptCallbackRes {
+  bool success = 1;
+  string message = 2;
+}
+
+// 行程状态变更回调请求
+message TripStatusUpdateReq {
+  string order_sn = 1;        // 订单号
+  uint32 driver_id = 2;       // 司机 ID
+  TripStatus status = 3;      // 行程状态
+  string update_time = 4;     // 更新时间
+  string message = 5;         // 状态说明
+}
+
+// 行程状态变更回调响应
+message TripStatusUpdateRes {
+  bool success = 1;
+  string message = 2;
+}
+
+// 支付结果回调请求
+message PaymentResultCallbackReq {
+  string order_sn = 1;        // 订单号
+  uint32 driver_id = 2;       // 司机 ID
+  double amount = 3;          // 支付金额
+  string payment_time = 4;    // 支付时间
+  string payment_method = 5;  // 支付方式
+  string message = 6;         // 通知内容
+}
+
+// 支付结果回调响应
+message PaymentResultCallbackRes {
+  bool success = 1;
+  string message = 2;
 }
 
 // ==================== Ride 服务定义 ====================
@@ -446,6 +525,7 @@ service RideService {
   rpc GetTripInfo(GetTripInfoReq) returns (GetTripInfoRes);
   rpc DriverAccept(DriverAcceptReq) returns (DriverAcceptRes);
   rpc DriverArrived(DriverArrivedReq) returns (DriverArrivedRes);
+  rpc ConfirmPassenger(ConfirmPassengerReq) returns (ConfirmPassengerRes);
   rpc StartTrip(StartTripReq) returns (StartTripRes);
   rpc EndTrip(EndTripReq) returns (EndTripRes);
   rpc SyncLocation(SyncLocationReq) returns (SyncLocationRes);
@@ -459,6 +539,11 @@ service RideService {
   rpc GetDriverIncomeList(GetDriverIncomeListReq) returns (GetDriverIncomeListRes);
   rpc GetDriverIncomeSummary(GetDriverIncomeSummaryReq) returns (GetDriverIncomeSummaryRes);
   rpc GetPlatformStatistics(GetPlatformStatisticsReq) returns (GetPlatformStatisticsRes);
+  
+  // 回调接口 - driver-notify 调用
+  rpc DriverAcceptCallback(DriverAcceptCallbackReq) returns (DriverAcceptCallbackRes);
+  rpc TripStatusUpdate(TripStatusUpdateReq) returns (TripStatusUpdateRes);
+  rpc PaymentResultCallback(PaymentResultCallbackReq) returns (PaymentResultCallbackRes);
 }
 
 // 补充缺失的消息类型
@@ -468,8 +553,4 @@ message GetCarTypesRes {
 
 message GetTripInfoReq {
   string order_sn = 1;
-}
-
-message GetTripInfoRes {
-  TripInfo trip_info = 1;
 }

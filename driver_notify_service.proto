@@ -1,60 +1,49 @@
 syntax = "proto3";
 
-package notifyProto;
+package driver_notify;
 
-option go_package = "./driver_notify";
+option go_package = "github.com/cibeiwanjia/ride-proto/driver_notify";
 
-// 通知类型枚举
+import "ride_service.proto";
+
+
+
+// 通知类型
 enum NotifyType {
-  NOTIFY_TYPE_UNKNOWN = 0;    // 未知类型
-  NOTIFY_TYPE_NEW_ORDER = 1;  // 新订单
-  NOTIFY_TYPE_PAY_SUCCESS = 2;// 乘客付款
-  NOTIFY_TYPE_ORDER_CANCEL = 3;// 订单取消
+  NOTIFY_TYPE_UNKNOWN = 0;      // 未知类型
+  NOTIFY_TYPE_NEW_ORDER = 1;    // 新订单
+  NOTIFY_TYPE_PAYMENT = 2;      // 支付成功
+  NOTIFY_TYPE_CANCEL = 3;       // 订单取消
+  NOTIFY_TYPE_ARRIVED = 4;      // 已到达
+  NOTIFY_TYPE_STARTED = 5;      // 行程开始
+  NOTIFY_TYPE_FINISHED = 6;     // 行程结束
+  NOTIFY_TYPE_ORDER_TAKEN = 7;  // 订单已被抢
+  NOTIFY_TYPE_TRIP_STATUS = 8;  // 行程状态变更
+  NOTIFY_TYPE_PAYMENT_RESULT = 9; // 支付结果
 }
 
-// 通知目标类型枚举
-enum NotifyTarget {
-  NOTIFY_TARGET_UNKNOWN = 0;  // 未知目标
-  NOTIFY_TARGET_NEAR_DRIVER = 1; // 推给附近司机
-  NOTIFY_TARGET_ASSIGN_DRIVER = 2; // 推给指定司机
-}
-
-// MQ传输的通知消息体
+// 通知消息
 message NotifyMessage {
-  NotifyType type = 1;                // 通知类型
-  NotifyTarget target = 2;            // 目标类型
-  string order_sn = 3;                // 订单编号
-  uint32 user_id = 4;                 // 目标司机ID（指定司机时必填）
-  string title = 5;                   // 通知标题
-  string content = 6;                 // 通知内容
-  map<string, string> extra = 7;      // 扩展字段（经纬度/金额等）
-  int64 created_at = 8;               // 消息生成时间戳（毫秒）
-}
-
-// gRPC查询通知记录请求
-message GetNotifyRecordReq {
-  uint32 driver_id = 1;               // 司机ID
-  uint32 page = 2;                    // 页码
-  uint32 page_size = 3;               // 每页条数
-}
-
-// gRPC查询通知记录响应
-message GetNotifyRecordRes {
-  repeated NotifyRecord records = 1;  // 通知记录列表
-  int32 total = 2;                    // 总条数
-}
-
-// 通知记录（落地数据库）
-message NotifyRecord {
-  uint32 id = 1;                      // 记录ID
-  uint32 user_id = 2;                 // 司机ID
-  string order_sn = 3;                // 订单编号
-  NotifyType notify_type = 4;         // 通知类型
-  string title = 5;                   // 通知标题
-  string content = 6;                 // 通知内容
-  int32 status = 7;                   // 发送状态：0-待发送 1-已发送 2-失败
-  int64 sent_at = 8;                  // 实际发送时间戳（毫秒）
-  int64 created_at = 9;               // 记录创建时间戳
+  int32 type = 1;              // 通知类型
+  string order_sn = 2;         // 订单编号
+  uint32 user_id = 3;          // 用户ID (司机ID)
+  string title = 4;            // 通知标题
+  string content = 5;          // 通知内容
+  string created_at = 6;       // 创建时间
+  int32 order_type = 7;        // 订单类型(1-实时单 2-预约单)
+  int32 passengers = 8;        // 乘客数
+  bool is_carpool = 9;         // 是否拼车
+  double toll_fee = 10;        // 过路费
+  int32 toll_fee_payer = 11;   // 过路费支付方(1-乘客 2-司机)
+  double price = 12;           // 颰估价格
+  double start_lat = 13;       // 起点纬度
+  double start_lng = 14;       // 起点经度
+  string start_address = 15;   // 起点地址
+  double end_lat = 16;         // 终点纬度
+  double end_lng = 17;         // 终点经度
+  string end_address = 18;     // 终点地址
+  uint32 car_type = 19;        // 车型
+  float radius = 20;           // 派单半径
 }
 
 // 推送通知请求
@@ -64,6 +53,18 @@ message PushNotifyReq {
   string order_sn = 3;            // 订单编号
   string title = 4;               // 通知标题
   string content = 5;             // 通知内容
+  double start_lat = 6;           // 起点纬度
+  double start_lng = 7;           // 起点经度
+  string start_address = 8;       // 起点地址
+  double end_lat = 9;             // 终点纬度
+  double end_lng = 10;            // 终点经度
+  string end_address = 11;        // 终点地址
+  double price = 12;              // 颰估价格
+  uint32 car_type = 13;           // 车型
+  int32 passengers = 14;          // 乘客数
+  bool is_carpool = 15;           // 是否拼车
+  double toll_fee = 16;           // 过路费
+  int32 toll_fee_payer = 17;      // 过路费支付方
 }
 
 // 推送通知响应
@@ -71,83 +72,135 @@ message PushNotifyRes {
   bool success = 1;                // 是否推送成功
   string reason = 2;              // 失败原因
 }
-// 推送通知请求
+
+// 更新司机位置请求
 message UpdateDriverLocationReq {
   uint32 driver_id = 1;          // 目标司机ID
-  float lng = 3;                  // 经度
-  float lat = 2;                  // 纬度
+  float lat = 2;                 // 纬度
+  float lng = 3;                 // 经度
 }
 
-// 推送通知响应
+// 更新司机位置响应
 message UpdateDriverLocationRes {
-  bool success = 1;                // 是否推送成功
-  string reason = 2;              // 失败原因
-}
-// 通知服务gRPC接口
-service NotifyService {
-  rpc GetNotifyRecord(GetNotifyRecordReq) returns (GetNotifyRecordRes);
-  rpc PushToDriver(PushNotifyReq) returns (PushNotifyRes);
-  rpc UpdateDriverLocation(UpdateDriverLocationReq) returns (UpdateDriverLocationRes);
-  rpc CreateRideSharingOrder(CreateRideSharingOrderReq) returns (CreateRideSharingOrderRes);
-  rpc GetDriverOrders(GetDriverOrdersReq) returns (GetDriverOrdersRes);
-  rpc DriverAccept(DriverAcceptReq) returns (DriverAcceptRes);
+  bool success = 1;
+  string message = 2;
 }
 
-// 创建顺风车预约单请求
+// 创建顺风车订单请求
 message CreateRideSharingOrderReq {
-  string order_sn = 1;          // 订单编号
-  string start_address = 2;     // 起点地址
-  double start_lat = 3;         // 起点纬度
-  double start_lng = 4;         // 起点经度
-  string end_address = 5;       // 终点地址
-  double end_lat = 6;           // 终点纬度
-  double end_lng = 7;           // 终点经度
-  double price = 8;              // 价格
-  int32 passengers = 9;          // 乘车人数
-  int32 is_carpool = 10;         // 是否拼车
-  double toll_fee = 11;          // 高速费
-  int32 toll_fee_payer = 12;     // 高速费承担方
-  string earliest_time = 13;     // 最早出发时间
-  string latest_time = 14;       // 最晚出发时间
+  string order_sn = 1;            // 订单编号
+  double start_lat = 2;           // 起点纬度
+  double start_lng = 3;           // 起点经度
+  double end_lat = 30;            // 终点纬度
+  double end_lng = 31;            // 终点经度
+  string start_address = 4;       // 起点地址
+  string end_address = 5;         // 终点地址
+  string earliest_time = 6;       // 最早出发时间
+  string latest_time = 7;         // 最晚出发时间
+  int32 passengers = 8;           // 乘客数
+  double price = 9;               // 颰估价格
+  bool is_carpool = 10;           // 是否拼车
+  double toll_fee = 11;           // 过路费
+  int32 toll_fee_payer = 12;      // 过路费支付方
+  int32 car_type = 13;            // 车型
+  int32 order_type = 14;          // 订单类型(2-顺风车)
 }
 
-// 创建顺风车预约单响应
+// 创建顺风车订单响应
 message CreateRideSharingOrderRes {
   bool success = 1;
   string message = 2;
 }
 
-// 司机订单请求
+// 获取司机订单请求
 message GetDriverOrdersReq {
-  uint32 driver_id = 1;
-  uint32 page = 2;
-  uint32 page_size = 3;
-}
-
-// 司机订单响应
-message GetDriverOrdersRes {
-  repeated DriverOrder orders = 1;
+  uint32 driver_id = 1;          // 司机ID
+  int32 page = 2;                // 页码
+  int32 page_size = 3;           // 每页数量
+  int32 order_type = 4;          // 订单类型(0-全部 1-实时单 2-预约单)
 }
 
 // 司机订单
 message DriverOrder {
-  string order_sn = 1;
-  int32 order_type = 2;
-  string title = 3;
-  string content = 4;
-  int32 status = 5;
-  int32 passengers = 6;
-  int32 is_carpool = 7;
+  string order_sn = 1;            // 订单编号
+  int32 order_type = 2;          // 订单类型
+  string title = 3;               // 标题
+  string content = 4;             // 内容
+  int32 status = 5;               // 状态
+  int32 passengers = 6;           // 乘客数
+  bool is_carpool = 7;           // 是否拼车
+  double toll_fee = 8;           // 过路费
+  int32 toll_fee_payer = 9;      // 过路费支付方
 }
 
-// 司机接单请求
-message DriverAcceptReq {
-  uint32 driver_id = 1;
-  string order_sn = 2;
+// 获取司机订单响应
+message GetDriverOrdersRes {
+  repeated DriverOrder orders = 1;  // 订单列表
+  int32 total = 2;                  // 总数
 }
 
-// 司机接单响应
-message DriverAcceptRes {
-  bool success = 1;
-  string message = 2;
+// 通知记录
+message NotifyRecord {
+  uint32 user_id = 1;             // 用户ID
+  string order_sn = 2;            // 订单编号
+  int32 notify_type = 3;          // 通知类型
+  string title = 4;               // 标题
+  string content = 5;             // 内容
+  int32 status = 6;               // 状态(0-待发送 1-已发送 2-发送失败)
+  int64 sent_at = 7;              // 发送时间戳(毫秒)
+  int32 order_type = 8;           // 订单类型
+  int32 passengers = 9;           // 乘客数
+  bool is_carpool = 10;           // 是否拼车
+  double toll_fee = 11;           // 过路费
+  int32 toll_fee_payer = 12;      // 过路费支付方
 }
+
+// 获取通知记录请求
+message GetNotifyRecordReq {
+  uint32 driver_id = 1;          // 司机ID
+  int32 page = 2;                // 页码
+  int32 page_size = 3;           // 每页数量
+}
+
+// 获取通知记录响应
+message GetNotifyRecordRes {
+  repeated NotifyRecord records = 1;  // 记录列表
+  int32 total = 2;                    // 总数
+}
+
+// ==================== Notify 服务定义 ====================
+
+service NotifyService {
+  // 推送通知
+  rpc PushToDriver(PushNotifyReq) returns (PushNotifyRes);
+  
+  // 更新司机位置
+  rpc UpdateDriverLocation(UpdateDriverLocationReq) returns (UpdateDriverLocationRes);
+  
+  // 创建顺风车订单
+  rpc CreateRideSharingOrder(CreateRideSharingOrderReq) returns (CreateRideSharingOrderRes);
+  
+  // 获取司机订单
+  rpc GetDriverOrders(GetDriverOrdersReq) returns (GetDriverOrdersRes);
+
+  // 司机接单
+  rpc DriverAccept(rideProto.DriverAcceptReq) returns (rideProto.DriverAcceptRes);
+  
+  // 获取通知记录
+  rpc GetNotifyRecord(GetNotifyRecordReq) returns (GetNotifyRecordRes);
+  
+  // 行程状态通知
+  rpc NotifyTripStatus(rideProto.TripStatusUpdateReq) returns (rideProto.TripStatusUpdateRes);
+  
+  // 支付结果通知
+  rpc NotifyPaymentResult(rideProto.PaymentResultCallbackReq) returns (rideProto.PaymentResultCallbackRes);
+}
+
+// 通知目标类型枚举
+enum NotifyTarget {
+  NOTIFY_TARGET_UNKNOWN = 0;  // 未知目标
+  NOTIFY_TARGET_NEAR_DRIVER = 1; // 推给附近司机
+  NOTIFY_TARGET_ASSIGN_DRIVER = 2; // 推给指定司机
+}
+
+

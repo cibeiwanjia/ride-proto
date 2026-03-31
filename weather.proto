@@ -46,6 +46,8 @@ message GetWeatherAlertRequest {
   string city = 1;              // 城市名称或城市编码
   string key = 2;               // 高德API密钥
   string extensions = 3;        // 查询类型：base=实况，all=预报
+  double user_lat = 4;          // 用户纬度
+  double user_lng = 5;          // 用户经度
 }
 
 // GetWeatherAlertResponse 获取天气预警响应（高德API返回结构）
